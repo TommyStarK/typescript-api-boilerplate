@@ -1,6 +1,6 @@
 # REST-API-Node-Boilerplate
 
-A simple RESTful API boilerplate written in Node.js using Express and MongoDB 3.0.
+A simple and customizable RESTful API boilerplate written in Node.js using Express and MongoDB 3.0.
 
 ### Requirements
 
@@ -8,7 +8,7 @@ A simple RESTful API boilerplate written in Node.js using Express and MongoDB 3.
 
 ### Usage
 
-`REST-API-Node-Boilerplate` includes a basic routing, an authentication middleware based on [JSON Web Tokens](https://jwt.io/) 
+`REST-API-Node-Boilerplate` includes a router, an authentication middleware based on [JSON Web Tokens](https://jwt.io/) 
 and a MongoDB connection. Therefore, you must have your mongo service running before starting the API.
 
 - Assuming you already have Mongo running:
@@ -73,7 +73,8 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
 
    By default, `REST-API-Node-Boilerplate` implements a MongoDB connection. The only collection
    created (if it doesn't exist) when the service starts is the `users` collection according to
-   the following JSON schema:
+   the following JSON schema.
+   Check the comments in `database.js` to implement new collections
 
    ```js
     $jsonSchema: {
@@ -96,26 +97,39 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
     }
    ```
 
-   CF comments in `database.js` to implement new collections.
+   To manipulate either the database or the bucket you simply have to require `database.js` and
+   call a function:
+
+   ```js
+   // Assuming we are in the 'routes' folder     
+   const database = require('../database.js')
+
+   const db = database.get()
+   const bucket = database.bucket()
+
+   console.log(db.collection('users').find())
+   ```
+
+
 
 - [Routing](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/routes/router.js)
 
     Edit the `router.js` file to implement your routing.
 
-    The following routes are implemented by default to manage accounts:
+    The following routes are implemented by default to manage accounts (CF Usage section):
+
+     __Register a new account by providing in the request's body a username, email and password.__
    * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/register`
 
-    Register a new account by providing in the body request a username, email and password.
-
+   
+   __Authorize your account and retrieve an authentication token by providing in the request's body__
+   __your username and password.__
    * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/authorize`
 
-    Authorize your account and retrieve an authentication token by providing in the body request
-    your username and password.
-
+    
+    __Delete your account by providing in the request's body your username and password.__
    * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/delete`
 
-   Delete your account by providing in the body request your username and password.
-
-
-   Note: Only hashes of email and password are stored in the database. Use the `hash` function in the 
+  
+   **Note**: Only hashes of email and password are stored in the database. Use the `hash` function in the 
    `utils` module if you need to compare hashes.

@@ -19,7 +19,7 @@ const error = {
       success: false,
       message: 'Internal server error'
     })
-    process.exit(1)
+    // process.exit(1)
   }
 }
 

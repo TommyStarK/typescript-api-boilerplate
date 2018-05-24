@@ -11,17 +11,11 @@ const success = '\x1b[32mOK\x1b[0m'
 const failure = '\x1b[31mFAILED\x1b[0m'
 
 const app = express()
-
-// Port setting
 const port = config.app.port || process.env.PORT || 3000
 
-// Enable all CORS request
 app.use(cors())
-// Allows nested object
 app.use(bodyParser.urlencoded({extended: true}))
-// Parses incoming request bodies in a middleware
 app.use(bodyParser.json())
-// Allow cross domain scripting
 app.use(function(request, response, next) {
   response.header('Access-Control-Allow-Origin', '*')
   response.header('Access-Control-Allow-Headers', 'Content-Type')
@@ -29,13 +23,12 @@ app.use(function(request, response, next) {
   next()
 })
 
-// Account management
+// Accounts management
 app.post(`/${config.app.url}/register`, account.register)
 app.post(`/${config.app.url}/authorize`, account.authorize)
 app.delete(`/${config.app.url}/delete`, account.delete)
 
-// Middlewares
-// Ensures that all requests starting with /config.app.url/* will be checked
+// Ensures that all requests starting with `/${config.app.url}/*` will be checked
 // for the token
 app.all(`/${config.app.url}/*`, [require('./middleware/token')])
 

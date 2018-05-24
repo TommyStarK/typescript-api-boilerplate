@@ -15,7 +15,7 @@ var config = {
     port: '27017',
     uri: process.env.MONGO_URI || 'localhost',
     database: 'boilerplate-db'
-  }  
+  }
 }
 
 module.exports = config

@@ -78,7 +78,7 @@ const database = {
 
   // i.e:
   // func createTestCollection() {
-  //   Collection 'test' creation
+  // console.log("creating collection test")
   // },
 
   createUsersCollection () {
