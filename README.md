@@ -21,10 +21,12 @@ $ yarn install; yarn start
 
 - Test your boilerplate
 
+Run the following commands to test your API :)
+
  ```bash
     $ curl --request GET http://localhost:3000/api.boilerplate
 
-    $ curl -H "Content-Type: application/json" --request POST -d '{"username":"test","email":"test@test.com", "password":"test"}' http://localhost:3000/api.boilerplate/register
+    $ curl -H "Content-Type: application/json" --request POST -d '{"username":"test", "email":"test@test.com", "password":"test"}' http://localhost:3000/api.boilerplate/register
 
     $ curl -H "Content-Type: application/json" --request POST -d '{"username":"test", "password":"test"}' http://localhost:3000/api.boilerplate/authorize
 
