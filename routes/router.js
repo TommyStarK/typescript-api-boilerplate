@@ -16,6 +16,18 @@ router.get(`/${config.app.url}`, (request, response, next) => {
 })
 
 // 
+// 
+// 
+// 
+// IMPLEMENT YOUR ROUTING HERE
+// 
+// 
+// 
+// 
+// 
+
+
+// 
 // test middleware
 // 
 router.get(`/${config.app.url}/hello`, (request, response, next) => {
