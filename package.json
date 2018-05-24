@@ -1,0 +1,31 @@
+{
+  "name": "rest-api-node-boilerplate",
+  "version": "1.0.0",
+  "description": "A secure RESTful API boilerplate",
+  "main": "server.js",
+  "repository": "https://github.com/TommyStarK/REST-API-Node-Boilerplate",
+  "author": "TommyStarK <thomasmilox@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "crypto": "^1.0.1",
+    "express": "^4.16.1",
+    "jsonwebtoken": "^8.1.0",
+    "jwt-simple": "^0.5.1",
+    "mongodb": "^3.0",
+    "sleep": "^5.1.1"
+  },
+  "engines": {
+    "node": "^8"
+  },
+  "devDependencies": {
+    "xo": "^0.18.2"
+  }
+}
