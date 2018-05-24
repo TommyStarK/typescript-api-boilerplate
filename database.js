@@ -5,6 +5,15 @@ const MongoClient = mongodb.MongoClient
 let _db
 let _bucket
 
+// 
+// By design, every time you start the API, the boilerplate will initialize the database 
+// by creating the collections defined in the 'collectionsRequired' object in the 'init ()' 
+// function. If the collection already exists, no function is executed.
+// 
+// if your application requires more collections, you simply have to edit the previously 
+// mentioned object and implement the function responsible for creating this collection in 
+// the database object.
+// 
 const database = {
   async connect () {
     let url = 'mongodb://'
@@ -30,8 +39,15 @@ const database = {
     return new Promise((resolve, reject) => {
       let map = new Map()
       const db = database.get()
+
+      // 
+      // Edit this object to add/remove a collection creation
+      // 
       const collectionsRequired = [
-        {name: 'users', func: database.initUsers}
+        {name: 'users', func: database.createUsersCollection
+        // i.e:
+        // name: 'test', func: database.createTestCollection
+        }
       ]
 
       db.listCollections().toArray((error, collections) => {
@@ -60,7 +76,12 @@ const database = {
     })
   },
 
-  initUsers () {
+  // i.e:
+  // func createTestCollection() {
+  //   Collection 'test' creation
+  // },
+
+  createUsersCollection () {
     const db = database.get()
 
     db.createCollection('users', {validator: {
@@ -78,7 +99,7 @@ const database = {
           },
           password: {
             bsonType: 'string',
-            description: 'must be a string and is reqired'
+            description: 'must be a string and is required'
           }
         }
       }

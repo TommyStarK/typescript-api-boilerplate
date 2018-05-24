@@ -2,10 +2,6 @@ const express = require('express')
 const router = new express.Router()
 const config = require('../config.js')
 
-//
-// Routing
-//
-
 // Frist path handled
 router.get(`/${config.app.url}`, (request, response, next) => {
   response.status(200).json({
@@ -24,8 +20,6 @@ router.get(`/${config.app.url}`, (request, response, next) => {
 // 
 // 
 // 
-// 
-
 
 // 
 // test middleware
