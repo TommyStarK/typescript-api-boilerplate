@@ -2,11 +2,11 @@
 
 A simple and customizable RESTful API boilerplate written in Node.js using Express and MongoDB 3.0.
 
-### Requirements
+## Requirements
 
 - [MongoDB driver](http://mongodb.github.io/node-mongodb-native/3.0/)
 
-### Usage
+## Usage
 
 `REST-API-Node-Boilerplate` includes a router, an authentication middleware based on [JSON Web Tokens](https://jwt.io/) 
 and a MongoDB connection. Therefore, you must have your mongo service running before starting the API.
@@ -41,7 +41,7 @@ $ curl -H "Content-Type: application/json" --request POST -d '{"username":"test"
 $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000/api.boilerplate/hello
  ```
 
-### Customization
+## Customization
 
 - [Config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/config.js)
 
