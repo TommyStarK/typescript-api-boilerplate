@@ -71,10 +71,10 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
 
 - [Database](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/database.js)
 
-   By default, `REST-API-Node-Boilerplate` implements a MongoDB connection. The only collection
+   * By default, `REST-API-Node-Boilerplate` implements a MongoDB connection. The only collection
    created (if it doesn't exist) when the service starts is the `users` collection according to
-   the following JSON schema.
-   Check the comments in `database.js` to implement new collections
+   the following JSON schema (Check the comments in `database.js` to implement new collections).
+   
 
    ```js
     $jsonSchema: {
@@ -97,8 +97,10 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
     }
    ```
 
-   To manipulate either the database or the bucket you simply have to require `database.js` and
+
+   * To manipulate either the database or the bucket you simply have to require `database.js` and
    call a function:
+
 
    ```js
    // Assuming we are in the 'routes' folder     
@@ -114,21 +116,19 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
 
 - [Routing](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/routes/router.js)
 
-    Edit the `router.js` file to implement your routing.
+    Edit the `router.js` file to implement your routing. The following routes are implemented by 
+    default to manage accounts (CF Usage section):
+     
+   * *Register a new account by providing in the request's body a username, email and password.*
+   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/register`
 
-    The following routes are implemented by default to manage accounts (CF Usage section):
 
-     __Register a new account by providing in the request's body a username, email and password.__
-   * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/register`
-
-   
-   __Authorize your account and retrieve an authentication token by providing in the request's body__
-   __your username and password.__
-   * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/authorize`
+   * *Authorize your account and retrieve an authentication token by providing in the request's body your username and password.*
+   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/authorize`
 
     
-    __Delete your account by providing in the request's body your username and password.__
-   * `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/delete`
+   * *Delete your account by providing in the request's body your username and password.*
+   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/delete`
 
   
    **Note**: Only hashes of email and password are stored in the database. Use the `hash` function in the 

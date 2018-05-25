@@ -1,4 +1,3 @@
-const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./routes/router.js')
@@ -13,15 +12,8 @@ const failure = '\x1b[31mFAILED\x1b[0m'
 const app = express()
 const port = config.app.port || process.env.PORT || 3000
 
-app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
-app.use(function(request, response, next) {
-  response.header('Access-Control-Allow-Origin', '*')
-  response.header('Access-Control-Allow-Headers', 'Content-Type')
-  response.header('Access-Control-Allow-Headers', 'X-Requested-With')
-  next()
-})
 
 // Accounts management
 app.post(`/${config.app.url}/register`, account.register)
