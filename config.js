@@ -2,7 +2,7 @@ var config = {
   app: {
     name: 'boilerplate-api',
     url: 'api.boilerplate',
-    port: 3000,
+    port: process.env.PORT || 3000,
     auth: {
       secret: '1S3cR€T!',
       expiresIn: '24h'

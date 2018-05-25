@@ -120,15 +120,18 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3000
     default to manage accounts (CF Usage section):
      
    * *Register a new account by providing in the request's body a username, email and password.*
-   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/register`
+   
+   >`POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/register`
 
 
    * *Authorize your account and retrieve an authentication token by providing in the request's body your username and password.*
-   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/authorize`
+   
+   >`POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/authorize`
 
     
    * *Delete your account by providing in the request's body your username and password.*
-   `POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/delete`
+   
+   >`POST {Content-Type: "application/json"} http://localhost:PORT/API_URL/delete`
 
   
    **Note**: Only hashes of email and password are stored in the database. Use the `hash` function in the 

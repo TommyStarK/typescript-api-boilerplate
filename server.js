@@ -10,7 +10,6 @@ const success = '\x1b[32mOK\x1b[0m'
 const failure = '\x1b[31mFAILED\x1b[0m'
 
 const app = express()
-const port = config.app.port || process.env.PORT || 3000
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -32,8 +31,8 @@ database.connect()
     console.log(`${name} Connection to the database [${success}]`)
     database.init()
       .then(() => {
-        app.listen(port, () => {
-          console.log(`${name} Listening on port ${port} [${success}]`)
+        app.listen(config.app.port, () => {
+          console.log(`${name} Listening on port ${config.app.port} [${success}]`)
           console.log(`${name} Starting service [${success}]`)
         })
       })
