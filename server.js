@@ -1,3 +1,4 @@
+const cors = require('cors')
 const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./routes/router.js')
@@ -11,6 +12,7 @@ const failure = '\x1b[31mFAILED\x1b[0m'
 
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
