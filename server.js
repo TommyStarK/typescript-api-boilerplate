@@ -52,3 +52,9 @@ database.connect()
       process.exit(1)
     }
   })
+
+process.on("SIGTERM", () => {
+    app.close(() => {
+        process.exit(0);
+    });
+});
