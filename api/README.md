@@ -11,14 +11,14 @@ A boilerplate of a REST API written in Node.js.
 
 ## Prerequisites
 
-  > In order to use the API locally, you must have the following services running:
+  In order to use the API locally, you must have the following services running:
 - mongod (localhost:27017)
 - mysqld (localhost:3306)
 - redis (localhost:6379)
 
 ## Dev mode
 
-> To start the API in dev mode:
+To start the API in dev mode:
 
 ```bash
 $ yarn install
@@ -27,7 +27,7 @@ $ yarn start
 
 ## Test your boilerplate
 
-  > Run the following commands to test your boilerplate:
+Run the following commands to test your boilerplate:
 
  ```bash
 #
@@ -49,7 +49,7 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3001
 
 # Customization
 
-- [Config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/config.js)
+## [Config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/config.js)
 
 Check the `config.js` file to customize your boilerplate as you wish. 
     
@@ -83,8 +83,7 @@ Check the `config.js` file to customize your boilerplate as you wish.
 By default, the config looks like this.
 
 
-
-- [Cache](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/cache)
+## [Cache](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/cache)
 
 Your boilerplate is linked with a cache service: Redis. 
 
@@ -95,7 +94,7 @@ Feel free to edit thoses files to fit to your needs.
 
 
 
-- [Databases](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database)
+## [Databases](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database)
 
 For demo purpose, the boilerplate is backed with two databases: MongoDB & MySQL
 
