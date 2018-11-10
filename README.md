@@ -15,7 +15,7 @@ The boilerplate is backed with a [Redis](https://redis.io/), a [Mongodb](https:/
 - Docker
 - Express web framework
 - Linting with [eslint](https://eslint.org/)
-- Uses [Yarn](https://yarnpkg.com/en/) over npm.
+- Uses [Yarn](https://yarnpkg.com/en/) over npm
 
 # Requirements
 
