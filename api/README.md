@@ -50,7 +50,7 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3001
 # Customization
 
 ## Config
-Check the `config.js` file to customize your boilerplate as you wish. 
+Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/config.js) file to customize your boilerplate as you wish. 
     
   ```js
   {
