@@ -49,8 +49,7 @@ $ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3001
 
 # Customization
 
-## [Config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/config.js)
-
+## Config
 Check the `config.js` file to customize your boilerplate as you wish. 
     
   ```js
@@ -83,7 +82,7 @@ Check the `config.js` file to customize your boilerplate as you wish.
 By default, the config looks like this.
 
 
-## [Cache](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/cache)
+## Cache
 
 Your boilerplate is linked with a cache service: Redis. 
 
@@ -94,9 +93,9 @@ Feel free to edit thoses files to fit to your needs.
 
 
 
-## [Databases](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database)
+## Databases
 
-For demo purpose, the boilerplate is backed with two databases: MongoDB & MySQL
+For demo purposes, the boilerplate is backed with two databases: MongoDB & MySQL.
 
 You will find the MySQL client connection and the MongoDB one [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database).
 
