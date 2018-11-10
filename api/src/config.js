@@ -12,7 +12,7 @@ export const config = {
   mysql: {
     host: process.env.MYSQL_URL || '127.0.0.1',
     user: 'root',
-    password: 'root',
+    password: 'root', // Do not forget to reflect any changes to the docker-compose.yml file
     database: 'api_boilerplate_mysql'
   },
   redis: {
