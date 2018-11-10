@@ -4,6 +4,18 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 
 The boilerplate is backed with a [Redis](https://redis.io/), a [Mongodb](https://www.mongodb.com/) and a [MySQL](https://www.mysql.com/).
 
+# Features
+
+- ES6 support using [Babel](https://babeljs.io/)
+- Auto server restart thanks to [nodemon](https://github.com/remy/nodemon)
+- Async/Await pattern implemented
+- Body parsing
+- Cors Enabled
+- Consistent coding styles
+- Docker
+- Express web framework
+- Linting with [eslint](https://eslint.org/)
+- Uses [Yarn](https://yarnpkg.com/en/) over npm.
 
 # Requirements
 
