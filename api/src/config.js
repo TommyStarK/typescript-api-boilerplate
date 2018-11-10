@@ -1,18 +1,19 @@
 export const config = {
   app: {
-    name: "node-boilerplate-rest-api",
+    name: "Nodejs REST API boilerplate",
     port: 3001,
+    url: "api.boilerplate"
   },
   mongo: {
     port: '27017',
     uri: process.env.MONGO_URI || 'localhost',
-    database: 'node-boilerplate-rest-api-mongodb'
+    database: 'api_boilerplate_mongodb'
   },
   mysql: {
     host: process.env.MYSQL_URL || '127.0.0.1',
     user: 'root',
     password: 'root',
-    database: 'node_boilerplate_rest_api_mysql'
+    database: 'api_boilerplate_mysql'
   },
   redis: {
     db: 0,
