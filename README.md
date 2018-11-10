@@ -1,6 +1,8 @@
 # REST-API-Node-Boilerplate
 
-A simple and customizable RESTful API boilerplate written in Node.js using Express and MongoDB 3.0.
+A simple and customizable RESTful API boilerplate written in Node.js using Express.
+
+# New README INC. ALL BELOW IS DEPRECATED!
 
 ## Requirements
 

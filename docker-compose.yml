@@ -1,0 +1,38 @@
+version: "3.0"
+services:
+  cache:
+    container_name: "cache"
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: always
+  mongodb:
+    container_name: "mongodb"
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    restart: always
+  mysql:
+    container_name: "mysql"
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    restart: always
+  api:
+    build: api
+    command: ["./wait_for_it.sh", "mysql:3306", "--", "yarn", "serve"]
+    container_name: "api"
+    depends_on:
+      - cache
+      - mongodb
+      - mysql
+    environment: 
+      - REDIS_URL=cache
+      - MONGO_URI=mongodb
+      - MYSQL_URL=mysql
+    ports:
+      - "3001:3001"
+    restart: always
+    
