@@ -1,52 +1,18 @@
-import "@babel/polyfill";
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express from 'express';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 
-import {config} from './config';
-import {database as mongo} from './database/mongo';
-import {database as mysql} from './database/mysql';
-import {redis} from './cache/redis';
-import {router} from './router';
-
-const PORT = process.env.PORT || config.app.port;
-const server = express();
-let returnCode = 0;
-
-
-// Shutdown gracefully the app
-async function quit() {
-  await mongo.quit();
-  await mysql.quit();
-  await redis.quit();
+function createHttpServer(app) {
+  return http.createServer(app);
 }
 
-async function main() {
-  try {
-    process.on('SIGINT', async () => {
-      await quit();
-      returnCode = 129;
-      process.exit(returnCode);
-    });
-
-    await mongo.connect(config.mongo);
-    await mysql.connect(config.mysql);
-    await redis.connect(config.redis);
-
-    server.use('*', cors({origin: '*'}));
-    server.use(bodyParser.urlencoded({extended: true}));
-    server.use(bodyParser.json());
-    server.use('/', router);
-    server.listen(PORT, '0.0.0.0', () => {
-      console.log(`${config.app.name} is now running on http://localhost:${PORT}`);
-    });
-
-  } catch (error) {
-    await quit();
-    returnCode = 1;
-    console.log(error);
-    process.exit(returnCode);
-  }
+function createHttpsServer(app, config) {
+  let credentials = {
+    cert: fs.readFileSync(config.ssl.path+config.ssl.certificate, 'utf8'),
+    key: fs.readFileSync(config.ssl.path+config.ssl.key, 'utf8')
+  };
+  
+  return https.createServer(credentials, app);
 }
 
-main();
+export {createHttpServer, createHttpsServer};

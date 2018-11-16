@@ -1,8 +1,18 @@
 export const config = {
   app: {
     name: "Nodejs REST API boilerplate",
-    port: 3001,
-    url: "api.boilerplate"
+    url: "api.boilerplate",
+    http: {
+      port: 3001
+    },
+    https: {
+      port: 8443,
+      ssl: {
+        certificate: 'server.crt',
+        key: 'key.pem',
+        path: 'ssl/'
+      }
+    }
   },
   mongo: {
     port: '27017',

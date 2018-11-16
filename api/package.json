@@ -2,11 +2,11 @@
   "name": "node-rest-api-boilerplate",
   "version": "1.0.0",
   "description": "Experimental boilerplate of a REST API.",
-  "main": "src/server.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/server.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir dist",
-    "serve": "node dist/server.js"
+    "serve": "node dist/index.js"
   },
   "author": "TommyStark <thomasmilox@gmail.com>",
   "license": "MIT",

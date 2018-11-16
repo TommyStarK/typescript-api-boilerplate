@@ -34,5 +34,6 @@ services:
       - MYSQL_URL=mysql
     ports:
       - "3001:3001"
+      - "8443:8443"
     restart: always
     
