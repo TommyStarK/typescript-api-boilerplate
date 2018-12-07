@@ -1,5 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import jwt from 'jsonwebtoken';
+
+import {config} from './config';
 
 export const utils = {
   hash: (target) => {
@@ -92,5 +95,18 @@ export const utils = {
     } catch (err) {
       throw(err);
     }
+  },
+
+  verifyToken: (token) => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, config.app.secret, (err, decode) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(decode);
+      });    
+    });
   }
 };

@@ -12,7 +12,8 @@ export const config = {
         key: 'key.pem',
         path: 'ssl/'
       }
-    }
+    },
+    secret: '1S3cR€T!'
   },
   mongo: {
     port: '27017',
