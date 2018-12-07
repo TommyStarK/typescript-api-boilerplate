@@ -7,7 +7,7 @@ async function checkDatabase(db) {
     await _connection.query(`CREATE DATABASE IF NOT EXISTS ${db};`);
     await _connection.query(`USE ${db};`);
   } catch (error) {
-    throw(error);
+    throw (error);
   }
 }
 

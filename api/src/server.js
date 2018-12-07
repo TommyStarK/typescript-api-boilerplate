@@ -7,12 +7,12 @@ function createHttpServer(app) {
 }
 
 function createHttpsServer(app, config) {
-  let credentials = {
-    cert: fs.readFileSync(config.ssl.path+config.ssl.certificate, 'utf8'),
-    key: fs.readFileSync(config.ssl.path+config.ssl.key, 'utf8')
-  };
-  
-  return https.createServer(credentials, app);
+  return https.createServer(
+      {
+        cert: fs.readFileSync(config.ssl.path + config.ssl.certificate, 'utf8'),
+        key: fs.readFileSync(config.ssl.path + config.ssl.key, 'utf8')
+      },
+      app);
 }
 
 export {createHttpServer, createHttpsServer};

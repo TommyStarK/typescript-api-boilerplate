@@ -10,25 +10,19 @@ async function authMiddleware(request, response, next) {
       const decoded = await utils.verifyToken(token);
       request.decoded = decoded;
     } catch (error) {
-      return response.status(401).json({
-        status: 401,
-        success: false,
-        message: 'Invalid token'
-      });
+      return response.status(401).json(
+          {status: 401, success: false, message: 'Invalid token'});
     }
 
     try {
       // Retrieve user in db
       next();
-    } catch (err) {
-      next(err);
+    } catch (error) {
+      next(error);
     }
   } else {
-    return response.status(401).json({
-      status: 401,
-      success: false,
-      message: 'No token provided'
-    });
+    return response.status(401).json(
+        {status: 401, success: false, message: 'No token provided'});
   }
 }
 

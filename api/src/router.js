@@ -1,15 +1,18 @@
 import express from 'express';
 
-import {config} from './config';
 import {account} from './account/manager';
 import {authMiddleware} from './auth/middleware';
+import {config} from './config';
 
 const router = new express.Router();
 
 // First path handled
 router.get(`/${config.app.url}`, (request, response, next) => {
-  return response.status(200).json(
-      {status: 200, success: true, message: `Welcome to the ${config.app.name}`});
+  return response.status(200).json({
+    status: 200,
+    success: true,
+    message: `Welcome to the ${config.app.name}`
+  });
 });
 
 // Account management

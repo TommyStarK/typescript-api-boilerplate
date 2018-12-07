@@ -1,14 +1,15 @@
-import "@babel/polyfill";
+import '@babel/polyfill';
+
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 
+import {redis} from './cache/redis';
 import {config} from './config';
-import {createHttpServer, createHttpsServer} from './server';
 import {database as mongo} from './database/mongo';
 import {database as mysql} from './database/mysql';
-import {redis} from './cache/redis';
 import {router} from './router';
+import {createHttpServer, createHttpsServer} from './server';
 
 const HTTP_PORT = process.env.HTTP_PORT || config.app.http.port;
 const HTTPS_PORT = process.env.HTTPS_PORT || config.app.https.port;
@@ -42,12 +43,14 @@ async function main() {
 
     const httpServer = createHttpServer(app);
     httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
-      console.log(`${config.app.name} is now running on http://localhost:${HTTP_PORT}`);
+      console.log(
+          `${config.app.name} is now running on http://localhost:${HTTP_PORT}`);
     });
 
     const httpsServer = createHttpsServer(app, config.app.https);
     httpsServer.listen(HTTPS_PORT, '0.0.0.0', () => {
-      console.log(`${config.app.name} is now running on https://localhost:${HTTPS_PORT}`);
+      console.log(`${config.app.name} is now running on https://localhost:${
+          HTTPS_PORT}`);
     });
 
   } catch (error) {
