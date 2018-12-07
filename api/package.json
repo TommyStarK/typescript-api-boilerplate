@@ -25,7 +25,11 @@
     "cors": "^2.8.3",
     "express": "^4.15.2",
     "ioredis": "^4.2.0",
+    "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
     "mysql": "^2.16.0"
+  },
+  "resolutions": {
+    "**/event-stream": "^4.0.1"
   }
 }
