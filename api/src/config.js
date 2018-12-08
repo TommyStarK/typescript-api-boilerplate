@@ -27,6 +27,5 @@ export const config = {
     host: process.env.REDIS_URL || '127.0.0.1',
     port: 6379,
     family: 4
-  },
-  router: undefined
+  }
 };

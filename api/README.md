@@ -55,19 +55,15 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
   ```js
   {
     app: {
-      name: "Nodejs REST API boilerplate",
-      url: "api.boilerplate",
-      http: {
-        port: 3001
-      },
+      name: 'Nodejs REST API boilerplate',
+      url: 'api.boilerplate',
+      http: {port: 3001},
       https: {
         port: 8443,
-        ssl: {
-          certificate: 'server.crt',
-          key: 'key.pem',
-          path: 'ssl/'
-        }
-      }
+        ssl: {certificate: 'server.crt', key: 'key.pem', path: 'ssl/'}
+      },
+      secret: '1S3cR€T!',
+      expiresIn: '24h'
     },
     mongo: {
       port: '27017',
@@ -77,7 +73,7 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
     mysql: {
       host: process.env.MYSQL_URL || '127.0.0.1',
       user: 'root',
-      password: 'root', // Do not forget to reflect any changes to the docker-compose.yml file
+      password: 'root',  // Do not forget to reflect any changes to the docker-compose.yml file
       database: 'api_boilerplate_mysql'
     },
     redis: {
