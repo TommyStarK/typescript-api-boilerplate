@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
+
 import {config} from '../config';
+import {database as mysql} from '../database/mysql';
 
 async function authMiddleware(request, response, next) {
   const token = (request.body && request.body.access_token) ||
@@ -16,7 +18,16 @@ async function authMiddleware(request, response, next) {
     }
 
     try {
-      // Retrieve user in db
+      const query = mysql.query();
+      const results = await query(
+          `select 1 from users where userID = ? and username = ? order by username limit 1`,
+          [request.decoded.userID, request.decoded.username]);
+
+      if (!results.length) {
+        return response.status(403).json(
+            {status: 403, success: false, message: 'Forbidden'});
+      }
+
       next();
     } catch (error) {
       next(error);
