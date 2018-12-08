@@ -105,13 +105,10 @@ Feel free to edit thoses files to fit to your needs.
 
 ## Databases
 
-For demo purposes, the boilerplate is backed with two databases: MongoDB & MySQL.
-
-You will find the MySQL client connection and the MongoDB one [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database).
-
-In the same way, you can edit the docker-compose configuration file to customize your app as you wish.
-
-By default, actions related to user account management are reflected in both databases.
-
+Your boilerplate is backed with a MySQL, you will find the client connection [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database/mysql.js).
+The database contains only one table, `users`, unpopulated.
 **Note**: Only hashes of email and password are stored in the database. Use the `hash` function in the 
-`utils` module if you need to compare hashes.
+`utils` module if you have to compare hashes.
+
+In case you need to store large files, the boilerplate is also backed with a [MongoDB](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database/mongo.js).
+In the same way, you can edit the docker-compose configuration file to customize your app as you wish.

@@ -1,4 +1,5 @@
-import {utils} from '../utils';
+import jwt from 'jsonwebtoken';
+import {config} from '../config';
 
 async function authMiddleware(request, response, next) {
   const token = (request.body && request.body.access_token) ||
@@ -7,7 +8,7 @@ async function authMiddleware(request, response, next) {
 
   if (token) {
     try {
-      const decoded = await utils.verifyToken(token);
+      const decoded = await jwt.verify(token, config.app.secret);
       request.decoded = decoded;
     } catch (error) {
       return response.status(401).json(

@@ -1,8 +1,5 @@
 import fs from 'fs';
-import jwt from 'jsonwebtoken';
 import path from 'path';
-
-import {config} from './config';
 
 export const utils = {
   encodeBase64: async (file) => {
@@ -89,19 +86,6 @@ export const utils = {
     let re =
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(email)
-  },
-
-  verifyToken: (token) => {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, config.app.secret, (error, decode) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve(decode);
-      });
-    });
   },
 
   writeFileAsync: (file, content) => {

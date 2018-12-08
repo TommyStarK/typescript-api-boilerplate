@@ -1,8 +1,6 @@
 # REST-API-Node-Boilerplate
 
-A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) and using [Express](https://expressjs.com/) as web framework.
-
-The boilerplate is backed with a [Redis](https://redis.io/), a [Mongodb](https://www.mongodb.com/) and a [MySQL](https://www.mysql.com/).
+A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) and using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/), a [Mongodb](https://www.mongodb.com/) to store large files and a [Redis](https://redis.io/) as cache service.
 
 # Features
 
@@ -24,11 +22,10 @@ The boilerplate is backed with a [Redis](https://redis.io/), a [Mongodb](https:/
 
 # Usage
 
-To start the API fully backed, just run the following commands in your terminal:
+To start your boilerplate, just run the following commands in your terminal:
 
 ```bash
-$ docker-compose build
-$ docker-compose up
+$ docker-compose up --build
 ```
 
 # Customization
