@@ -26,6 +26,10 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 To start your boilerplate, just run the following commands in your terminal:
 
 ```bash
+# If you want to enable https, run those commands before only the first time
+$ openssl req -newkey rsa:2048 -new -nodes -keyout api/ssl/key.pem -out api/ssl/csr.pem
+$ openssl x509 -req -days 365 -in api/ssl/csr.pem -signkey api/ssl/key.pem -out api/ssl/server.crt
+
 $ docker-compose up --build
 ```
 
