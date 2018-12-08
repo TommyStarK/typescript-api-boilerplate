@@ -11,15 +11,7 @@ const userValidator = {
       bsonType: 'object',
       required: ['username', 'email', 'password'],
       properties: {
-        username: {
-          bsonType: 'string',
-          description: 'must be a string and is required'
-        },
-        email: {
-          bsonType: 'string',
-          description: 'must be a string with a valid email and is required'
-        },
-        password: {
+        userID: {
           bsonType: 'string',
           description: 'must be a string and is required'
         }
