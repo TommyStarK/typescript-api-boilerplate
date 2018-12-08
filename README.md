@@ -36,8 +36,10 @@ To start your boilerplate, just run the following commands in your terminal:
 $ docker-compose up --build
 ```
 
-
-
 # Customization
 
 In order to customize your boilerplate as you wish, see the [README](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/README.md).
+
+## Contribution
+
+Each Contribution is welcomed and encouraged. I do not claim to cover each use cases nor completely master the Node.js. If you encounter a non sense or any trouble, you can open an issue and I will be happy to discuss about it :)
