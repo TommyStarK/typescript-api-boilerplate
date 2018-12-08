@@ -27,7 +27,8 @@
     "ioredis": "^4.2.0",
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "uniqid": "^5.0.3"
   },
   "resolutions": {
     "**/event-stream": "^4.0.1"

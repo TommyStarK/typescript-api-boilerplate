@@ -22,10 +22,6 @@ export const config = {
                        // docker-compose.yml file
     database: 'api_boilerplate_mysql'
   },
-  redis: {
-    db: 0,
-    host: process.env.REDIS_URL || '127.0.0.1',
-    port: 6379,
-    family: 4
-  }
+  redis:
+      {db: 0, host: process.env.REDIS_URL || '127.0.0.1', port: 6379, family: 4}
 };
