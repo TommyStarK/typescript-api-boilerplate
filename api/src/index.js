@@ -3,19 +3,40 @@ import '@babel/polyfill';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 
 import {redis} from './cache/redis';
 import {config} from './config';
 import {database as mongo} from './database/mongo';
 import {database as mysql} from './database/mysql';
 import {router} from './router';
-import {createHttpServer, createHttpsServer} from './server';
 
 const HTTP_PORT = process.env.HTTP_PORT || config.app.http.port;
 const HTTPS_PORT = process.env.HTTPS_PORT || config.app.https.port;
 const app = express();
 let returnCode = 0;
 
+function attemptToEnableHTTPS(app, name, config) {
+  try {
+    const certPath = config.ssl.path + config.ssl.certificate;
+    const keyPath = config.ssl.path + config.ssl.key;
+
+    const httpsServer = https.createServer(
+        {
+          cert: fs.readFileSync(certPath, 'utf8'),
+          key: fs.readFileSync(keyPath, 'utf8')
+        },
+        app);
+
+    httpsServer.listen(HTTPS_PORT, '0.0.0.0', () => {
+      console.log(`${name} is now running on https://localhost:${HTTPS_PORT}`);
+    });
+  } catch (error) {
+    console.log(`Failed to enable https.\n${error}.\nSkipping...`);
+  }
+}
 
 // Shutdown gracefully the app
 async function quit() {
@@ -41,18 +62,13 @@ async function main() {
     app.use(bodyParser.json());
     app.use('/', router);
 
-    const httpServer = createHttpServer(app);
+    attemptToEnableHTTPS(app, config.app.name, config.app.https);
+
+    const httpServer = http.createServer(app);
     httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
       console.log(
           `${config.app.name} is now running on http://localhost:${HTTP_PORT}`);
     });
-
-    const httpsServer = createHttpsServer(app, config.app.https);
-    httpsServer.listen(HTTPS_PORT, '0.0.0.0', () => {
-      console.log(`${config.app.name} is now running on https://localhost:${
-          HTTPS_PORT}`);
-    });
-
   } catch (error) {
     await quit();
     returnCode = 1;
