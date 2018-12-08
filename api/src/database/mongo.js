@@ -9,7 +9,7 @@ const userValidator = {
   validator: {
     $jsonSchema: {
       bsonType: 'object',
-      required: ['username', 'email', 'password'],
+      required: ['userID'],
       properties: {
         userID: {
           bsonType: 'string',
