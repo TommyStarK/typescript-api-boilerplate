@@ -44,7 +44,6 @@ router.use((err, request, response, next) => {
   console.log(err.message);
   response.status(500).json(
       {status: 500, success: false, message: 'Internal server error'});
-  process.exit(1);
 });
 
 export {router};
