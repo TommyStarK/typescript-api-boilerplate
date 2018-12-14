@@ -1,4 +1,5 @@
 import '@babel/polyfill';
+
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
@@ -6,27 +7,28 @@ import fs from 'fs';
 import http from 'http';
 import https from 'https';
 
-import {redis} from './cache/redis';
-import {config} from './config';
-import {database as mongo} from './database/mongo';
-import {database as mysql} from './database/mysql';
-import {router} from './router';
+import redis from './cache/redis';
+import config from './config';
+import mongo from './database/mongo';
+import mysql from './database/mysql';
+import router from './router';
 
-const HTTP_PORT = process.env.HTTP_PORT || config.app.http.port;
+const HTTP_PORT = process.env.HTTP_PORT || config.app.http.port;
 const HTTPS_PORT = process.env.HTTPS_PORT || config.app.https.port;
 const app = express();
 
-function attemptToEnableHTTPS(app, name, config) {
+function attemptToEnableHTTPS(expressApp, name, cfg) {
   try {
-    const certPath = config.ssl.path + config.ssl.certificate;
-    const keyPath = config.ssl.path + config.ssl.key;
+    const certPath = cfg.ssl.path + cfg.ssl.certificate;
+    const keyPath = cfg.ssl.path + cfg.ssl.key;
 
     const httpsServer = https.createServer(
-        {
-          cert: fs.readFileSync(certPath, 'utf8'),
-          key: fs.readFileSync(keyPath, 'utf8')
-        },
-        app);
+      {
+        cert: fs.readFileSync(certPath, 'utf8'),
+        key: fs.readFileSync(keyPath, 'utf8'),
+      },
+      expressApp,
+    );
 
     httpsServer.listen(HTTPS_PORT, '0.0.0.0', () => {
       console.log(`${name} is now running on https://localhost:${HTTPS_PORT}`);
@@ -54,8 +56,8 @@ async function main() {
     process.exit(1);
   }
 
-  app.use('*', cors({origin: '*'}));
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use('*', cors({ origin: '*' }));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use('/', router);
 
@@ -63,7 +65,8 @@ async function main() {
   const httpServer = http.createServer(app);
   httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
     console.log(
-        `${config.app.name} is now running on http://localhost:${HTTP_PORT}`);
+      `${config.app.name} is now running on http://localhost:${HTTP_PORT}`,
+    );
   });
 }
 

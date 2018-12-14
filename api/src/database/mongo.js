@@ -2,8 +2,8 @@ import mongodb from 'mongodb';
 
 const MongoClient = mongodb.MongoClient;
 
-let _db = undefined;
-let _bucket = undefined;
+let db;
+let bucket;
 
 const userValidator = {
   validator: {
@@ -13,37 +13,35 @@ const userValidator = {
       properties: {
         userID: {
           bsonType: 'string',
-          description: 'must be a string and is required'
-        }
-      }
-    }
+          description: 'must be a string and is required',
+        },
+      },
+    },
   },
   validationLevel: 'strict',
-  validationAction: 'error'
+  validationAction: 'error',
 };
 
 function checkCollections() {
   return new Promise((resolve, reject) => {
-    let map = new Map();
-    const collectionsRequired = [{name: 'users', validator: userValidator}];
+    const map = new Map();
+    const collectionsRequired = [{ name: 'users', validator: userValidator }];
 
 
     try {
-      _db.listCollections().toArray((err, collections) => {
+      db.listCollections().toArray((err, collections) => {
         if (err) {
           reject(err);
           return;
         }
 
-        collections = collections.map((item) => {
-          return item.name;
-        });
+        const cls = collections.map(item => item.name);
 
-        collections.forEach(map.set.bind(map));
+        cls.forEach(map.set.bind(map));
 
-        collectionsRequired.forEach(target => {
+        collectionsRequired.forEach((target) => {
           if (!map.has(target.name)) {
-            _db.createCollection(target.name, target.validator);
+            db.createCollection(target.name, target.validator);
           }
         });
 
@@ -55,39 +53,34 @@ function checkCollections() {
   });
 }
 
-export const database = {
-  connect: async (config) => {
+export default {
+  connect: async (cfg) => {
     try {
-      if (_db !== undefined && _bucket !== undefined) {
+      if (db !== undefined && bucket !== undefined) {
         console.log('Mongo client already connected.');
         return;
       }
 
-      let url =
-          'mongodb://' + config.uri + ':' + config.port + '/' + config.database;
-      const client = await MongoClient.connect(url, {useNewUrlParser: true});
-      _db = client.db(config.database);
-      _bucket = new mongodb.GridFSBucket(_db);
+      const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
+      const client = await MongoClient.connect(url, { useNewUrlParser: true });
+      db = client.db(cfg.database);
+      bucket = new mongodb.GridFSBucket(db);
       await checkCollections();
     } catch (error) {
       throw (error);
     }
   },
 
-  getBucket: () => {
-    return _bucket;
-  },
+  getBucket: () => bucket,
 
-  getDatabase: () => {
-    return _db;
-  },
+  getDatabase: () => db,
 
   quit: async () => {
     try {
-      // await _db.logout();
-      // await _db.close();
+      // await db.logout();
+      // await db.close();
     } catch (error) {
       throw (error);
     }
-  }
+  },
 };

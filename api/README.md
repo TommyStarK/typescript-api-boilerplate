@@ -38,13 +38,13 @@ Run the following commands to test your boilerplate:
 $ curl --request GET http://localhost:3001/api.boilerplate
 
 # Register a new account
-$ curl -H "Content-Type: application/json" --request POST -d '{"username":"test", "email":"test@test.com", "password":"test"}' http://localhost:3001/api.boilerplate/register
+$ curl -H "Content-Type: application/json" --request POST -d '{"username":"foo", "email":"foo@email.com", "password":"bar"}' http://localhost:3001/api.boilerplate/register
 
 # Authorize your account and retrieve your authentication token
-$ curl -H "Content-Type: application/json" --request POST -d '{"username":"test", "password":"test"}' http://localhost:3001/api.boilerplate/authorize
+$ curl -H "Content-Type: application/json" --request POST -d '{"username":"foo", "password":"bar"}' http://localhost:3001/api.boilerplate/authorize
 
 # Test an auth required request
-$ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET http://localhost:3001/api.boilerplate/hello
+$ curl -H "x-access-token: INSERT_YOUR_TOKEN" --request GET http://localhost:3001/api.boilerplate/hello
  ```
 
 # Customization
@@ -57,31 +57,29 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
     app: {
       name: 'Nodejs REST API boilerplate',
       url: 'api.boilerplate',
-      http: {port: 3001},
+      http: { port: 3001 },
       https: {
         port: 8443,
-        ssl: {certificate: 'server.crt', key: 'key.pem', path: 'ssl/'}
+        ssl: { certificate: 'server.crt', key: 'key.pem', path: 'ssl/' },
       },
       secret: '1S3cR€T!',
-      expiresIn: '24h'
+      expiresIn: '24h',
     },
     mongo: {
       port: '27017',
       uri: process.env.MONGO_URI || 'localhost',
-      database: 'api_boilerplate_mongodb'
+      database: 'api_boilerplate_mongodb',
     },
     mysql: {
       host: process.env.MYSQL_URL || '127.0.0.1',
       user: 'root',
-      password: 'root',  // Do not forget to reflect any changes to the docker-compose.yml file
-      database: 'api_boilerplate_mysql'
+      password: 'root',
+      database: 'api_boilerplate_mysql',
     },
-    redis: {
-      db: 0,
-      host: process.env.REDIS_URL || '127.0.0.1',
-      port: 6379,
-      family: 4
-    }
+    redis:
+      {
+        db: 0, host: process.env.REDIS_URL || '127.0.0.1', port: 6379, family: 4,
+      },
   }
   ```
 
