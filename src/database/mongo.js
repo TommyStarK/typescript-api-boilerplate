@@ -1,6 +1,4 @@
-import mongodb from 'mongodb';
-
-const MongoClient = mongodb.MongoClient;
+import { MongoClient, GridFSBucket } from 'mongodb';
 
 let db;
 let bucket;
@@ -64,7 +62,7 @@ export default {
       const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
       const client = await MongoClient.connect(url, { useNewUrlParser: true });
       db = client.db(cfg.database);
-      bucket = new mongodb.GridFSBucket(db);
+      bucket = new GridFSBucket(db);
       await checkCollections();
     } catch (error) {
       throw (error);

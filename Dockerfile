@@ -1,7 +1,7 @@
-FROM node:latest
-RUN curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+FROM node:alpine
 COPY . /home
 WORKDIR /home
+RUN apk add bash
 RUN yarn install && \
     yarn build && \
     chmod +x /home/wait_for_it.sh
