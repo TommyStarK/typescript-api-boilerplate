@@ -1,31 +1,58 @@
-# API Boilerplate
+# REST-API-Node-Boilerplate
 
-A boilerplate of a REST API written in Node.js.
+A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/), a [Mongodb](https://www.mongodb.com/) to store large files and a [Redis](https://redis.io/) as cache service.
+
+
+
+# Features
+
+- ES6 support using [Babel](https://babeljs.io/)
+- Auto server restart thanks to [nodemon](https://github.com/remy/nodemon)
+- Async/Await pattern implemented
+- Authentication using [jsonwebtoken](https://jwt.io/)
+- Body parsing
+- Cors Enabled
+- Consistent coding styles
+- Docker
+- Express web framework
+- Linting with [eslint](https://eslint.org/)
+- Support http/https
+- Uses [Yarn](https://yarnpkg.com/en/) over npm
+
+
 
 # Requirements
 
-- [Nodejs>=10.13](https://nodejs.org/en/)
-- [Yarn>=1.2.1](https://yarnpkg.com/fr/)
+- [Docker](https://www.docker.com)
+
+
 
 # Usage
 
-## Prerequisites
+To enable https, you must add your ssl certificate and key to `ssl/` before running your boilerplate:
 
-  In order to use the API locally, you must have the following services running:
-- mongod (localhost:27017)
-- mysqld (localhost:3306)
-- redis (localhost:6379)
-
-## Dev mode
-
-To start the API in dev mode:
-
+To generate self-signed certificate, run the following commands:
 ```bash
-$ yarn install
-$ yarn start
+$ openssl req -newkey rsa:2048 -new -nodes -keyout ssl/key.pem -out ssl/csr.pem
+$ openssl x509 -req -days 365 -in ssl/csr.pem -signkey ssl/key.pem -out ssl/server.crt
 ```
 
-## Test your boilerplate
+To start your boilerplate, just run the following commands in your terminal:
+
+```bash
+$ docker-compose up --build
+```
+
+
+
+# Contribution
+
+Each Contribution is welcomed and encouraged. I do not claim to cover each use cases nor completely master the Node.js. If you encounter a non sense or any trouble, you can open an issue and I will be happy to discuss about it :)
+
+
+
+
+# Test your boilerplate
 
 Run the following commands to test your boilerplate:
 
@@ -47,10 +74,12 @@ $ curl -H "Content-Type: application/json" --request POST -d '{"username":"foo",
 $ curl -H "x-access-token: INSERT_YOUR_TOKEN" --request GET http://localhost:3001/api.boilerplate/hello
  ```
 
+
+
 # Customization
 
 ## Config
-Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/config.js) file to customize your boilerplate as you wish. 
+Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/src/config.js) file to customize your boilerplate as you wish. 
     
   ```js
   {
@@ -86,11 +115,13 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
 By default, the config looks like this.
 
 
+
+
 ## Cache
 
 Your boilerplate is linked with a cache service: Redis. 
 
-You will find the client connection [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/api/src/cache/redis.js) and the docker-compose configuration file [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/docker-compose.yml). 
+You will find the client connection [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/src/cache/redis.js) and the docker-compose configuration file [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/docker-compose.yml). 
 
 Feel free to edit thoses files to fit to your needs.
 
@@ -99,7 +130,7 @@ Feel free to edit thoses files to fit to your needs.
 
 ## Databases
 
-Your boilerplate is backed with a MySQL, you will find the client connection [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database/mysql.js).
+Your boilerplate is backed with a MySQL, you will find the client connection [here](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/src/database/mysql.js).
 The database contains only one table, `users`, unpopulated.
 
 
@@ -107,5 +138,5 @@ The database contains only one table, `users`, unpopulated.
 `utils` module if you have to compare hashes.
 
 
-In case you need to store large files, the boilerplate is also backed with a [MongoDB](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/api/src/database/mongo.js).
+In case you need to store large files, the boilerplate is also backed with a [MongoDB](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/src/database/mongo.js).
 In the same way, you can edit the docker-compose configuration file to customize your app as you wish.
