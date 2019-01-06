@@ -18,7 +18,7 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 - Linting with [eslint](https://eslint.org/)
 - Support http/https
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
-- Test ugin [AVA](https://github.com/avajs/ava)
+- Test using [AVA](https://github.com/avajs/ava)
 
 
 
