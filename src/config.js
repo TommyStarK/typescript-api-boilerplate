@@ -5,7 +5,7 @@ export default {
     http: { port: 3001 },
     https: {
       port: 8443,
-      ssl: { certificate: 'server.crt', key: 'key.pem', path: 'ssl/' },
+      tls: { certificate: 'server.crt', key: 'key.pem', path: 'tls/' },
     },
     secret: '1S3cR€T!',
     expiresIn: '24h',

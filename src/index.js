@@ -19,8 +19,8 @@ const app = express();
 
 function attemptToEnableHTTPS(expressApp, name, cfg) {
   try {
-    const certPath = cfg.ssl.path + cfg.ssl.certificate;
-    const keyPath = cfg.ssl.path + cfg.ssl.key;
+    const certPath = cfg.tls.path + cfg.tls.certificate;
+    const keyPath = cfg.tls.path + cfg.tls.key;
 
     const httpsServer = https.createServer(
       {

@@ -18,6 +18,7 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 - Linting with [eslint](https://eslint.org/)
 - Support http/https
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
+- Test ugin [AVA](https://github.com/avajs/ava)
 
 
 
@@ -29,12 +30,12 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 
 # Usage
 
-To enable https, you must add your ssl certificate and key to `ssl/` before running your boilerplate:
+To enable https, you must add your tls certificate and key to `tls/` before running your boilerplate:
 
 To generate self-signed certificate, run the following commands:
 ```bash
-$ openssl req -newkey rsa:2048 -new -nodes -keyout ssl/key.pem -out ssl/csr.pem
-$ openssl x509 -req -days 365 -in ssl/csr.pem -signkey ssl/key.pem -out ssl/server.crt
+$ openssl req -newkey rsa:2048 -new -nodes -keyout tls/key.pem -out tls/csr.pem
+$ openssl x509 -req -days 365 -in tls/csr.pem -signkey tls/key.pem -out tls/server.crt
 ```
 
 To start your boilerplate, just run the following commands in your terminal:
@@ -51,10 +52,20 @@ Each Contribution is welcomed and encouraged. I do not claim to cover each use c
 
 
 
-
 # Test your boilerplate
 
 Run the following commands to test your boilerplate:
+
+ ```bash
+$ yarn install
+$ yarn test
+ ```
+
+
+
+# Use your boilerplate
+
+Run the following commands to use your boilerplate:
 
  ```bash
 #
