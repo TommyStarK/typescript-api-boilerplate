@@ -100,7 +100,7 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
       http: { port: 3001 },
       https: {
         port: 8443,
-        ssl: { certificate: 'server.crt', key: 'key.pem', path: 'ssl/' },
+        tls: { certificate: 'server.crt', key: 'key.pem', path: 'tls/' },
       },
       secret: '1S3cR€T!',
       expiresIn: '24h',
@@ -113,7 +113,7 @@ Check the [config.js](https://github.com/TommyStarK/REST-API-Node-Boilerplate/bl
     mysql: {
       host: process.env.MYSQL_URL || '127.0.0.1',
       user: 'root',
-      password: 'root',
+      password: 'root', // Do not forget to reflect any changes to the docker-compose.yml file
       database: 'api_boilerplate_mysql',
     },
     redis:
