@@ -33,21 +33,3 @@ services:
     networks:
       - boilerplate
     restart: always
-
-  ava:
-    build: .
-    command: ["./wait_for_it.sh", "mysql:3306", "--", "echo", "**** Starting Tests ***"]
-    container_name: "ava"
-    depends_on:
-      - cache
-      - mongodb
-      - mysql
-    environment: 
-      - REDIS_URL=cache
-      - MONGO_URI=mongodb
-      - MYSQL_URL=mysql
-    ports:
-      - "3001:3001"
-      - "8443:8443"
-    networks: 
-      - boilerplate    
