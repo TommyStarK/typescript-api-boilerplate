@@ -38,7 +38,7 @@ test.serial('ping service', async (t) => {
 test.serial('404 not found', async (t) => {
   t.plan(1);
   const {app} = t.context;
-  const res = await request(app).get('/api.streetpet');
+  const res = await request(app).get('/api.boilerplat');
   t.is(res.status, 404);
 });
 
