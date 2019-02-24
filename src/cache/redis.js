@@ -28,6 +28,7 @@ export default {
   quit: async () => {
     try {
       await client.quit();
+      client = undefined;
     } catch (error) {
       throw (error);
     }

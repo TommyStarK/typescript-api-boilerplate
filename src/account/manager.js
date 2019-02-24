@@ -70,10 +70,10 @@ export default {
 
     try {
       const query = mysql.query();
-      const emailHash = utils.hash(request.body.email);
+      const emailEncrypted = utils.encrypt(request.body.email);
       const passwordHash = utils.hash(request.body.password);
       const check = 'select email, username from users where username = ? or email = ? order by email limit 1';
-      const results = await query(check, [request.body.username, emailHash]);
+      const results = await query(check, [request.body.username, emailEncrypted]);
 
       if (results.length > 0) {
         let target = '';
@@ -98,10 +98,10 @@ export default {
 
       await query(
         'insert into `users`(`email`, `password`, `userID`, `username`) values(?,?,?,?)',
-        [emailHash, passwordHash, uniqid(), request.body.username],
+        [emailEncrypted, passwordHash, uniqid(), request.body.username],
       );
 
-      response.status(200).json({
+      response.status(201).json({
         status: 201,
         success: true,
         message: 'Account registered successfully.',
@@ -128,7 +128,7 @@ export default {
       const query = mysql.query();
       const passwordHash = utils.hash(request.body.password);
       const results = await query(
-        'select 1 from users where username = ? and password = ? order by username limit 1',
+        'select userID from users where username = ? and password = ? order by username limit 1',
         [request.body.username, passwordHash],
       );
 

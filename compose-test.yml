@@ -3,38 +3,15 @@ version: "3.0"
 networks: 
   boilerplate:
 
-volumes:
-  mongodb_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/mongodb/data/db
-  mysql_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/mysql
-  redis_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/redis/data
-
 services:
 
   cache:
     container_name: "cache"
     image: redis:alpine
-    command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"
     networks: 
       - boilerplate
-    volumes:
-      - redis_volume:/data
     restart: always
 
   mongodb:
@@ -44,8 +21,6 @@ services:
       - "27017:27017"
     networks: 
       - boilerplate
-    volumes:
-      - mongodb_volume:/data/db
     restart: always
 
   mysql:
@@ -55,17 +30,14 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - "3306:3306"
-    networks: 
+    networks:
       - boilerplate
-    volumes:
-      - mysql_volume:/var/lib/mysql
     restart: always
 
-  api:
+  ava:
     build: .
-    hostname: api.boilerplate
-    command: ["./wait_for_it.sh", "mysql:3306", "--", "yarn", "serve"]
-    container_name: "api"
+    command: ["./wait_for_it.sh", "mysql:3306", "--", "echo", "**** Starting Tests ***"]
+    container_name: "ava"
     depends_on:
       - cache
       - mongodb
@@ -78,6 +50,4 @@ services:
       - "3001:3001"
       - "8443:8443"
     networks: 
-      - boilerplate
-    restart: always
-    
+      - boilerplate    

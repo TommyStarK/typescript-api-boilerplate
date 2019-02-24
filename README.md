@@ -13,9 +13,10 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 - Body parsing
 - Cors Enabled
 - Consistent coding styles
-- Docker
+- Docker + data persistence
 - Express web framework
 - Linting with [eslint](https://eslint.org/)
+- MySQL table hydratation
 - Support http/https
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
 - Test using [AVA](https://github.com/avajs/ava)
@@ -25,6 +26,15 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 # Requirements
 
 - [Docker](https://www.docker.com)
+
+
+For MacOS, add the following paths to your docker engine:
+
+- `/var/lib/mysql`
+- `/var/lib/mongodb/data/db`
+- `/var/lib/redis/data`
+
+This can be done through **Docker -> Preferences -> File sharing**
 
 
 
@@ -57,8 +67,7 @@ Each Contribution is welcomed and encouraged. I do not claim to cover each use c
 Run the following commands to test your boilerplate:
 
  ```bash
-$ yarn install
-$ yarn test
+$ ./run_tests.sh
  ```
 
 
@@ -145,8 +154,11 @@ Your boilerplate is backed with a MySQL, you will find the client connection [he
 The database contains only one table, `users`, unpopulated.
 
 
-**Note**: Only hashes of email and password are stored in the database. Use the `hash` function in the 
+**Note**: Only hashes of password are stored in the database. Use the `hash` function in the 
 `utils` module if you have to compare hashes.
+
+Same for emails, there are encrypted using `SHA256` before being stored. Use the `decrypt`
+function in the `utils` module if you need to decrypt stored email.
 
 
 In case you need to store large files, the boilerplate is also backed with a [MongoDB](https://github.com/TommyStarK/REST-API-Node-Boilerplate/tree/master/src/database/mongo.js).

@@ -1,7 +1,8 @@
 import { MongoClient, GridFSBucket } from 'mongodb';
 
-let db;
 let bucket;
+let client;
+let db;
 
 const userValidator = {
   validator: {
@@ -54,13 +55,13 @@ function checkCollections() {
 export default {
   connect: async (cfg) => {
     try {
-      if (db !== undefined && bucket !== undefined) {
+      if (db !== undefined && bucket !== undefined && client.isConnected()) {
         console.log('Mongo client already connected.');
         return;
       }
 
       const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
-      const client = await MongoClient.connect(url, { useNewUrlParser: true });
+      client = await MongoClient.connect(url, { useNewUrlParser: true });
       db = client.db(cfg.database);
       bucket = new GridFSBucket(db);
       await checkCollections();
@@ -75,8 +76,10 @@ export default {
 
   quit: async () => {
     try {
-      // await db.logout();
-      // await db.close();
+      await client.logout();
+      // await client.close(true);
+      db = undefined;
+      bucket = undefined;
     } catch (error) {
       throw (error);
     }

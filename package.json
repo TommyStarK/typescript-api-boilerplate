@@ -4,10 +4,12 @@
   "description": "Experimental boilerplate of a REST API.",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
     "build": "babel src --out-dir dist",
+    "debug": "node --inspect-brk dist/index.js",
     "serve": "node dist/index.js",
-    "test": "ava"
+    "start": "nodemon --exec babel-node src/index.js",
+    "startAva": "ava",
+    "test": "./run_tests.sh"
   },
   "author": "TommyStark <thomasmilox@gmail.com>",
   "license": "MIT",
