@@ -8,7 +8,7 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 
 - ES6 support using [Babel](https://babeljs.io/)
 - Auto server restart thanks to [nodemon](https://github.com/remy/nodemon)
-- Async/Await pattern implemented
+- Async/Await syntax
 - Authentication using [jsonwebtoken](https://jwt.io/)
 - Body parsing
 - Cors Enabled
