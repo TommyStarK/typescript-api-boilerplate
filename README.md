@@ -157,7 +157,7 @@ The database contains only one table, `users`, unpopulated.
 **Note**: Only hashes of password are stored in the database. Use the `hash` function in the 
 `utils` module if you have to compare hashes.
 
-Same for emails, they are encrypted using `SHA256` before being stored. Use the `decrypt`
+Same for emails, they are encrypted using `AES256` before being stored. Use the `decrypt`
 function in the `utils` module if you need to decrypt stored email.
 
 
