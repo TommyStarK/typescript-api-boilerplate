@@ -6,7 +6,19 @@
 
 A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/) to store large files.
 
+For demo purposes, some features have been integrated to the boilerplate in order to have reusable base "modules" or at least a clean and clear architecture to implement new ones.These "modules" manage the following "services":
 
+- Account managment (register/unregister an account)
+- Authentication
+- Per-User media management system (upload/download/list/delete pictures)
+
+The goal is to define a healthy architecture of a REST API connected to one or more backend, in this case a MySQL to store user data and a MongoDB to store pictures of each user. The whole accompanied by a simple authentication system.
+
+**Note**: Only hashes of password are stored in the database. Use the `hash` function in the
+`utils` module if you have to compare hashes.
+
+Same for emails, they are encrypted using `AES256` before being stored. Use the `decrypt`
+function in the `utils` module if you need to decrypt stored email.
 
 # Features
 
@@ -94,15 +106,15 @@ curl -H "Authorization: INSERT_YOUR_TOKEN" -F file=@README.md \
 
 # Get your pictures
 curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET \
-  -X POST http://localhost:3001/api.boilerplate/pictures
+  http://localhost:3001/api.boilerplate/pictures
 
 # Get a specific picture
 curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET \
-  -X POST http://localhost:3001/api.boilerplate/picture/PICTURE_ID
+  http://localhost:3001/api.boilerplate/picture/PICTURE_ID
 
 # Delete a specific picture
 curl -H "Authorization: INSERT_YOUR_TOKEN" --request DELETE \
-  -X POST http://localhost:3001/api.boilerplate/picture/PICTURE_ID
+  http://localhost:3001/api.boilerplate/picture/PICTURE_ID
 
 # Unregister your account
 $ curl -H "Content-Type: application/json" --request DELETE \
