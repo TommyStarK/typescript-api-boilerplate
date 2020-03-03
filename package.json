@@ -2,14 +2,15 @@
   "name": "node-rest-api-boilerplate",
   "version": "1.0.0",
   "description": "Experimental boilerplate of a REST API.",
-  "main": "src/index.js",
+  "main": "server/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "babel server --out-dir dist",
     "debug": "node --inspect-brk dist/index.js",
     "serve": "node dist/index.js",
-    "start": "nodemon --exec babel-node src/index.js",
-    "startAva": "ava",
-    "test": "./run_tests.sh"
+    "start": "nodemon --exec babel-node server/index.js",
+    "startAva": "nyc --reporter=lcov ava",
+    "test": "./scripts/run_tests.sh",
+    "coverage": "codecov"
   },
   "author": "TommyStark <thomasmilox@gmail.com>",
   "license": "MIT",
@@ -33,17 +34,20 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "body-parser": "^1.17.1",
+    "codecov": "^3.6.5",
     "cors": "^2.8.3",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
     "express": "^4.15.2",
-    "ioredis": "^4.2.0",
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
+    "multer": "^1.4.2",
     "mysql": "^2.16.0",
-    "uniqid": "^5.0.3"
+    "nyc": "^15.0.0",
+    "uniqid": "^5.0.3",
+    "winston": "^3.2.1"
   },
   "resolutions": {
     "**/event-stream": "^4.0.1"
@@ -57,15 +61,22 @@
       "@babel/polyfill"
     ],
     "babel": {
-			"testOptions": {
-				"plugins": [
+      "testOptions": {
+        "plugins": [
           "@babel/plugin-syntax-dynamic-import",
           "@babel/plugin-syntax-import-meta",
-          ["@babel/plugin-proposal-class-properties", { "loose": false }],
+          [
+            "@babel/plugin-proposal-class-properties",
+            {
+              "loose": false
+            }
+          ],
           "@babel/plugin-proposal-json-strings"
         ],
-				"presets": ["@babel/preset-env"]
-			}
-		}
+        "presets": [
+          "@babel/preset-env"
+        ]
+      }
+    }
   }
 }

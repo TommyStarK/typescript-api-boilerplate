@@ -1,9 +1,13 @@
 import fs from 'fs';
 import crypto from 'crypto';
 
-const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+import config from '../config';
+
 const algorithm = 'aes-256-ctr';
-const password = 'd6F3Efeq';
+const iv = crypto.randomBytes(16);
+const password = crypto.createHash('sha256').update(String(config.app.secret)).digest('base64').substr(0, 32);
+// eslint-disable-next-line no-useless-escape
+const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const utils = {
   checkStringLengthInBytes: target => Buffer.byteLength(target, 'utf8') === 24,
@@ -18,14 +22,14 @@ const utils = {
   },
 
   encrypt: (target) => {
-    let cipher = crypto.createCipher(algorithm, password)
+    const cipher = crypto.createCipheriv(algorithm, password, iv);
     let crypted = cipher.update(target, 'utf8', 'hex');
     crypted += cipher.final('hex');
     return crypted;
   },
-   
+
   decrypt: (target) => {
-    let decipher = crypto.createDecipher(algorithm, password)
+    const decipher = crypto.createDecipheriv(algorithm, password, iv);
     let dec = decipher.update(target, 'hex', 'utf8');
     dec += decipher.final('utf8');
     return dec;

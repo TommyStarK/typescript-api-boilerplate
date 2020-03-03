@@ -1,0 +1,19 @@
+sudo: required
+
+language: node_js
+node_js:
+    - 12
+
+services:
+    - docker
+
+cache:
+    yarn: true
+
+before_script:
+    - yarn run eslint .
+
+script:
+    - yarn test
+
+after_success: yarn coverage

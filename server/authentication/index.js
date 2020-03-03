@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import config from '../config';
-import mysql from '../database/mysql';
+import mysql from '../storage/mysql';
 
 async function authMiddleware(request, response, next) {
   const token = (request.body && request.body.access_token)
@@ -10,12 +10,10 @@ async function authMiddleware(request, response, next) {
 
   if (token) {
     try {
-      const decoded = await jwt.verify(token, config.app.secret);
+      const decoded = jwt.verify(token, config.app.secret);
       request.decoded = decoded;
     } catch (error) {
-      response.status(401).json(
-        { status: 401, success: false, message: 'Invalid token' },
-      );
+      response.status(401).json({ status: 401, message: 'Invalid token' });
       return;
     }
 
@@ -27,9 +25,7 @@ async function authMiddleware(request, response, next) {
       );
 
       if (!results.length) {
-        response.status(403).json(
-          { status: 403, success: false, message: 'Forbidden' },
-        );
+        response.status(403).json({ status: 403, message: 'Forbidden' });
         return;
       }
 
@@ -38,9 +34,7 @@ async function authMiddleware(request, response, next) {
       next(error);
     }
   } else {
-    response.status(401).json(
-      { status: 401, success: false, message: 'No token provided' },
-    );
+    response.status(401).json({ status: 401, message: 'No token provided' });
   }
 }
 

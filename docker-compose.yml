@@ -1,6 +1,6 @@
-version: "3.0"
+version: '3.7'
 
-networks: 
+networks:
   boilerplate:
 
 volumes:
@@ -16,46 +16,27 @@ volumes:
       type: none
       o: bind
       device: /var/lib/mysql
-  redis_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/redis/data
 
 services:
-
-  cache:
-    container_name: "cache"
-    image: redis:alpine
-    command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - "6379:6379"
-    networks: 
-      - boilerplate
-    volumes:
-      - redis_volume:/data
-    restart: always
-
   mongodb:
-    container_name: "mongodb"
+    container_name: mongodb
     image: mongo:latest
     ports:
       - "27017:27017"
-    networks: 
+    networks:
       - boilerplate
     volumes:
       - mongodb_volume:/data/db
     restart: always
 
   mysql:
-    container_name: "mysql"
+    container_name: mysql
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
     ports:
       - "3306:3306"
-    networks: 
+    networks:
       - boilerplate
     volumes:
       - mysql_volume:/var/lib/mysql
@@ -67,17 +48,14 @@ services:
     command: ["./wait_for_it.sh", "mysql:3306", "--", "yarn", "serve"]
     container_name: "api"
     depends_on:
-      - cache
       - mongodb
       - mysql
-    environment: 
-      - REDIS_URL=cache
+    environment:
       - MONGO_URI=mongodb
       - MYSQL_URL=mysql
     ports:
       - "3001:3001"
       - "8443:8443"
-    networks: 
+    networks:
       - boilerplate
     restart: always
-    
