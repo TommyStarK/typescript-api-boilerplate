@@ -14,6 +14,36 @@ const userValidator = {
           bsonType: 'string',
           description: 'must be a string and is required',
         },
+        pictures: {
+          bsonType: 'array',
+          items: {
+            bsonType: 'object',
+            properties: {
+              name: { bsonType: 'string', description: 'must be a string' },
+              hashname: { bsonType: 'string', description: 'must be a string' },
+              encoding: { bsonType: 'string', description: 'must be a string' },
+              mimetype: { bsonType: 'string', description: 'must be a string' },
+              size: { bsonType: 'int', description: 'must be an integer' },
+              fileId: {
+                bsonType: 'objectId',
+                description: 'must be a MongoDB ObjectId',
+              },
+            },
+          },
+        },
+        videos: {
+          bsonType: 'array',
+          items: {
+            bsonType: 'object',
+            properties: {
+              name: { bsonType: 'string', description: 'must be a string' },
+              fileId: {
+                bsonType: 'objectId',
+                description: 'must be a MongoDB ObjectId',
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -21,11 +51,11 @@ const userValidator = {
   validationAction: 'error',
 };
 
+
 function checkCollections() {
   return new Promise((resolve, reject) => {
     const map = new Map();
     const collectionsRequired = [{ name: 'users', validator: userValidator }];
-
 
     try {
       db.listCollections().toArray((err, collections) => {
@@ -56,12 +86,11 @@ export default {
   connect: async (cfg) => {
     try {
       if (db !== undefined && bucket !== undefined && client.isConnected()) {
-        console.log('Mongo client already connected.');
         return;
       }
 
       const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
-      client = await MongoClient.connect(url, { useNewUrlParser: true });
+      client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
       db = client.db(cfg.database);
       bucket = new GridFSBucket(db);
       await checkCollections();
