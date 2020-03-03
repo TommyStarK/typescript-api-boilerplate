@@ -8,8 +8,9 @@
     "debug": "node --inspect-brk dist/index.js",
     "serve": "node dist/index.js",
     "start": "nodemon --exec babel-node server/index.js",
-    "startAva": "nyc ava",
-    "test": "./scripts/run_tests.sh"
+    "startAva": "nyc --reporter=lcov ava",
+    "test": "./scripts/run_tests.sh",
+    "coverage": "codecov"
   },
   "author": "TommyStark <thomasmilox@gmail.com>",
   "license": "MIT",
@@ -33,6 +34,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "body-parser": "^1.17.1",
+    "codecov": "^3.6.5",
     "cors": "^2.8.3",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
