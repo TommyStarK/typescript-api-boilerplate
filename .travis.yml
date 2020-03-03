@@ -25,11 +25,6 @@ before_install:
 cache:
     yarn: true
 
-before_script:
-    - docker -v
-    - docker-compose -v
-    - node -v
-
 script:
     - yarn test
 
