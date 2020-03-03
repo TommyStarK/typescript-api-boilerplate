@@ -10,6 +10,9 @@ services:
 cache:
     yarn: true
 
+before_script:
+    - yarn run eslint .
+
 script:
     - yarn test
 

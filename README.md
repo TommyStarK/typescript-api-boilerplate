@@ -6,7 +6,7 @@
 
 A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/) to store large files.
 
-For demo purposes, some features have been integrated to the boilerplate in order to have reusable base "modules" or at least a clean and clear architecture to implement new ones.These "modules" manage the following "services":
+For demo purposes, some features have been integrated to the boilerplate in order to have reusable base "modules" or at least a clean and clear architecture to implement new ones. These "modules" manage the following "services":
 
 - Account managment (register/unregister an account)
 - Authentication
@@ -66,6 +66,7 @@ Each Contribution is welcomed and encouraged. I do not claim to cover each use c
 Run the following commands to run the unit/integration tests:
 
  ```bash
+$ yarn install
 $ yarn test
  ```
 

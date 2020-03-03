@@ -69,6 +69,17 @@ test.serial('register successfully a new account', async (t) => {
   t.is(res.status, 201);
 });
 
+test.serial('failed to register a new account: email missing', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .post(`/${config.app.url}/register`)
+    .send({ username: 'ava', password: '123123' });
+
+  // eslint-disable-next-line quotes
+  t.true(res.body.message === `Body missing 'email' field`);
+  t.is(res.status, 412);
+});
+
 test.serial('failed to register a new account: email already used', async (t) => {
   const { app } = t.context;
   const res = await request(app)
@@ -76,6 +87,17 @@ test.serial('failed to register a new account: email already used', async (t) =>
     .send({ username: 'ava', password: '123123', email: 'ava@rocks.com' });
 
   t.is(res.status, 409);
+});
+
+test.serial('failed to retrieve a valid token, password not provided', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .post(`/${config.app.url}/authorize`)
+    .send({ username: 'ava' });
+
+  // eslint-disable-next-line quotes
+  t.true(res.body.message === `Body missing 'password' field`);
+  t.is(res.status, 412);
 });
 
 test.serial('successfully retrieve a valid token', async (t) => {
@@ -154,6 +176,53 @@ test.serial('upload a picture which already exists', async (t) => {
 
   t.true(res.body.message === "Conflict: Picture 'test.png' already exists");
   t.is(res.status, 409);
+});
+
+test.serial('upload a new picture, a second time', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .post(`/${config.app.url}/picture`)
+    .set('x-access-token', token)
+    .attach('file', './test/testdata/test2.png');
+
+  t.true(res.body.pictureName === 'test2.png');
+  t.true(res.body.pictureID !== undefined && res.body.pictureID.length > 0);
+  t.is(res.status, 201);
+  await new Promise(r => setTimeout(r, 1000));
+});
+
+test.serial('delete a specific picture', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .delete(`/${config.app.url}/picture/${pictureID}`)
+    .set('x-access-token', token);
+
+  t.true(res.body.message === `Picture with ID (${pictureID}) has been deleted`);
+  t.is(res.status, 200);
+  await new Promise(r => setTimeout(r, 1000));
+});
+
+
+test.serial('failed to unregister account, username not provided', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .delete(`/${config.app.url}/unregister`)
+    .send({ password: '123123' });
+
+  // eslint-disable-next-line quotes
+  t.true(res.body.message === `Body missing 'username' field`);
+  t.is(res.status, 412);
+});
+
+test.serial('unregister account', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .delete(`/${config.app.url}/unregister`)
+    .send({ username: 'ava', password: '123123' });
+
+  t.true(res.body.message === 'Account has been unregistered');
+  t.is(res.status, 200);
+  await new Promise(r => setTimeout(r, 1000));
 });
 
 test.afterEach.always(async () => {
