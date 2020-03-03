@@ -3,7 +3,7 @@ docker-compose -f test/compose-test.yml --project-name boilerplate up --detach -
 
 docker build . -t ava:latest;
 
-docker run -ti --rm --network=boilerplate_default -e MONGO_URI=mongodb -e MYSQL_URL=mysql \
+docker run -ti --rm --network=boilerplate_default -v `pwd`:/home -e MONGO_URI=mongodb -e MYSQL_URL=mysql \
 -p 3001:3001 -p 8443:8443 ava:latest bash -c './scripts/wait_for_it.sh mysql:3306 -- yarn startAva; exit $?';
 
 rc=$?;
