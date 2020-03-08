@@ -17,7 +17,7 @@ const checkPayloadIsValid = (payload, emailRequired) => {
   for (const field of accountDetails) {
     if ((emailRequired || (!emailRequired && field !== 'email')) && !(field in payload)) {
       return {
-        status: 412,
+        status: 422,
         success: false,
         message: `Body missing '${field}' field`,
       };
@@ -25,7 +25,7 @@ const checkPayloadIsValid = (payload, emailRequired) => {
   }
 
   return {
-    status: 412,
+    status: 422,
     success: emailRequired ? utils.validateEmail(payload.email) : true,
     message: 'Invalid email',
   };

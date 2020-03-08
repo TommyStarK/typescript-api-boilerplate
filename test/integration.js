@@ -57,7 +57,7 @@ test.serial('register new account without providing email: should fail', async (
     .post(`/${config.app.url}/register`)
     .send({ username: 'ava', password: '123123' });
 
-  t.is(res.status, 412);
+  t.is(res.status, 422);
 });
 
 test.serial('register successfully a new account', async (t) => {
@@ -77,7 +77,7 @@ test.serial('failed to register a new account: email missing', async (t) => {
 
   // eslint-disable-next-line quotes
   t.true(res.body.message === `Body missing 'email' field`);
-  t.is(res.status, 412);
+  t.is(res.status, 422);
 });
 
 test.serial('failed to register a new account: email already used', async (t) => {
@@ -97,7 +97,7 @@ test.serial('failed to retrieve a valid token, password not provided', async (t)
 
   // eslint-disable-next-line quotes
   t.true(res.body.message === `Body missing 'password' field`);
-  t.is(res.status, 412);
+  t.is(res.status, 422);
 });
 
 test.serial('successfully retrieve a valid token', async (t) => {
@@ -211,7 +211,7 @@ test.serial('failed to unregister account, username not provided', async (t) => 
 
   // eslint-disable-next-line quotes
   t.true(res.body.message === `Body missing 'username' field`);
-  t.is(res.status, 412);
+  t.is(res.status, 422);
 });
 
 test.serial('unregister account', async (t) => {
