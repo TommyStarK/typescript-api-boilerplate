@@ -1,7 +1,5 @@
 #!/bin/bash
-if [[ -z "${BUILD_NUMBER}" ]]; then
-    BUILD_NUMBER=0
-fi
+BUILD_NUMBER="${BUILD_NUMBER:-0}"
 
 docker-compose -f test/compose-test.yml --project-name boilerplate_${BUILD_NUMBER} up --detach --build --force-recreate;
 
