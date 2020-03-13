@@ -2,17 +2,13 @@ version: '3.7'
 
 services:
   mongodb:
-    container_name: mongodb
+    hostname: mongodb
     image: mongo:latest
-    ports:
-      - "27017:27017"
     restart: always
 
   mysql:
-    container_name: mysql
+    hostname: mysql
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
-    ports:
-      - "3306:3306"
     restart: always
