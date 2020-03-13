@@ -4,11 +4,9 @@ services:
   mongodb:
     hostname: mongodb
     image: mongo:latest
-    restart: always
 
   mysql:
     hostname: mysql
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
-    restart: always
