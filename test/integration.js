@@ -123,6 +123,17 @@ test.serial('failed to retrieve a valid token: wrong credentials', async (t) => 
   t.is(res.status, 401);
 });
 
+test.serial('test hello route', async (t) => {
+  const { app } = t.context;
+  const res = await request(app)
+    .get(`/${config.app.url}/hello`)
+    .set('x-access-token', token);
+
+  t.true(res.body.message.length > 0);
+  t.true(res.body.message === 'Hello ava');
+  t.is(res.status, 200);
+});
+
 test.serial('query all picture but provide an invalid token: should fail', async (t) => {
   const { app } = t.context;
   const res = await request(app)
