@@ -31,19 +31,6 @@ const userValidator = {
             },
           },
         },
-        videos: {
-          bsonType: 'array',
-          items: {
-            bsonType: 'object',
-            properties: {
-              name: { bsonType: 'string', description: 'must be a string' },
-              fileId: {
-                bsonType: 'objectId',
-                description: 'must be a MongoDB ObjectId',
-              },
-            },
-          },
-        },
       },
     },
   },
@@ -64,7 +51,7 @@ function checkCollections() {
           return;
         }
 
-        const cls = collections.map(item => item.name);
+        const cls = collections.map((item) => item.name);
 
         cls.forEach(map.set.bind(map));
 
@@ -84,19 +71,15 @@ function checkCollections() {
 
 export default {
   connect: async (cfg) => {
-    try {
-      if (db !== undefined && bucket !== undefined && client.isConnected()) {
-        return;
-      }
-
-      const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
-      client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-      db = client.db(cfg.database);
-      bucket = new GridFSBucket(db);
-      await checkCollections();
-    } catch (error) {
-      throw (error);
+    if (db !== undefined && bucket !== undefined && client.isConnected()) {
+      return;
     }
+
+    const url = `mongodb://${cfg.uri}:${cfg.port}/${cfg.database}`;
+    client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+    db = client.db(cfg.database);
+    bucket = new GridFSBucket(db);
+    await checkCollections();
   },
 
   getBucket: () => bucket,
@@ -104,13 +87,9 @@ export default {
   getDatabase: () => db,
 
   quit: async () => {
-    try {
-      await client.logout();
-      // await client.close(true);
-      db = undefined;
-      bucket = undefined;
-    } catch (error) {
-      throw (error);
-    }
+    await client.logout();
+    // await client.close(true);
+    db = undefined;
+    bucket = undefined;
   },
 };

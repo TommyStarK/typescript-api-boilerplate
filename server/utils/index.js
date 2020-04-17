@@ -10,15 +10,11 @@ const password = crypto.createHash('sha256').update(String(config.app.secret)).d
 const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const utils = {
-  checkStringLengthInBytes: target => Buffer.byteLength(target, 'utf8') === 24,
+  checkStringLengthInBytes: (target) => Buffer.byteLength(target, 'utf8') === 24,
 
   encodeBase64: async (filePath) => {
-    try {
-      const data = await utils.readFileAsync(filePath);
-      return Buffer.from(data).toString('base64');
-    } catch (error) {
-      throw (error);
-    }
+    const data = await utils.readFileAsync(filePath);
+    return Buffer.from(data).toString('base64');
   },
 
   encrypt: (target) => {
@@ -41,7 +37,7 @@ const utils = {
     return hash.digest('hex');
   },
 
-  readdirAsync: filePath => new Promise((resolve, reject) => {
+  readdirAsync: (filePath) => new Promise((resolve, reject) => {
     fs.readdir(filePath, (error, result) => {
       if (error) {
         reject(error);
@@ -51,7 +47,7 @@ const utils = {
     });
   }),
 
-  readFileAsync: filePath => new Promise((resolve, reject) => {
+  readFileAsync: (filePath) => new Promise((resolve, reject) => {
     fs.readFile(filePath, (error, result) => {
       if (error) {
         reject(error);
@@ -61,7 +57,7 @@ const utils = {
     });
   }),
 
-  unlinkAsync: filePath => new Promise((resolve, reject) => {
+  unlinkAsync: (filePath) => new Promise((resolve, reject) => {
     fs.unlink(filePath, (error, result) => {
       if (error) {
         reject(error);
@@ -81,7 +77,7 @@ const utils = {
     });
   }),
 
-  validateEmail: email => re.test(email),
+  validateEmail: (email) => re.test(email),
 };
 
 export default utils;

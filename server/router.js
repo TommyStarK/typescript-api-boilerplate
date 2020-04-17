@@ -10,7 +10,7 @@ const upload = multer({ dest: '.uploads/' });
 
 // tiny async handler for express midlleware
 // http://expressjs.com/en/advanced/best-practice-performance.html#handle-exceptions-properly
-const asyncWrapper = fn => (...args) => fn(...args).catch(args[2]);
+const asyncWrapper = (fn) => (...args) => fn(...args).catch(args[2]);
 
 // First path handled
 router.get(`/${config.app.url}`, (_, response) => response.status(200).json({

@@ -165,7 +165,7 @@ test.serial('upload a new picture', async (t) => {
   t.true(res.body.pictureID !== undefined && res.body.pictureID.length > 0);
   t.is(res.status, 201);
   pictureID = String(res.body.pictureID);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 1000));
 });
 
 test.serial('get a specific picture by ID', async (t) => {
@@ -199,7 +199,7 @@ test.serial('upload a new picture, a second time', async (t) => {
   t.true(res.body.pictureName === 'test2.png');
   t.true(res.body.pictureID !== undefined && res.body.pictureID.length > 0);
   t.is(res.status, 201);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 1000));
 });
 
 test.serial('delete a specific picture', async (t) => {
@@ -210,7 +210,7 @@ test.serial('delete a specific picture', async (t) => {
 
   t.true(res.body.message === `Picture with ID (${pictureID}) has been deleted`);
   t.is(res.status, 200);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 1000));
 });
 
 
@@ -233,7 +233,7 @@ test.serial('unregister account', async (t) => {
 
   t.true(res.body.message === 'Account has been unregistered');
   t.is(res.status, 200);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 1000));
 });
 
 test.afterEach.always(async () => {

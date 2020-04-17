@@ -33,132 +33,120 @@ const checkPayloadIsValid = (payload, emailRequired) => {
 
 const userController = {
   authenticate: async (payload) => {
-    try {
-      const res = checkPayloadIsValid(payload, false);
-      if (!res.success) {
-        return (({ status, message }) => ({ status, message }))(res);
-      }
-
-      const query = mysql.query();
-      const { username, password } = payload;
-      const passwordHash = utils.hash(password);
-      const results = await query(
-        'select userID, username from users where username = ? and password = ? order by username limit 1',
-        [username, passwordHash],
-      );
-
-      if (!results.length) {
-        return { status: 401, message: 'Wrong credentials' };
-      }
-
-      const tokenPayload = {
-        username: results[0].username,
-        userID: results[0].userID,
-      };
-
-      const newToken = jwt.sign(
-        tokenPayload, config.app.secret, { expiresIn: config.app.expiresIn },
-      );
-
-      return { status: 200, token: newToken };
-    } catch (error) {
-      throw (error);
+    const res = checkPayloadIsValid(payload, false);
+    if (!res.success) {
+      return (({ status, message }) => ({ status, message }))(res);
     }
+
+    const query = mysql.query();
+    const { username, password } = payload;
+    const passwordHash = utils.hash(password);
+    const results = await query(
+      'select userID, username from users where username = ? and password = ? order by username limit 1',
+      [username, passwordHash],
+    );
+
+    if (!results.length) {
+      return { status: 401, message: 'Wrong credentials' };
+    }
+
+    const tokenPayload = {
+      username: results[0].username,
+      userID: results[0].userID,
+    };
+
+    const newToken = jwt.sign(
+      tokenPayload, config.app.secret, { expiresIn: config.app.expiresIn },
+    );
+
+    return { status: 200, token: newToken };
   },
 
   create: async (payload) => {
-    try {
-      const res = checkPayloadIsValid(payload, true);
-      if (!res.success) {
-        return (({ status, message }) => ({ status, message }))(res);
-      }
-
-      const query = mysql.query();
-      const { username, email, password } = payload;
-      const emailEncrypted = utils.encrypt(email);
-      const passwordHash = utils.hash(password);
-      const results = await query(
-        'select email, username from users where username = ? or email = ? order by email limit 1',
-        [username, emailEncrypted],
-      );
-
-      if (results.length > 0) {
-        let target = '';
-        let content = '';
-
-        if (results[0].username === username) {
-          target = 'Username';
-          content = results[0].username;
-        } else {
-          target = 'Email';
-          content = email;
-        }
-
-        return {
-          status: 409,
-          message: `Conflict: ${target} [${content}] already used`,
-        };
-      }
-
-      await query(
-        'insert into `users`(`email`, `password`, `userID`, `username`) values(?,?,?,?)',
-        [emailEncrypted, passwordHash, uniqid(), username],
-      );
-
-      return { status: 201, message: 'Account has been registered' };
-    } catch (error) {
-      throw (error);
+    const res = checkPayloadIsValid(payload, true);
+    if (!res.success) {
+      return (({ status, message }) => ({ status, message }))(res);
     }
+
+    const query = mysql.query();
+    const { username, email, password } = payload;
+    const emailEncrypted = utils.encrypt(email);
+    const passwordHash = utils.hash(password);
+    const results = await query(
+      'select email, username from users where username = ? or email = ? order by email limit 1',
+      [username, emailEncrypted],
+    );
+
+    if (results.length > 0) {
+      let target = '';
+      let content = '';
+
+      if (results[0].username === username) {
+        target = 'Username';
+        content = results[0].username;
+      } else {
+        target = 'Email';
+        content = email;
+      }
+
+      return {
+        status: 409,
+        message: `Conflict: ${target} [${content}] already used`,
+      };
+    }
+
+    await query(
+      'insert into `users`(`email`, `password`, `userID`, `username`) values(?,?,?,?)',
+      [emailEncrypted, passwordHash, uniqid(), username],
+    );
+
+    return { status: 201, message: 'Account has been registered' };
   },
 
   delete: async (payload) => {
-    try {
-      const res = checkPayloadIsValid(payload, false);
-      if (!res.success) {
-        return (({ status, message }) => ({ status, message }))(res);
-      }
+    const res = checkPayloadIsValid(payload, false);
+    if (!res.success) {
+      return (({ status, message }) => ({ status, message }))(res);
+    }
 
-      const query = mysql.query();
-      const { username, password } = payload;
-      const passwordHash = utils.hash(password);
-      const results = await query(
-        'select userID from users where username = ? and password = ? order by username limit 1',
-        [username, passwordHash],
-      );
+    const query = mysql.query();
+    const { username, password } = payload;
+    const passwordHash = utils.hash(password);
+    const results = await query(
+      'select userID from users where username = ? and password = ? order by username limit 1',
+      [username, passwordHash],
+    );
 
-      if (!results.length) {
-        return { status: 401, message: 'Wrong credentials' };
-      }
+    if (!results.length) {
+      return { status: 401, message: 'Wrong credentials' };
+    }
 
-      await query(
-        'delete from users where username = ? and password = ? order by username limit 1',
-        [username, passwordHash],
-      );
+    await query(
+      'delete from users where username = ? and password = ? order by username limit 1',
+      [username, passwordHash],
+    );
 
-      const db = mongo.getDatabase();
-      const user = await db.collection('users').findOneAndDelete({
-        userID: results[0].userID,
+    const db = mongo.getDatabase();
+    const user = await db.collection('users').findOneAndDelete({
+      userID: results[0].userID,
+    });
+
+    const clean = async (element) => {
+      const target = await db.collection('fs.files').findOneAndDelete({
+        _id: element.fileid,
       });
 
-      const clean = async (element) => {
-        const target = await db.collection('fs.files').findOneAndDelete({
-          _id: element.fileid,
-        });
+      await db.collection('fs.chunks').deleteMany({
+        // eslint-disable-next-line no-underscore-dangle
+        files_id: target.value._id,
+      });
+    };
 
-        await db.collection('fs.chunks').deleteMany({
-          // eslint-disable-next-line no-underscore-dangle
-          files_id: target.value._id,
-        });
-      };
-
-      if (user.value) {
-        await Promise.all(user.value.pictures.map(elem => clean(elem)));
-      }
-
-      return { status: 200, message: 'Account has been unregistered' };
-    } catch (error) {
-      throw (error);
+    if (user.value) {
+      await Promise.all(user.value.pictures.map((elem) => clean(elem)));
     }
+
+    return { status: 200, message: 'Account has been unregistered' };
   },
 };
 
