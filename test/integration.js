@@ -25,7 +25,7 @@ function createApp() {
   return app;
 }
 
-test.beforeEach(async (t) => {
+test.before(async (t) => {
   await mongo.connect(config.mongo);
   await mysql.connect(config.mysql);
   const app = createApp();
@@ -236,7 +236,7 @@ test.serial('unregister account', async (t) => {
   await new Promise((r) => setTimeout(r, 1000));
 });
 
-test.afterEach.always(async () => {
+test.after(async () => {
   await mongo.quit();
   await mysql.quit();
 });
