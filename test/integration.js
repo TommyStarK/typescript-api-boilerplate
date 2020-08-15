@@ -213,7 +213,6 @@ test.serial('delete a specific picture', async (t) => {
   await new Promise((r) => setTimeout(r, 1000));
 });
 
-
 test.serial('failed to unregister account, username not provided', async (t) => {
   const { app } = t.context;
   const res = await request(app)

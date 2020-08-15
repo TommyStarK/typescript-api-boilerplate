@@ -38,7 +38,6 @@ const userValidator = {
   validationAction: 'error',
 };
 
-
 function checkCollections() {
   return new Promise((resolve, reject) => {
     const map = new Map();
