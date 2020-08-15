@@ -8,7 +8,7 @@
     "debug": "node --inspect-brk dist/index.js",
     "serve": "node dist/index.js",
     "start": "nodemon --exec babel-node server/index.js",
-    "startAva": "nyc --reporter=lcov ava -T 100000 --verbose",
+    "startAva": "c8 --reporter=lcov --report-dir=coverage ava -T 100000 --verbose",
     "test": "./scripts/run_tests.sh",
     "coverage": "codecov"
   },
@@ -28,6 +28,8 @@
     "@babel/register": "^7.0.0",
     "ava": "^1.0.1",
     "babel-eslint": "^10.1.0",
+    "c8": "^7.3.0",
+    "codecov": "^3.7.1",
     "eslint": "^5.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
@@ -36,14 +38,12 @@
   },
   "dependencies": {
     "body-parser": "^1.17.1",
-    "codecov": "^3.7.1",
     "cors": "^2.8.3",
     "express": "^4.15.2",
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
     "multer": "^1.4.2",
     "mysql": "^2.16.0",
-    "nyc": "^15.0.0",
     "uniqid": "^5.0.3",
     "winston": "^3.2.1"
   },
