@@ -1,7 +1,7 @@
 # REST-API-Node-Boilerplate
 
 
-[![Build Status](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate)
+[![Build Status](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/13403/branches/224530/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=13403&bid=224530)
 
 
 A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/) to store large files.
