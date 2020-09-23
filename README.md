@@ -8,9 +8,9 @@ A simple and customizable RESTful API boilerplate written in [Node.js](https://n
 
 For demo purposes, some features have been integrated to the boilerplate in order to have reusable base "modules" or at least a clean and clear architecture to implement new ones. These "modules" manage the following "services":
 
-- Account managment (register/unregister an account)
+- Account management (register/unregister an account)
 - Authentication
-- Per-User media management system (upload/download/list/delete pictures)
+- Per-User media management system (upload|download|list|delete pictures)
 
 The goal is to define a healthy architecture of a REST API connected to one or more backend, in this case a MySQL to store user data and a MongoDB to store pictures of each user. The whole accompanied by a simple authentication system.
 
