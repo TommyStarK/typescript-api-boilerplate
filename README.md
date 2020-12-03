@@ -1,6 +1,7 @@
 # REST-API-Node-Boilerplate
 
 
+
 [![Build Status](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/13403/branches/224530/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=13403&bid=224530) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 
