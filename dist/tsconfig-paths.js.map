@@ -1,1 +1,0 @@
-{"version":3,"file":"tsconfig-paths.js","sourceRoot":"","sources":["../tsconfig-paths.js"],"names":[],"mappings":"AAAA,MAAM,aAAa,GAAG,OAAO,CAAC,gBAAgB,CAAC,CAAC;AAChD,MAAM,QAAQ,GAAG,OAAO,CAAC,iBAAiB,CAAC,CAAC;AAE5C,MAAM,OAAO,GAAG,YAAY,CAAC,CAAC,4FAA4F;AAC1H,aAAa,CAAC,QAAQ,CAAC;IACrB,OAAO;IACP,KAAK,EAAE,QAAQ,CAAC,eAAe,CAAC,KAAK;CACtC,CAAC,CAAC"}
