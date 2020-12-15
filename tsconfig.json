@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "lib": ["dom","es2017"],
+    "allowJs": true,
+    "checkJs": false,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": false,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": ["./*"]
+    },
+    "types": ["node", "typescript", "reflect-metadata", "express"],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["./src", "tsconfig-paths.js"],
+  "exclude": ["./tests"]
+}
