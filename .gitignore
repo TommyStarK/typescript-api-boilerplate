@@ -53,3 +53,6 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# build
+dist
