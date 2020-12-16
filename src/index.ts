@@ -1,16 +1,80 @@
-// import 'reflect-metadata';
+import 'reflect-metadata';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express, { Express } from 'express';
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 
-// import utils from '@app/utils';
-// import logger from '@app/logger';
-// import { container, MySQLClient, TYPES } from '@app/storage/mysql';
+import config from '@app/config';
+import logger from '@app/logger';
 
-// logger.info(utils.validateEmail('test@test.com'));
-// logger.info(utils.hash('test') === '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08');
-// const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
-// (async () => {
-//   await mysql.connect();
-//   const conn = await mysql.getConnection();
-//   const b = await conn.query('select * from users');
-//   console.log(b);
-//   conn.release();
-// })();
+import {
+  IoCMySQLClientContainer,
+  IoCMySQLClientIdentifier,
+  MySQLClient,
+} from '@app/storage/mysql';
+
+import {
+  IoCMongoDBClientContainer,
+  IoCMongoDBClientIdentifier,
+  MongoDBClient,
+} from '@app/storage/mongodb';
+
+let httpServer; let httpsServer;
+const HTTP_PORT: string = process.env.HTTP_PORT || String(config.app.http.port);
+const HTTPS_PORT: string = process.env.HTTPS_PORT || String(config.app.https.port);
+const app: Express = express();
+
+function attemptToEnableHTTPS(expressApp: Express, name: string, cfg) {
+  try {
+    const certPath = cfg.tls.path + cfg.tls.certificate;
+    const keyPath = cfg.tls.path + cfg.tls.key;
+
+    httpsServer = https.createServer(
+      {
+        cert: fs.readFileSync(certPath, 'utf8'),
+        key: fs.readFileSync(keyPath, 'utf8'),
+      },
+      expressApp,
+    );
+
+    httpsServer.listen(HTTPS_PORT, '0.0.0.0', () => {
+      logger.info(`${name} is now running on https://localhost:${HTTPS_PORT}`);
+    });
+  } catch (error) {
+    logger.warn('Failed to enable HTTPS. Skipping...');
+  }
+}
+
+async function main() {
+  const mongodb: MongoDBClient = IoCMongoDBClientContainer.get<MongoDBClient>(IoCMongoDBClientIdentifier);
+  const mysql: MySQLClient = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
+
+  process.on('SIGINT', async () => {
+    await mongodb.disconnect();
+    await mysql.disconnect();
+    process.exit(1);
+  });
+
+  try {
+    await mongodb.connect();
+    await mysql.connect();
+  } catch (error) {
+    logger.error(error);
+    process.exit(1);
+  }
+
+  app.use('*', cors({ origin: '*' }));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  // app.use('/', router);
+
+  attemptToEnableHTTPS(app, config.app.name, config.app.https);
+  httpServer = http.createServer(app);
+  httpServer.listen(HTTP_PORT, '0.0.0.0', () => {
+    logger.info(`${config.app.name} is now running on http://localhost:${HTTP_PORT}`);
+  });
+}
+
+main();
