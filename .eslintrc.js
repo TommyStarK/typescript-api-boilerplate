@@ -4,6 +4,9 @@ module.exports = {
     commonjs: true,
     es2021: true,
   },
+  globals: {
+    Express: 'writable',
+  },
   extends: [
     'airbnb-typescript/base',
   ],
@@ -30,7 +33,7 @@ module.exports = {
       js: 'never', jsx: 'never', ts: 'never', tsx: 'never',
     }],
     '@typescript-eslint/no-unused-vars': ['error', { vars: 'all', args: 'none', ignoreRestSiblings: false }],
-    'no-underscore-dangle': ['error', { allow: ['_id', '_replaceOrCreate'] }],
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'max-classes-per-file': 'off',
     'no-param-reassign': 'off',
     'import/no-unresolved': 'off',

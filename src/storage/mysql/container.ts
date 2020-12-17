@@ -1,14 +1,11 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
+
 import { MySQLClient } from '@app/storage/mysql/client';
+import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
 
-const identifier = Symbol.for('MySQLClient');
-Object.seal(identifier);
+const IoCMySQLClientContainer = new Container();
+IoCMySQLClientContainer.bind<MySQLClient>(IoCMySQLClientIdentifier).to(MySQLClient);
+Object.seal(IoCMySQLClientContainer);
 
-const container = new Container();
-container.bind<MySQLClient>(identifier).to(MySQLClient);
-Object.seal(container);
-
-export {
-  container as IoCMySQLClientContainer,
-  identifier as IoCMySQLClientIdentifier,
-};
+export default IoCMySQLClientContainer;

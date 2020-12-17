@@ -1,14 +1,11 @@
+import 'reflect-metadata';
 import { Container } from 'inversify';
+
+import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
 import { MongoDBClient } from '@app/storage/mongodb/client';
 
-const identifier = Symbol.for('MongoDBClient');
-Object.seal(identifier);
+const IoCMongoDBClientContainer = new Container();
+IoCMongoDBClientContainer.bind<MongoDBClient>(IoCMongoDBClientIdentifier).to(MongoDBClient);
+Object.seal(IoCMongoDBClientContainer);
 
-const container = new Container();
-container.bind<MongoDBClient>(identifier).to(MongoDBClient);
-Object.seal(container);
-
-export {
-  container as IoCMongoDBClientContainer,
-  identifier as IoCMongoDBClientIdentifier,
-};
+export default IoCMongoDBClientContainer;

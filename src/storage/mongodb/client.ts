@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import { injectable } from 'inversify';
 import { MongoClient, GridFSBucket, Db } from 'mongodb';
@@ -17,15 +15,17 @@ export class MongoDBClient {
   private database: Db;
 
   private async checkDatabase() {
-    const collectionsRequired = [];
-    const files = await utils.readdirAsync(`${process.cwd()}/src/storage/mongodb/validators`);
-    files.forEach((file) => {
-      const f = file.slice(0, -3);
-      collectionsRequired.push({
-        name: f,
-        validatior: require(`@app/storage/mongodb/validators/${f}`),
-      });
+    const validatorsPath = `${process.cwd()}/src/storage/mongodb/validators`;
+    const files = await utils.readdirAsync(validatorsPath);
+
+    const promises = files.map(async (file) => {
+      const lastIndex = file.lastIndexOf('.');
+      const collection = file.substr(0, lastIndex);
+      const buffer = await utils.readFileAsync(`${validatorsPath}/${file}`);
+      return { name: collection, validator: JSON.parse(buffer.toString('utf-8')) };
     });
+
+    const collectionsRequired = await Promise.all(promises);
 
     return new Promise((resolve, reject): void => {
       const map = new Map();
@@ -42,7 +42,6 @@ export class MongoDBClient {
 
           collectionsRequired.forEach((target) => {
             if (!map.has(target.name)) {
-              console.log(target);
               this.database.createCollection(target.name, target.validator);
             }
           });

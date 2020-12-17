@@ -8,18 +8,15 @@ import https from 'https';
 
 import config from '@app/config';
 import logger from '@app/logger';
+import router from '@app/router';
 
-import {
-  IoCMySQLClientContainer,
-  IoCMySQLClientIdentifier,
-  MySQLClient,
-} from '@app/storage/mysql';
+import IoCMySQLClientContainer from '@app/storage/mysql/container';
+import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
+import { MySQLClient } from '@app/storage/mysql';
 
-import {
-  IoCMongoDBClientContainer,
-  IoCMongoDBClientIdentifier,
-  MongoDBClient,
-} from '@app/storage/mongodb';
+import IoCMongoDBClientContainer from '@app/storage/mongodb/container';
+import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+import { MongoDBClient } from '@app/storage/mongodb';
 
 let httpServer; let httpsServer;
 const HTTP_PORT: string = process.env.HTTP_PORT || String(config.app.http.port);
@@ -68,7 +65,7 @@ async function main() {
   app.use('*', cors({ origin: '*' }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  // app.use('/', router);
+  app.use('/', router);
 
   attemptToEnableHTTPS(app, config.app.name, config.app.https);
   httpServer = http.createServer(app);
