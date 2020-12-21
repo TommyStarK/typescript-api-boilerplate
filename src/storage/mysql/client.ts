@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import { injectable } from 'inversify';
-import mysql from 'mysql2/promise';
+import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 import config from '@app/config';
 import utils from '@app/utils';
@@ -9,8 +9,12 @@ type MySQLConn = mysql.PoolConnection;
 
 @injectable()
 export class MySQLClient {
-  private readonly hydratationPath: string = 'server/storage/mysql/tables';
+  private readonly hydratationPath: string = 'src/storage/mysql/tables';
   private pool: mysql.Pool;
+
+  constructor() {
+    this.pool = undefined;
+  }
 
   private async checkConnection(): Promise<void> {
     const connection: MySQLConn = await this.getConnection();
@@ -62,6 +66,13 @@ export class MySQLClient {
   public async getConnection(): Promise<MySQLConn> {
     const conn: MySQLConn = await this.pool.getConnection();
     return conn;
+  }
+
+  public processRows(rows: RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader): any[] {
+    return [rows].map((row) => (JSON.parse(JSON.stringify(row)).length ? { ...row } : undefined))
+      .filter((elem) => elem !== undefined)
+      // handle BinaryRow
+      .map((elem) => (elem['0']));
   }
 
   public query() {

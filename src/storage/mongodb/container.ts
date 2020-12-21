@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Container } from 'inversify';
 
 import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';

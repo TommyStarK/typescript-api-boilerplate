@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 import config from '@app/config';
 import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
@@ -22,13 +22,21 @@ export const authMiddleware = async (request: Request, response: Response, next:
 
     try {
       const mysql = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
-      const query = mysql.query();
-      const results = await query(
+      // const query = mysql.query();
+      const connection = await mysql.getConnection();
+      // const results = await query(
+      //   'select 1 from users where userID = ? and username = ? order by username limit 1',
+      //   [request.decoded.userID, request.decoded.username],
+      // );
+      const [rows] = await connection.query(
         'select 1 from users where userID = ? and username = ? order by username limit 1',
         [request.decoded.userID, request.decoded.username],
       );
 
-      if (!results.length) {
+      connection.release();
+      const users = mysql.processRows(rows);
+
+      if (!users.length) {
         response.status(403).json({ status: 403, message: 'Forbidden' });
         return;
       }

@@ -3,8 +3,8 @@ import { inject, injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-import { MongoDBClient } from '@app/storage/mongodb';
 import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+import { MongoDBClient } from '@app/storage/mongodb';
 import utils from '@app/utils';
 
 @injectable()

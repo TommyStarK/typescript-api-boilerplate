@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 const IoCMongoDBClientIdentifier = Symbol.for('MongoDBClient');
 Object.seal(IoCMongoDBClientIdentifier);
 

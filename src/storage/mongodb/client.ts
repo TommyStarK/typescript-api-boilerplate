@@ -14,6 +14,12 @@ export class MongoDBClient {
   private client: MongoClient;
   private database: Db;
 
+  constructor() {
+    this.bucket = undefined;
+    this.client = undefined;
+    this.database = undefined;
+  }
+
   private async checkDatabase() {
     const validatorsPath = `${process.cwd()}/src/storage/mongodb/validators`;
     const files = await utils.readdirAsync(validatorsPath);

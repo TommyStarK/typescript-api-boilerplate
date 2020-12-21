@@ -1,9 +1,6 @@
-# REST-API-Node-Boilerplate
-
-
+# typescript-api-boilerplate
 
 [![Build Status](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/REST-API-Node-Boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/TommyStarK/REST-API-Node-Boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/13403/branches/224530/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=13403&bid=224530) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-
 
 A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/) to store large files.
 
@@ -21,32 +18,29 @@ The goal is to define a healthy architecture of a REST API connected to one or m
 Same for emails, they are encrypted using `AES256` before being stored. Use the `decrypt`
 function in the `utils` module if you need to decrypt stored email.
 
-# Features
+## Features
 
-- ES6 support using [Babel](https://babeljs.io/)
 - Auto server restart thanks to [nodemon](https://github.com/remy/nodemon)
-- Async/Await syntax
 - Authentication using [jsonwebtoken](https://jwt.io/)
 - Body parsing
 - Cross-Origin Resource Sharing enabled
 - Consistent coding styles
 - Docker + data persistence
 - Express web framework
+- Inversion of Control container with [inversify](https://github.com/inversify/InversifyJS)
 - Linting with [eslint](https://eslint.org/)
 - Logging using [winston](https://github.com/winstonjs/winston)
-- MySQL table hydratation
-- Support http/https
+- MongoDB automatic collections creation and validation
+- MySQL tables hydratation
+- Support HTTP/HTTPS
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
-- Test using [AVA](https://github.com/avajs/ava)
+- Test using [Jest](https://github.com/facebook/jest)
 
-
-
-# Requirements
+## Requirements
 
 - [Docker](https://www.docker.com)
 - [Node.js 12+](https://nodejs.org/en/)
 - [Yarn](https://yarnpkg.com/)
-
 
 For MacOS, add the following paths to your docker engine:
 
@@ -55,25 +49,20 @@ For MacOS, add the following paths to your docker engine:
 
 This can be done through **Docker -> Preferences -> File sharing**
 
-
-# Contribution
+## Contribution
 
 Each Contribution is welcomed and encouraged. I do not claim to cover each use cases nor completely master the Node.js. If you encounter a non sense or any trouble, you can open an issue and I will be happy to discuss about it :smile:
 
-
-
-# Tests
+## Tests
 
 Run the following commands to run the unit/integration tests:
 
  ```bash
-$ yarn install
-$ yarn test
+❯ yarn install
+❯ yarn test
  ```
 
-
-
-# Usage
+## Usage
 
 Run the following commands to use your boilerplate:
 
@@ -124,14 +113,13 @@ $ curl -H "Content-Type: application/json" --request DELETE \
   http://localhost:3001/api.boilerplate/unregister
  ```
 
+## Customization
 
+### Config
 
-# Customization
+Check the [config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/src/config.ts) file to customize your boilerplate as you wish.
 
-## Config
-Check the [config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/server/config/index.js) file to customize your boilerplate as you wish.
-
-  ```js
+  ```typescript
   {
     app: {
       name: 'Experimental REST API boilerplate',
@@ -161,16 +149,16 @@ Check the [config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/
 
 By default, the config looks like this.
 
-
-## HTTPS
+### HTTPS
 
 To enable https, you must add your tls certificate and key to `tls/` before running your boilerplate:
 
 To generate self-signed certificate, run the following commands:
+
 ```bash
-$ openssl req -newkey rsa:2048 -new -nodes \
+❯ openssl req -newkey rsa:2048 -new -nodes \
   -keyout tls/key.pem -out tls/csr.pem
 
-$ openssl x509 -req -days 365 -in tls/csr.pem \
+❯ openssl x509 -req -days 365 -in tls/csr.pem \
   -signkey tls/key.pem -out tls/server.crt
 ```

@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 const IoCUser = {
   ControllerIdentifier: Symbol.for('UserController'),
   ServiceIdentifier: Symbol.for('UserService'),

@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
-import { MediaService } from '@app/components/media';
 import IoCMedia from '@app/components/media/symbol';
+import { MediaService } from '@app/components/media';
 
 @injectable()
 export class MediaController {

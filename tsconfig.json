@@ -14,7 +14,6 @@
     "paths": {
       "@app/*": ["./*"]
     },
-    "types": ["node", "typescript", "reflect-metadata", "express"],
     "typeRoots": [
       "./custom_typings",
       "./node_modules/@types"

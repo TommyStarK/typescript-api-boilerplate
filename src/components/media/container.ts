@@ -1,8 +1,7 @@
-import 'reflect-metadata';
 import { Container } from 'inversify';
 
-import { MediaController, MediaService } from '@app/components/media';
 import IoCMedia from '@app/components/media/symbol';
+import { MediaController, MediaService } from '@app/components/media';
 
 const IoCMediaContainer = new Container();
 IoCMediaContainer.bind<MediaController>(IoCMedia.ControllerIdentifier).to(MediaController);
