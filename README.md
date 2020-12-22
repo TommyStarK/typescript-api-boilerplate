@@ -20,16 +20,16 @@ function in the `utils` module if you need to decrypt stored email.
 
 ## Features
 
-- Auto server restart thanks to [nodemon](https://github.com/remy/nodemon)
-- Authentication using [jsonwebtoken](https://jwt.io/)
+- Auto server restart thanks to [Nodemon](https://github.com/remy/nodemon)
+- Authentication using [JSON Web Tokens](https://jwt.io/)
 - Body parsing
 - Cross-Origin Resource Sharing enabled
 - Consistent coding styles
 - Docker + data persistence
 - Express web framework
-- Inversion of Control container with [inversify](https://github.com/inversify/InversifyJS)
-- Linting with [eslint](https://eslint.org/)
-- Logging using [winston](https://github.com/winstonjs/winston)
+- Inversion of Control container with [Inversify](https://github.com/inversify/InversifyJS)
+- Linting with [Eslint](https://eslint.org/)
+- Logging using [Winston](https://github.com/winstonjs/winston)
 - MongoDB automatic collections creation and validation
 - MySQL tables hydratation
 - Support HTTP/HTTPS

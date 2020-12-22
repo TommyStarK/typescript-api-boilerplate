@@ -2,15 +2,18 @@ import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 
 import config from '@app/config';
-// import IoCMedia from '@app/components/media/symbol';
-// import IoCMediaContainer from '@app/components/media/container';
-// import { MediaController } from '@app/components/media';
-import IoCUser from '@app/components/user/symbol';
-import IoCUserContainer from '@app/components/user/container';
-import { UserController } from '@app/components/user';
+import logger from '@app/logger';
+
+import IoCMySQLClientContainer from '@app/storage/mysql/container';
+import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
+import { MySQLClient } from '@app/storage/mysql';
+import IoCMongoDBClientContainer from '@app/storage/mongodb/container';
+import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+import { MongoDBClient } from '@app/storage/mongodb';
+
+import { UserController, UserService } from '@app/components/user';
 import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middlewares';
 
-const router = express.Router();
 const upload = multer({ dest: '.uploads/' });
 console.log(upload);
 
@@ -18,35 +21,53 @@ const asyncWrapper = (fn: any) => (request: Request, response: Response, next: N
   Promise.resolve(fn(request, response, next)).catch(next);
 };
 
-// const mediaController: MediaController = IoCMediaContainer.get<MediaController>(IoCMedia.ControllerIdentifier);
-const userController: UserController = IoCUserContainer.get<UserController>(IoCUser.ControllerIdentifier);
-console.log('is bound', IoCUserContainer.isBound(IoCUser.ControllerIdentifier));
+export const router = async (): Promise<express.Router> => {
+  const mongodb: MongoDBClient = IoCMongoDBClientContainer.get<MongoDBClient>(IoCMongoDBClientIdentifier);
+  const mysql: MySQLClient = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
 
-// First path handled
-router.get(`/${config.app.url}`, (_: Request, response: Response) => response.status(200).json({
-  status: 200,
-  message: `Welcome to the ${config.app.name}`,
-}));
+  process.on('SIGINT', async () => {
+    await mongodb.disconnect();
+    await mysql.disconnect();
+    process.exit(1);
+  });
 
-// Account management
-router.post(`/${config.app.url}/authorize`, asyncWrapper(userController.authorize));
-router.post(`/${config.app.url}/register`, asyncWrapper(userController.register));
-router.delete(`/${config.app.url}/unregister`, asyncWrapper(userController.unregister));
+  try {
+    await mongodb.connect();
+    await mysql.connect();
+  } catch (error) {
+    logger.error(error);
+    process.exit(1);
+  }
 
-// authentication middleware
-router.all(`/${config.app.url}/*`, [authMiddleware]);
+  const userService = new UserService(mongodb, mysql);
+  const userController = new UserController(userService);
+  const r = express.Router();
 
-router.get(`/${config.app.url}/hello`, (request: Request, response: Response) => {
-  response.status(200).json({ status: 200, message: `Hello ${request.decoded.username}` });
-});
+  // First path handled
+  r.get(`/${config.app.url}`, (_: Request, response: Response) => response.status(200).json({
+    status: 200,
+    message: `Welcome to the ${config.app.name}`,
+  }));
 
-// Media
-// router.get(`/${config.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
-// router.get(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture));
-// router.post(`/${config.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
-// router.delete(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture));
+  // Account management
+  r.post(`/${config.app.url}/authorize`, asyncWrapper(userController.authorize.bind(userController)));
+  r.post(`/${config.app.url}/register`, asyncWrapper(userController.register.bind(userController)));
+  r.delete(`/${config.app.url}/unregister`, asyncWrapper(userController.unregister.bind(userController)));
 
-router.use(notfoundMiddleware);
-router.use(errorMiddleware);
+  // authentication middleware
+  r.all(`/${config.app.url}/*`, [authMiddleware(mysql)]);
 
-export default router;
+  r.get(`/${config.app.url}/hello`, (request: Request, response: Response) => {
+    response.status(200).json({ status: 200, message: `Hello ${request.decoded.username}` });
+  });
+
+  // Media
+  // r.get(`/${config.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
+  // r.get(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture));
+  // r.post(`/${config.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
+  // r.delete(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture));
+
+  r.use(notfoundMiddleware);
+  r.use(errorMiddleware);
+  return r;
+};

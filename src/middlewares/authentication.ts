@@ -2,11 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import config from '@app/config';
-import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
-import IoCMySQLClientContainer from '@app/storage/mysql/container';
+// import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
+// import IoCMySQLClientContainer from '@app/storage/mysql/container';
 import { MySQLClient } from '@app/storage/mysql';
 
-export const authMiddleware = async (request: Request, response: Response, next: NextFunction): Promise<void> => {
+export const authMiddleware = (mysqlClient: MySQLClient) => async (
+  request: Request, response: Response, next: NextFunction,
+): Promise<void> => {
   const token = (request.body && request.body.access_token)
   || (request.query && request.query.access_token)
   || request.headers['x-access-token'] || request.headers.authorization;
@@ -21,9 +23,9 @@ export const authMiddleware = async (request: Request, response: Response, next:
     }
 
     try {
-      const mysql = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
+      // const mysql = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
       // const query = mysql.query();
-      const connection = await mysql.getConnection();
+      const connection = await mysqlClient.getConnection();
       // const results = await query(
       //   'select 1 from users where userID = ? and username = ? order by username limit 1',
       //   [request.decoded.userID, request.decoded.username],
@@ -34,7 +36,7 @@ export const authMiddleware = async (request: Request, response: Response, next:
       );
 
       connection.release();
-      const users = mysql.processRows(rows);
+      const users = mysqlClient.processRows(rows);
 
       if (!users.length) {
         response.status(403).json({ status: 403, message: 'Forbidden' });
