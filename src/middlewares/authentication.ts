@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import config from '@app/config';
-// import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
-// import IoCMySQLClientContainer from '@app/storage/mysql/container';
 import { MySQLClient } from '@app/storage/mysql';
 
 export const authMiddleware = (mysqlClient: MySQLClient) => async (
@@ -23,13 +21,7 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
     }
 
     try {
-      // const mysql = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
-      // const query = mysql.query();
       const connection = await mysqlClient.getConnection();
-      // const results = await query(
-      //   'select 1 from users where userID = ? and username = ? order by username limit 1',
-      //   [request.decoded.userID, request.decoded.username],
-      // );
       const [rows] = await connection.query(
         'select 1 from users where userID = ? and username = ? order by username limit 1',
         [request.decoded.userID, request.decoded.username],

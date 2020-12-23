@@ -10,12 +10,11 @@ import { MySQLClient } from '@app/storage/mysql';
 import IoCMongoDBClientContainer from '@app/storage/mongodb/container';
 import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
 import { MongoDBClient } from '@app/storage/mongodb';
-
+import { MediaController, MediaService } from '@app/components/media';
 import { UserController, UserService } from '@app/components/user';
 import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middlewares';
 
 const upload = multer({ dest: '.uploads/' });
-console.log(upload);
 
 const asyncWrapper = (fn: any) => (request: Request, response: Response, next: NextFunction) => {
   Promise.resolve(fn(request, response, next)).catch(next);
@@ -41,6 +40,8 @@ export const router = async (): Promise<express.Router> => {
 
   const userService = new UserService(mongodb, mysql);
   const userController = new UserController(userService);
+  const mediaService = new MediaService(mongodb);
+  const mediaController = new MediaController(mediaService);
   const r = express.Router();
 
   // First path handled
@@ -62,10 +63,10 @@ export const router = async (): Promise<express.Router> => {
   });
 
   // Media
-  // r.get(`/${config.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
-  // r.get(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture));
-  // r.post(`/${config.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
-  // r.delete(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture));
+  r.get(`/${config.app.url}/pictures`, asyncWrapper(mediaController.getPictures.bind(mediaController)));
+  r.get(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture.bind(mediaController)));
+  r.post(`/${config.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture.bind(mediaController)));
+  r.delete(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture.bind(mediaController)));
 
   r.use(notfoundMiddleware);
   r.use(errorMiddleware);

@@ -1,17 +1,23 @@
+/* eslint-disable @typescript-eslint/lines-between-class-members */
 import fs from 'fs';
-import { inject, injectable } from 'inversify';
+// import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+// import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
 import { MongoDBClient } from '@app/storage/mongodb';
 import utils from '@app/utils';
 
 @injectable()
 export class MediaService {
   private readonly uploadDirectoryPath: string = path.join('.', '.uploads');
+  private mongoClient: MongoDBClient;
 
-  constructor(@inject(IoCMongoDBClientIdentifier) private mongoClient: MongoDBClient) {}
+  // constructor(@inject(IoCMongoDBClientIdentifier) private mongoClient: MongoDBClient) {}
+  constructor(mongoClient: MongoDBClient) {
+    this.mongoClient = mongoClient;
+  }
 
   public async deletePicture(pictureID: string, userID: string): Promise<any> {
     if (!utils.checkStringLengthInBytes(pictureID)) {
@@ -115,7 +121,7 @@ export class MediaService {
     };
   }
 
-  public async uploadNewPicture(file, userID: string): Promise<any> {
+  public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<any> {
     try {
       if (file === undefined) {
         return {
@@ -148,7 +154,7 @@ export class MediaService {
         };
       }
 
-      const upload = await fs.createReadStream(path.join(this.uploadDirectoryPath, file.filename))
+      const upload = fs.createReadStream(path.join(this.uploadDirectoryPath, file.filename))
         .pipe(bucket.openUploadStream(file.originalname));
 
       await db.collection('users').updateOne({ userID }, {
