@@ -56,3 +56,6 @@ typings/
 
 # build
 dist
+
+# upload
+.uploads
