@@ -165,8 +165,7 @@ export class MediaService {
             encoding: file.encoding,
             mimetype: file.mimetype,
             size: file.size,
-            fileid: new ObjectId(+upload.id),
-            // fileid: upload.id,
+            fileid: upload.id,
           },
         },
       });
