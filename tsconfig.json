@@ -22,6 +22,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["./src", "tsconfig-paths.js"],
-  "exclude": ["./tests", "./coverage", "./.uploads"]
+  "include": ["./src", "./src/**/*.json", "tsconfig-paths.js"],
+  "exclude": [
+    "**/tests/**",
+    "**/coverage/**"
+  ]
 }

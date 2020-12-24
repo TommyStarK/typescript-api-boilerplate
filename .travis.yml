@@ -10,8 +10,8 @@ services:
 cache:
     yarn: true
 
-before_script:
-    - yarn run eslint .
+# before_script:
+#     - yarn run eslint .
 
 script:
     - yarn test:ci
