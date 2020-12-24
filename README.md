@@ -58,8 +58,7 @@ Each Contribution is welcomed and encouraged. I do not claim to cover each use c
 Run the following commands to run the unit/integration tests:
 
  ```bash
-❯ yarn install
-❯ yarn test
+❯ yarn test:ci
  ```
 
 ## Usage

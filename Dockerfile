@@ -1,4 +1,4 @@
-FROM node:12.18.2-alpine
+FROM node:14.15.3-alpine
 COPY . /home
 WORKDIR /home
 RUN apk add bash && \

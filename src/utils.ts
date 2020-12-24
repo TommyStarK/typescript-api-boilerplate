@@ -25,7 +25,7 @@ const utils = {
     return crypted;
   },
 
-  decrypt: (target: NodeJS.ArrayBufferView) => {
+  decrypt: (target: string) => {
     const decipher = crypto.createDecipheriv(algorithm, password, iv);
     let dec = decipher.update(target, 'hex', 'utf8');
     dec += decipher.final('utf8');
