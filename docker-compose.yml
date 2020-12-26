@@ -45,7 +45,7 @@ services:
   api:
     build: .
     hostname: api.boilerplate
-    command: ["./wait_for_it.sh", "mysql:3306", "--", "yarn", "start"]
+    command: ["./scripts/wait_for_it.sh", "mysql:3306", "--", "yarn", "start"]
     container_name: "api"
     depends_on:
       - mongodb
