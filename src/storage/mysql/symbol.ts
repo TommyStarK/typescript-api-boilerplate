@@ -1,4 +1,7 @@
-const IoCMySQLClientIdentifier = Symbol.for('MySQLClient');
+const IoCMySQLClientIdentifier = {
+  Symbol: Symbol.for('MySQLClient'),
+};
+
 Object.seal(IoCMySQLClientIdentifier);
 
 export default IoCMySQLClientIdentifier;
