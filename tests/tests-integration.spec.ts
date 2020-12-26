@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import bodyParser from 'body-parser';
-// import cors from 'cors';
+import cors from 'cors';
 import express from 'express';
 import request from 'supertest';
 
@@ -13,7 +13,7 @@ const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp2a
 
 async function createApp() {
   const app = express();
-  // app.use('*', cors({ origin: '*' }));
+  app.use('*', cors({ origin: '*' }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use('/', await router());
@@ -29,6 +29,12 @@ describe('integration tests', () => {
 
   afterAll(async () => {
     jest.clearAllMocks();
+  });
+
+  test('500 Internal server error', async () => {
+    const response = await request(app).get('/500');
+    expect(response.status).toBe(500);
+    expect(response.body.message).toEqual('Internal server error');
   });
 
   test('ping service', async () => {
@@ -146,10 +152,19 @@ describe('integration tests', () => {
   test('get a specific picture by ID', async () => {
     const response = await request(app)
       .get(`/${config.app.url}/picture/${pictureID}`)
-      .set('x-access-token', token);
+      .set('Authorization', token);
 
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual('test.png');
+  });
+
+  test('422 get a specific picture with invalid ID', async () => {
+    const response = await request(app)
+      .get(`/${config.app.url}/picture/44621c51`)
+      .set('Authorization', token);
+
+    expect(response.status).toBe(422);
+    expect(response.body.message).toEqual('Unprocessable Entity: picture ID must be a single string of either 12 bytes or 24 hex characters');
   });
 
   test('upload a picture which already exists', async () => {

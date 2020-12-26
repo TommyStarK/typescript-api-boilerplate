@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import multer from 'multer';
 
 import config from '@app/config';
@@ -16,13 +16,11 @@ import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middle
 
 const upload = multer({ dest: '.uploads/' });
 
-const asyncWrapper = (fn: any) => (request: Request, response: Response, next: NextFunction) => {
-  Promise.resolve(fn(request, response, next)).catch(next);
-};
+const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
 
 export const router = async (): Promise<express.Router> => {
-  const mongodb: MongoDBClient = IoCMongoDBClientContainer.get<MongoDBClient>(IoCMongoDBClientIdentifier);
-  const mysql: MySQLClient = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier);
+  const mongodb: MongoDBClient = IoCMongoDBClientContainer.get<MongoDBClient>(IoCMongoDBClientIdentifier.Symbol);
+  const mysql: MySQLClient = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier.Symbol);
 
   process.on('SIGINT', async () => {
     await mongodb.disconnect();
@@ -43,6 +41,11 @@ export const router = async (): Promise<express.Router> => {
   const mediaService = new MediaService(mongodb);
   const mediaController = new MediaController(mediaService);
   const r = express.Router();
+
+  // for sake of tests
+  r.get('/500', (request: Request, response: Response) => {
+    throw new Error('test internal server error');
+  });
 
   // First path handled
   r.get(`/${config.app.url}`, (_: Request, response: Response) => response.status(200).json({
