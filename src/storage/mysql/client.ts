@@ -59,11 +59,17 @@ export class MySQLClient {
   }
 
   public async disconnect(): Promise<void> {
-    await this.pool.end();
-    this.pool = undefined;
+    if (this.pool !== undefined) {
+      await this.pool.end();
+      this.pool = undefined;
+    }
   }
 
   public async getConnection(): Promise<MySQLConn> {
+    if (this.pool === undefined) {
+      throw new Error('MySQLClient not connected, call \'connect(): Promise<void>\' before');
+    }
+
     const conn: MySQLConn = await this.pool.getConnection();
     return conn;
   }
