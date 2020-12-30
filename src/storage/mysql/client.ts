@@ -54,8 +54,8 @@ export class MySQLClient {
       password,
     });
 
-    await this.checkDatabase();
     await this.checkConnection();
+    await this.checkDatabase();
   }
 
   public async disconnect(): Promise<void> {

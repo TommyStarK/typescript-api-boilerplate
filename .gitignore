@@ -59,3 +59,7 @@ dist
 
 # upload
 .uploads
+
+# macOS
+.DS_Store
+
