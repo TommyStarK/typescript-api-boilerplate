@@ -2,17 +2,22 @@ import express, { Request, Response } from 'express';
 import multer from 'multer';
 
 import MongoDBContainer from '@app/storage/mongodb/container';
-import { MongoDBClient } from '@app/storage/mongodb';
 import MySQLContainer from '@app/storage/mysql/container';
-import { MySQLClient } from '@app/storage/mysql';
 import MediaContainer from '@app/components/media/container';
-import { MediaController } from '@app/components/media';
 import UserContainer from '@app/components/user/container';
-import { UserController } from '@app/components/user';
+import { MongoDBClient } from '@app/storage/mongodb';
+import { MySQLClient } from '@app/storage/mysql';
+import { MediaController } from '@app/components/media/controller';
+import { UserController } from '@app/components/user/controller';
+
 import { AppConfig } from '@app/config';
 import TYPES from '@app/IoC/types';
 import logger from '@app/logger';
-import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middlewares';
+import {
+  authMiddleware,
+  errorMiddleware,
+  notfoundMiddleware,
+} from '@app/middlewares';
 
 const upload = multer({ dest: '.uploads/' });
 

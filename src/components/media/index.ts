@@ -1,3 +1,3 @@
-export * from '@app/components/media/container';
-export * from '@app/components/media/controller';
-export * from '@app/components/media/service';
+export * from './controller';
+export * from './service';
+export * from './container';

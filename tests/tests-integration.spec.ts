@@ -143,9 +143,9 @@ describe('integration tests', () => {
       .attach('file', './tests/testdata/test.png');
 
     expect(response.status).toBe(201);
-    expect(response.body.pictureName).toEqual('test.png');
-    expect(response.body.pictureID.length).not.toEqual(0);
-    pictureID = String(response.body.pictureID);
+    expect(response.body.name).toEqual('test.png');
+    expect(response.body.id.length).not.toEqual(0);
+    pictureID = String(response.body.id);
     await new Promise((r) => setTimeout(r, 1000));
   });
 
@@ -184,8 +184,8 @@ describe('integration tests', () => {
       .attach('file', './tests/testdata/test2.png');
 
       expect(response.status).toBe(201);
-      expect(response.body.pictureName).toEqual('test2.png');
-      expect(response.body.pictureID.length).not.toEqual(0);
+      expect(response.body.name).toEqual('test2.png');
+      expect(response.body.id.length).not.toEqual(0);
       await new Promise((r) => setTimeout(r, 1000));
   });
 
