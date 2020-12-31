@@ -1,20 +1,11 @@
 import { Container } from 'inversify';
 
 import { MediaController, MediaService } from '@app/components/media';
-
-const IoCMedia = {
-  ControllerIdentifier: Symbol.for('MediaController'),
-  ServiceIdentifier: Symbol.for('MediaService'),
-};
-
-Object.seal(IoCMedia);
+import TYPES from '@app/IoC/types';
 
 const MediaContainer = new Container();
-MediaContainer.bind<MediaService>(IoCMedia.ServiceIdentifier).to(MediaService);
-MediaContainer.bind<MediaController>(IoCMedia.ControllerIdentifier).to(MediaController);
+MediaContainer.bind<MediaService>(TYPES.MediaService).to(MediaService);
+MediaContainer.bind<MediaController>(TYPES.MediaController).to(MediaController);
 Object.seal(MediaContainer);
 
-export {
-  IoCMedia,
-  MediaContainer,
-};
+export default MediaContainer;

@@ -1,23 +1,18 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import fs from 'fs';
-// import { inject, injectable } from 'inversify';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-// import { IoCMongoDB, MongoDBClient } from '@app/storage/mongodb';
-import { MongoDBClient } from '@app/storage/mongodb';
+import { MongoDBClient } from '@app/storage/mongodb/client';
+import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 
 @injectable()
 export class MediaService {
   private readonly uploadDirectoryPath: string = path.join('.', '.uploads');
-  private mongoClient: MongoDBClient;
 
-  // constructor(@inject(IoCMongoDB.ClientIdentifier) private mongoClient: MongoDBClient) {}
-  constructor(mongoClient: MongoDBClient) {
-    this.mongoClient = mongoClient;
-  }
+  constructor(@inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient) {}
 
   public async deletePicture(pictureID: string, userID: string): Promise<any> {
     if (!utils.checkStringLengthInBytes(pictureID)) {

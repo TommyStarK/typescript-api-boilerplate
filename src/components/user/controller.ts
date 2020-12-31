@@ -1,17 +1,12 @@
 import { Request, Response } from 'express';
-// import { injectable, inject } from 'inversify';
+import { injectable, inject } from 'inversify';
 
-// import { IoCUser, UserService } from '@app/components/user';
 import { UserService } from '@app/components/user';
+import TYPES from '@app/IoC/types';
 
-// @injectable()
+@injectable()
 export class UserController {
-  private userService: UserService;
-
-  // constructor(@inject(IoCUser.ServiceIdentifier) private userService: UserService) {}
-  constructor(userService: UserService) {
-    this.userService = userService;
-  }
+  constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
   public async authorize(request: Request, response: Response): Promise<void> {
     const auth = await this.userService.authenticate(request.body);

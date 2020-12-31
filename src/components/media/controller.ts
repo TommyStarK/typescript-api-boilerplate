@@ -1,18 +1,12 @@
 import { Request, Response } from 'express';
-// import { inject, injectable } from 'inversify';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 
-// import { IoCMedia, MediaService } from '@app/components/media';
 import { MediaService } from '@app/components/media';
+import TYPES from '@app/IoC/types';
 
 @injectable()
 export class MediaController {
-  private mediaService: MediaService;
-
-  // constructor(@inject(IoCMedia.ServiceIdentifier) private mediaService: MediaService) {}
-  constructor(mediaService: MediaService) {
-    this.mediaService = mediaService;
-  }
+  constructor(@inject(TYPES.MediaService) private mediaService: MediaService) {}
 
   public async deletePicture(request: Request, response: Response): Promise<void> {
     const { id } = request.params;

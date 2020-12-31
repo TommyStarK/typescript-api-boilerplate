@@ -1,21 +1,28 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 
-import { MediaController, MediaService } from '@app/components/media';
-import { UserController, UserService } from '@app/components/user';
+import MongoDBContainer from '@app/storage/mongodb/container';
+import { MongoDBClient } from '@app/storage/mongodb';
+import MySQLContainer from '@app/storage/mysql/container';
+import { MySQLClient } from '@app/storage/mysql';
+import MediaContainer from '@app/components/media/container';
+import { MediaController } from '@app/components/media';
+import UserContainer from '@app/components/user/container';
+import { UserController } from '@app/components/user';
 import { AppConfig } from '@app/config';
+import TYPES from '@app/IoC/types';
 import logger from '@app/logger';
 import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middlewares';
-import { MongoDBContainer, MongoDBClient, IoCMongoDB } from '@app/storage/mongodb';
-import { MySQLContainer, MySQLClient, IoCMySQL } from '@app/storage/mysql';
 
 const upload = multer({ dest: '.uploads/' });
 
 const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
 
+console.log(TYPES);
+
 export const router = async (): Promise<express.Router> => {
-  const mongodb: MongoDBClient = MongoDBContainer.get<MongoDBClient>(IoCMongoDB.ClientIdentifier);
-  const mysql: MySQLClient = MySQLContainer.get<MySQLClient>(IoCMySQL.ClientIdentifier);
+  const mongodb: MongoDBClient = MongoDBContainer.get<MongoDBClient>(TYPES.MongoDBClient);
+  const mysql: MySQLClient = MySQLContainer.get<MySQLClient>(TYPES.MySQLClient);
 
   process.on('SIGINT', async () => {
     await mongodb.disconnect();
@@ -31,10 +38,8 @@ export const router = async (): Promise<express.Router> => {
     process.exit(1);
   }
 
-  const userService = new UserService(mongodb, mysql);
-  const userController = new UserController(userService);
-  const mediaService = new MediaService(mongodb);
-  const mediaController = new MediaController(mediaService);
+  const mediaController = MediaContainer.get<MediaController>(TYPES.MediaController);
+  const userController = UserContainer.get<UserController>(TYPES.UserController);
   const Router = express.Router();
 
   // for sake of tests

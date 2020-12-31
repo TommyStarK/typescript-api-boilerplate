@@ -1,18 +1,10 @@
 import { Container } from 'inversify';
 
 import { MongoDBClient } from '@app/storage/mongodb/client';
-
-const IoCMongoDB = {
-  ClientIdentifier: Symbol.for('MongoDBClient'),
-};
-
-Object.seal(IoCMongoDB);
+import TYPES from '@app/IoC/types';
 
 const MongoDBContainer = new Container();
-MongoDBContainer.bind<MongoDBClient>(IoCMongoDB.ClientIdentifier).to(MongoDBClient);
+MongoDBContainer.bind<MongoDBClient>(TYPES.MongoDBClient).to(MongoDBClient);
 Object.seal(MongoDBContainer);
 
-export {
-  IoCMongoDB,
-  MongoDBContainer,
-};
+export default MongoDBContainer;
