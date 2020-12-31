@@ -20,6 +20,7 @@ function in the `utils` module if you need to decrypt stored email.
 
 ## Features
 
+- ECMAScript 2020
 - Auto server restart thanks to [Nodemon](https://github.com/remy/nodemon)
 - Authentication using [JSON Web Tokens](https://jwt.io/)
 - Body parsing
