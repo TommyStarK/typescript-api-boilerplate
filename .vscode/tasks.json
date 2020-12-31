@@ -1,0 +1,20 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "tsc -p tsconfig.json"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"problemMatcher": [],
+			"label": "npm: start",
+			"detail": "NODE_ENV=local ts-node -r tsconfig-paths/register --project tsconfig.json --files src/index.ts"
+		}
+	]
+}

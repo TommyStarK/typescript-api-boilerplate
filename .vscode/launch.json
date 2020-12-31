@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Program",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "npm: build",
+      "program": "${workspaceFolder}/src/index.ts",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "protocol": "inspector",
+      "trace": "all",
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ]
+    },
+    {
+      "name": "Debug Jest Tests",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceFolder}/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--coverage",
+        "false",
+        "--config",
+        "jest.config.js"
+      ]
+    }
+  ]
+}
