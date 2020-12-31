@@ -1,18 +1,18 @@
+/* eslint-disable @typescript-eslint/lines-between-class-members */
 // import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
-import config from '@app/config';
-// import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+import { AppConfig } from '@app/config';
+// import { MongoDBClient, IoCMongoDB } from '@app/storage/mongodb';
 import { MongoDBClient } from '@app/storage/mongodb';
-// import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
+// import { MySQLClient, IoCMySQL } from '@app/storage/mysql';
 import { MySQLClient } from '@app/storage/mysql';
 import utils from '@app/utils';
 
 // @injectable()
 export class UserService {
   private mongoClient: MongoDBClient;
-
   private mysqlClient: MySQLClient;
 
   private readonly accountDetails: string[] = [
@@ -22,8 +22,8 @@ export class UserService {
   ];
 
   // constructor(
-  //   @inject(IoCMongoDBClientIdentifier) private mongoClient: MongoDBClient,
-  //   @inject(IoCMySQLClientIdentifier) private mysqlClient: MySQLClient,
+  //   @inject(IoCMongoDB.ClientIdentifier) private mongoClient: MongoDBClient,
+  //   @inject(IoCMySQL.ClientIdentifier) private mysqlClient: MySQLClient,
   // ) {}
   constructor(
     mongoClient: MongoDBClient,
@@ -85,7 +85,7 @@ export class UserService {
     };
 
     const newToken = jwt.sign(
-      tokenPayload, config.app.secret, { expiresIn: config.app.expiresIn },
+      tokenPayload, AppConfig.app.secret, { expiresIn: AppConfig.app.expiresIn },
     );
 
     return { status: 200, token: newToken };

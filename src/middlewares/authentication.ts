@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import config from '@app/config';
+import { AppConfig } from '@app/config';
 import { MySQLClient } from '@app/storage/mysql';
 
 export const authMiddleware = (mysqlClient: MySQLClient) => async (
@@ -13,7 +13,7 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, config.app.secret);
+      const decoded = jwt.verify(token, AppConfig.app.secret);
       request.decoded = decoded;
     } catch (error) {
       response.status(401).json({ status: 401, message: 'Invalid token' });

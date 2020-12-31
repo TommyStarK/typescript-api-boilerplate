@@ -2,7 +2,7 @@
 import { injectable } from 'inversify';
 import { MongoClient, GridFSBucket, Db } from 'mongodb';
 
-import config from '@app/config';
+import { AppConfig } from '@app/config';
 import utils from '@app/utils';
 
 type MongoBucket = GridFSBucket;
@@ -10,15 +10,12 @@ type MongoDatabase = Db;
 
 @injectable()
 export class MongoDBClient {
-  private bucket: GridFSBucket;
-  private client: MongoClient;
-  private database: Db;
+  private readonly validatorsPath: string = 'src/storage/mongodb/validators';
+  private bucket: GridFSBucket = undefined;
+  private client: MongoClient = undefined;
+  private database: Db = undefined;
 
-  constructor() {
-    this.bucket = undefined;
-    this.client = undefined;
-    this.database = undefined;
-  }
+  constructor() {}
 
   private async checkConnection(): Promise<void> {
     if (!this.client.isConnected()) {
@@ -27,13 +24,11 @@ export class MongoDBClient {
   }
 
   private async checkDatabase(): Promise<void> {
-    const validatorsPath = `${process.cwd()}/src/storage/mongodb/validators`;
-    const files = await utils.readdirAsync(validatorsPath);
-
+    const files = await utils.readdirAsync(this.validatorsPath);
     const promises = files.map(async (file): Promise<{name: string, validator: object}> => {
       const lastIndex = file.lastIndexOf('.');
       const collection = file.substr(0, lastIndex);
-      const buffer = await utils.readFileAsync(`${validatorsPath}/${file}`);
+      const buffer = await utils.readFileAsync(`${this.validatorsPath}/${file}`);
       return { name: collection, validator: JSON.parse(buffer.toString('utf-8')) };
     });
 
@@ -62,7 +57,7 @@ export class MongoDBClient {
       database,
       port,
       uri,
-    } = config.mongo;
+    } = AppConfig.mongo;
 
     const url = `mongodb://${uri}:${port}/${database}`;
     this.client = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -75,7 +70,6 @@ export class MongoDBClient {
 
   public async disconnect(): Promise<void> {
     if (this.client !== undefined) {
-      // await this.client.logout();
       await this.client.close();
     }
   }

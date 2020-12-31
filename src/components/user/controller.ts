@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 // import { injectable, inject } from 'inversify';
-// import { controller } from 'inversify-express-utils';
 
-// import IoCUser from '@app/components/user/symbol';
+// import { IoCUser, UserService } from '@app/components/user';
 import { UserService } from '@app/components/user';
 
 // @injectable()
-// @controller('/api')
 export class UserController {
   private userService: UserService;
 

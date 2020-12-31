@@ -1,7 +1,8 @@
 import winston from 'winston';
-import config from '@app/config';
 
-const transports: winston.transport[] = process.env.NODE_ENV === 'production' || config.app.production
+import { AppConfig } from '@app/config';
+
+const transports: winston.transport[] = process.env.NODE_ENV === 'production' || AppConfig.app.production
   ? [
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
     new winston.transports.File({ filename: 'combined.log' }),

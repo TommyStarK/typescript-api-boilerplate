@@ -2,7 +2,7 @@
 import { injectable } from 'inversify';
 import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
-import config from '@app/config';
+import { AppConfig } from '@app/config';
 import utils from '@app/utils';
 
 type MySQLConn = mysql.PoolConnection;
@@ -10,11 +10,9 @@ type MySQLConn = mysql.PoolConnection;
 @injectable()
 export class MySQLClient {
   private readonly hydratationPath: string = 'src/storage/mysql/tables';
-  private pool: mysql.Pool;
+  private pool: mysql.Pool = undefined;
 
-  constructor() {
-    this.pool = undefined;
-  }
+  constructor() {}
 
   private async checkConnection(): Promise<void> {
     const connection: MySQLConn = await this.getConnection();
@@ -24,8 +22,8 @@ export class MySQLClient {
 
   private async checkDatabase(): Promise<void> {
     const connection: MySQLConn = await this.getConnection();
-    await connection.query(`create database if not exists ${config.mysql.database};`);
-    await connection.query(`use ${config.mysql.database};`);
+    await connection.query(`create database if not exists ${AppConfig.mysql.database};`);
+    await connection.query(`use ${AppConfig.mysql.database};`);
 
     const tables: string[] = await utils.readdirAsync(this.hydratationPath);
     const promises = tables.map(async (table): Promise<void> => {
@@ -45,7 +43,7 @@ export class MySQLClient {
 
     const {
       host, user, password,
-    } = config.mysql;
+    } = AppConfig.mysql;
 
     this.pool = mysql.createPool({
       connectionLimit: 10,

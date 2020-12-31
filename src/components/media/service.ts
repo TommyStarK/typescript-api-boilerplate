@@ -5,7 +5,7 @@ import { injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-// import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
+// import { IoCMongoDB, MongoDBClient } from '@app/storage/mongodb';
 import { MongoDBClient } from '@app/storage/mongodb';
 import utils from '@app/utils';
 
@@ -14,7 +14,7 @@ export class MediaService {
   private readonly uploadDirectoryPath: string = path.join('.', '.uploads');
   private mongoClient: MongoDBClient;
 
-  // constructor(@inject(IoCMongoDBClientIdentifier) private mongoClient: MongoDBClient) {}
+  // constructor(@inject(IoCMongoDB.ClientIdentifier) private mongoClient: MongoDBClient) {}
   constructor(mongoClient: MongoDBClient) {
     this.mongoClient = mongoClient;
   }

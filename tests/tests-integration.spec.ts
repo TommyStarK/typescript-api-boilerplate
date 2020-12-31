@@ -4,7 +4,7 @@ import cors from 'cors';
 import express from 'express';
 import request from 'supertest';
 
-import config from '../src/config';
+import { AppConfig } from '../src/config';
 import { router } from '../src/router';
 
 let token = '';
@@ -38,7 +38,7 @@ describe('integration tests', () => {
   });
 
   test('ping service', async () => {
-    const response = await request(app).get(`/${config.app.url}`);
+    const response = await request(app).get(`/${AppConfig.app.url}`);
     expect(response.status).toBe(200);
   });
 
@@ -48,14 +48,14 @@ describe('integration tests', () => {
   });
 
   test('401 no token provided', async () => {
-    const response = await request(app).get(`/${config.app.url}/dummy`);
+    const response = await request(app).get(`/${AppConfig.app.url}/dummy`);
     expect(response.status).toBe(401);
     expect(response.body.message).toEqual('No token provided');
   });
 
   test('422 register new account without providing an email: should fail', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/register`)
+      .post(`/${AppConfig.app.url}/register`)
       .send({ username: 'jest', password: '123123' });
 
     expect(response.status).toBe(422);
@@ -64,7 +64,7 @@ describe('integration tests', () => {
 
   test('register successfully a new account', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/register`)
+      .post(`/${AppConfig.app.url}/register`)
       .send({ username: 'jest', password: '123123', email: 'jest@rocks.com' });
 
     expect(response.status).toBe(201);
@@ -73,7 +73,7 @@ describe('integration tests', () => {
 
   test('409 failed to register a new account: email already used', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/register`)
+      .post(`/${AppConfig.app.url}/register`)
       .send({ username: 'foo', password: '123123', email: 'jest@rocks.com' });
 
     expect(response.status).toBe(409);
@@ -82,7 +82,7 @@ describe('integration tests', () => {
 
   test('422 failed to retrieve a valid token, password not provided', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/authorize`)
+      .post(`/${AppConfig.app.url}/authorize`)
       .send({ username: 'jest' });
 
     expect(response.status).toBe(422);
@@ -91,7 +91,7 @@ describe('integration tests', () => {
 
   test('successfully retrieve a valid token', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/authorize`)
+      .post(`/${AppConfig.app.url}/authorize`)
       .send({ username: 'jest', password: '123123' });
 
     expect(response.status).toBe(200);
@@ -101,7 +101,7 @@ describe('integration tests', () => {
 
   test('401 failed to retrieve a valid token: wrong credentials', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/authorize`)
+      .post(`/${AppConfig.app.url}/authorize`)
       .send({ username: 'jest', password: 'wrongpassword' });
 
     expect(response.status).toBe(401);
@@ -111,7 +111,7 @@ describe('integration tests', () => {
 
   test('test /hello', async () => {
     const response = await request(app)
-      .get(`/${config.app.url}/hello`)
+      .get(`/${AppConfig.app.url}/hello`)
       .set('Authorization', token);
 
     expect(response.status).toBe(200);
@@ -120,7 +120,7 @@ describe('integration tests', () => {
 
   test('query all picture but provide an invalid token: should fail', async () => {
     const response = await request(app)
-      .get(`/${config.app.url}/pictures`)
+      .get(`/${AppConfig.app.url}/pictures`)
       .set('Authorization', invalidToken);
 
     expect(response.status).toBe(401);
@@ -129,7 +129,7 @@ describe('integration tests', () => {
 
   test('query all picture with a valid token: no existing picture', async () => {
     const response = await request(app)
-      .get(`/${config.app.url}/pictures`)
+      .get(`/${AppConfig.app.url}/pictures`)
       .set('Authorization', token);
 
     expect(response.status).toBe(200);
@@ -138,7 +138,7 @@ describe('integration tests', () => {
 
   test('upload a new picture', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/picture`)
+      .post(`/${AppConfig.app.url}/picture`)
       .set('Authorization', token)
       .attach('file', './tests/testdata/test.png');
 
@@ -151,7 +151,7 @@ describe('integration tests', () => {
 
   test('get a specific picture by ID', async () => {
     const response = await request(app)
-      .get(`/${config.app.url}/picture/${pictureID}`)
+      .get(`/${AppConfig.app.url}/picture/${pictureID}`)
       .set('Authorization', token);
 
     expect(response.status).toBe(200);
@@ -160,7 +160,7 @@ describe('integration tests', () => {
 
   test('422 get a specific picture with invalid ID', async () => {
     const response = await request(app)
-      .get(`/${config.app.url}/picture/44621c51`)
+      .get(`/${AppConfig.app.url}/picture/44621c51`)
       .set('Authorization', token);
 
     expect(response.status).toBe(422);
@@ -169,7 +169,7 @@ describe('integration tests', () => {
 
   test('upload a picture which already exists', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/picture`)
+      .post(`/${AppConfig.app.url}/picture`)
       .set('Authorization', token)
       .attach('file', './tests/testdata/test.png');
 
@@ -179,7 +179,7 @@ describe('integration tests', () => {
 
   test('upload a new picture, a second time', async () => {
     const response = await request(app)
-      .post(`/${config.app.url}/picture`)
+      .post(`/${AppConfig.app.url}/picture`)
       .set('Authorization', token)
       .attach('file', './tests/testdata/test2.png');
 
@@ -191,7 +191,7 @@ describe('integration tests', () => {
 
   test('delete a specific picture', async () => {
     const response = await request(app)
-      .delete(`/${config.app.url}/picture/${pictureID}`)
+      .delete(`/${AppConfig.app.url}/picture/${pictureID}`)
       .set('Authorization', token);
 
     expect(response.status).toBe(200);
@@ -201,7 +201,7 @@ describe('integration tests', () => {
 
   test('failed to unregister account, username not provided', async () => {
     const response = await request(app)
-      .delete(`/${config.app.url}/unregister`)
+      .delete(`/${AppConfig.app.url}/unregister`)
       .send({ password: '123123' });
 
     expect(response.status).toBe(422);
@@ -210,7 +210,7 @@ describe('integration tests', () => {
 
   test('unregister account', async () => {
     const response = await request(app)
-      .delete(`/${config.app.url}/unregister`)
+      .delete(`/${AppConfig.app.url}/unregister`)
       .send({ username: 'jest', password: '123123' });
 
     expect(response.status).toBe(200);

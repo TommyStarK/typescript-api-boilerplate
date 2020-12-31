@@ -1,12 +1,21 @@
 import { Container } from 'inversify';
 
-import IoCUser from '@app/components/user/symbol';
 import { UserController, UserService } from '@app/components/user';
 
-const IoCUserContainer = new Container();
-IoCUserContainer.bind<UserService>(IoCUser.ServiceIdentifier).to(UserService);
-IoCUserContainer.bind<UserController>(IoCUser.ControllerIdentifier).to(UserController);
+const IoCUser = {
+  ControllerIdentifier: Symbol.for('UserController'),
+  ServiceIdentifier: Symbol.for('UserService'),
+};
 
-Object.seal(IoCUserContainer);
+Object.seal(IoCUser);
 
-export default IoCUserContainer;
+const UserContainer = new Container();
+UserContainer.bind<UserService>(IoCUser.ServiceIdentifier).to(UserService);
+UserContainer.bind<UserController>(IoCUser.ControllerIdentifier).to(UserController);
+
+Object.seal(UserContainer);
+
+export {
+  IoCUser,
+  UserContainer,
+};

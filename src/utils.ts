@@ -2,11 +2,11 @@ import crypto from 'crypto';
 import fs from 'fs';
 import { URL } from 'url';
 
-import config from '@app/config';
+import { AppConfig } from '@app/config';
 
 const algorithm = 'aes-256-ctr';
 const iv = crypto.randomBytes(16);
-const password = crypto.createHash('sha256').update(String(config.app.secret)).digest('base64').substr(0, 32);
+const password = crypto.createHash('sha256').update(String(AppConfig.app.secret)).digest('base64').substr(0, 32);
 // eslint-disable-next-line no-useless-escape
 const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 

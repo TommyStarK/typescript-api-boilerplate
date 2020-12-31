@@ -1,9 +1,8 @@
+import { Request, Response } from 'express';
 // import { inject, injectable } from 'inversify';
 import { injectable } from 'inversify';
 
-import { Request, Response } from 'express';
-
-// import IoCMedia from '@app/components/media/symbol';
+// import { IoCMedia, MediaService } from '@app/components/media';
 import { MediaService } from '@app/components/media';
 
 @injectable()

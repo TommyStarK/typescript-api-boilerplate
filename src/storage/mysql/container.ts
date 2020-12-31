@@ -1,10 +1,18 @@
 import { Container } from 'inversify';
 
-import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
 import { MySQLClient } from '@app/storage/mysql/client';
 
-const IoCMySQLClientContainer = new Container();
-IoCMySQLClientContainer.bind<MySQLClient>(IoCMySQLClientIdentifier.Symbol).to(MySQLClient);
-Object.seal(IoCMySQLClientContainer);
+const IoCMySQL = {
+  ClientIdentifier: Symbol.for('MySQLClient'),
+};
 
-export default IoCMySQLClientContainer;
+Object.seal(IoCMySQL);
+
+const MySQLContainer = new Container();
+MySQLContainer.bind<MySQLClient>(IoCMySQL.ClientIdentifier).to(MySQLClient);
+Object.seal(MySQLContainer);
+
+export {
+  IoCMySQL,
+  MySQLContainer,
+};

@@ -1,26 +1,21 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 
-import config from '@app/config';
-import logger from '@app/logger';
-
-import IoCMySQLClientContainer from '@app/storage/mysql/container';
-import IoCMySQLClientIdentifier from '@app/storage/mysql/symbol';
-import { MySQLClient } from '@app/storage/mysql';
-import IoCMongoDBClientContainer from '@app/storage/mongodb/container';
-import IoCMongoDBClientIdentifier from '@app/storage/mongodb/symbol';
-import { MongoDBClient } from '@app/storage/mongodb';
 import { MediaController, MediaService } from '@app/components/media';
 import { UserController, UserService } from '@app/components/user';
+import { AppConfig } from '@app/config';
+import logger from '@app/logger';
 import { authMiddleware, errorMiddleware, notfoundMiddleware } from '@app/middlewares';
+import { MongoDBContainer, MongoDBClient, IoCMongoDB } from '@app/storage/mongodb';
+import { MySQLContainer, MySQLClient, IoCMySQL } from '@app/storage/mysql';
 
 const upload = multer({ dest: '.uploads/' });
 
 const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
 
 export const router = async (): Promise<express.Router> => {
-  const mongodb: MongoDBClient = IoCMongoDBClientContainer.get<MongoDBClient>(IoCMongoDBClientIdentifier.Symbol);
-  const mysql: MySQLClient = IoCMySQLClientContainer.get<MySQLClient>(IoCMySQLClientIdentifier.Symbol);
+  const mongodb: MongoDBClient = MongoDBContainer.get<MongoDBClient>(IoCMongoDB.ClientIdentifier);
+  const mysql: MySQLClient = MySQLContainer.get<MySQLClient>(IoCMySQL.ClientIdentifier);
 
   process.on('SIGINT', async () => {
     await mongodb.disconnect();
@@ -40,38 +35,38 @@ export const router = async (): Promise<express.Router> => {
   const userController = new UserController(userService);
   const mediaService = new MediaService(mongodb);
   const mediaController = new MediaController(mediaService);
-  const r = express.Router();
+  const Router = express.Router();
 
   // for sake of tests
-  r.get('/500', (request: Request, response: Response) => {
+  Router.get('/500', (request: Request, response: Response) => {
     throw new Error('test internal server error');
   });
 
   // First path handled
-  r.get(`/${config.app.url}`, (_: Request, response: Response) => response.status(200).json({
+  Router.get(`/${AppConfig.app.url}`, (_: Request, response: Response) => response.status(200).json({
     status: 200,
-    message: `Welcome to the ${config.app.name}`,
+    message: `Welcome to the ${AppConfig.app.name}`,
   }));
 
   // Account management
-  r.post(`/${config.app.url}/authorize`, asyncWrapper(userController.authorize.bind(userController)));
-  r.post(`/${config.app.url}/register`, asyncWrapper(userController.register.bind(userController)));
-  r.delete(`/${config.app.url}/unregister`, asyncWrapper(userController.unregister.bind(userController)));
+  Router.post(`/${AppConfig.app.url}/authorize`, asyncWrapper(userController.authorize.bind(userController)));
+  Router.post(`/${AppConfig.app.url}/register`, asyncWrapper(userController.register.bind(userController)));
+  Router.delete(`/${AppConfig.app.url}/unregister`, asyncWrapper(userController.unregister.bind(userController)));
 
   // authentication middleware
-  r.all(`/${config.app.url}/*`, [authMiddleware(mysql)]);
+  Router.all(`/${AppConfig.app.url}/*`, [authMiddleware(mysql)]);
 
-  r.get(`/${config.app.url}/hello`, (request: Request, response: Response) => {
+  Router.get(`/${AppConfig.app.url}/hello`, (request: Request, response: Response) => {
     response.status(200).json({ status: 200, message: `Hello ${request.decoded.username}` });
   });
 
   // Media
-  r.get(`/${config.app.url}/pictures`, asyncWrapper(mediaController.getPictures.bind(mediaController)));
-  r.get(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture.bind(mediaController)));
-  r.post(`/${config.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture.bind(mediaController)));
-  r.delete(`/${config.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture.bind(mediaController)));
+  Router.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures.bind(mediaController)));
+  Router.get(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture.bind(mediaController)));
+  Router.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture.bind(mediaController)));
+  Router.delete(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture.bind(mediaController)));
 
-  r.use(notfoundMiddleware);
-  r.use(errorMiddleware);
-  return r;
+  Router.use(notfoundMiddleware);
+  Router.use(errorMiddleware);
+  return Router;
 };
