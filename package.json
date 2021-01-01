@@ -1,8 +1,7 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Experimental Typescript boilerplate of a REST API",
-  "main": "index.js",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
   "repository": {
