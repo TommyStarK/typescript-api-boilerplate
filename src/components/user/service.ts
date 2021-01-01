@@ -1,37 +1,26 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
-// import { inject, injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
 import { AppConfig } from '@app/config';
-// import { MongoDBClient, IoCMongoDB } from '@app/storage/mongodb';
+import { UserOpResult } from '@app/types';
 import { MongoDBClient } from '@app/storage/mongodb';
-// import { MySQLClient, IoCMySQL } from '@app/storage/mysql';
 import { MySQLClient } from '@app/storage/mysql';
+import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 
-// @injectable()
+@injectable()
 export class UserService {
-  private mongoClient: MongoDBClient;
-  private mysqlClient: MySQLClient;
-
   private readonly accountDetails: string[] = [
     'email',
     'password',
     'username',
   ];
 
-  // constructor(
-  //   @inject(IoCMongoDB.ClientIdentifier) private mongoClient: MongoDBClient,
-  //   @inject(IoCMySQL.ClientIdentifier) private mysqlClient: MySQLClient,
-  // ) {}
   constructor(
-    mongoClient: MongoDBClient,
-    mysqlClient: MySQLClient,
-  ) {
-    this.mongoClient = mongoClient;
-    this.mysqlClient = mysqlClient;
-  }
+    @inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient,
+    @inject(TYPES.MySQLClient) private mysqlClient: MySQLClient,
+  ) {}
 
   private checkPayloadIsValid(payload: any, emailRequired: boolean): any {
     // eslint-disable-next-line no-restricted-syntax
@@ -52,7 +41,7 @@ export class UserService {
     };
   }
 
-  public async authenticate(payload: { username: string; password: string; }): Promise<any> {
+  public async authenticate(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, false);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);
@@ -91,7 +80,7 @@ export class UserService {
     return { status: 200, token: newToken };
   }
 
-  public async create(payload: { username: string; email: string; password: string; }): Promise<any> {
+  public async create(payload: { username?: string; email?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, true);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);
@@ -130,7 +119,7 @@ export class UserService {
     return { status: 201, message: 'Account has been registered' };
   }
 
-  public async delete(payload: { username: string; password: string; }): Promise<any> {
+  public async delete(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, false);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);

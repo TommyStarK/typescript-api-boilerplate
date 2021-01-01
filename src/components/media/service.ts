@@ -1,25 +1,20 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import fs from 'fs';
-// import { inject, injectable } from 'inversify';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-// import { IoCMongoDB, MongoDBClient } from '@app/storage/mongodb';
-import { MongoDBClient } from '@app/storage/mongodb';
+import { MediaOpResult } from '@app/types';
+import { MongoDBClient } from '@app/storage/mongodb/client';
+import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 
 @injectable()
 export class MediaService {
   private readonly uploadDirectoryPath: string = path.join('.', '.uploads');
-  private mongoClient: MongoDBClient;
 
-  // constructor(@inject(IoCMongoDB.ClientIdentifier) private mongoClient: MongoDBClient) {}
-  constructor(mongoClient: MongoDBClient) {
-    this.mongoClient = mongoClient;
-  }
+  constructor(@inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient) {}
 
-  public async deletePicture(pictureID: string, userID: string): Promise<any> {
+  public async deletePicture(pictureID: string, userID: string): Promise<MediaOpResult> {
     if (!utils.checkStringLengthInBytes(pictureID)) {
       return {
         status: 422,
@@ -48,14 +43,13 @@ export class MediaService {
     });
 
     await db.collection('fs.chunks').deleteMany({
-      // eslint-disable-next-line no-underscore-dangle
       files_id: target.value._id,
     });
 
     return { status: 200, message: `Picture with ID (${pictureID}) has been deleted` };
   }
 
-  public async getPictures(userID: string): Promise<any> {
+  public async getPictures(userID: string): Promise<MediaOpResult> {
     const db = this.mongoClient.getDatabase();
     const result = await db.collection('users')
       .find({ userID })
@@ -77,7 +71,7 @@ export class MediaService {
     return { status: 200, pictures };
   }
 
-  public async getPicture(pictureID: string, userID: string): Promise<any> {
+  public async getPicture(pictureID: string, userID: string): Promise<MediaOpResult> {
     if (!utils.checkStringLengthInBytes(pictureID)) {
       return {
         status: 422,
@@ -98,7 +92,7 @@ export class MediaService {
     }
 
     // eslint-disable-next-line eqeqeq
-    const pictureMetadata = user.pictures.find((elem) => elem.fileid == pictureID);
+    const pictureMetadata = user.pictures.find((elem: { fileid: string; }) => elem.fileid == pictureID);
     const filePath = path.join(this.uploadDirectoryPath, pictureMetadata.name);
     await utils.writeFileAsync(filePath, '');
     const pipe = bucket.openDownloadStream(picObjectId).pipe(fs.createWriteStream(filePath));
@@ -121,7 +115,7 @@ export class MediaService {
     };
   }
 
-  public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<any> {
+  public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<MediaOpResult> {
     try {
       if (file === undefined) {
         return {
@@ -172,8 +166,8 @@ export class MediaService {
 
       return {
         status: 201,
-        pictureID: upload.id,
-        pictureName: file.originalname,
+        id: upload.id.toString(),
+        name: file.originalname,
       };
     // eslint-disable-next-line no-useless-catch
     } catch (error) {

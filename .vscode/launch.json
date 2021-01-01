@@ -13,7 +13,6 @@
       "protocol": "inspector",
       "trace": "all",
       "runtimeArgs": [
-        "--nolazy",
         "-r",
         "ts-node/register",
         "-r",

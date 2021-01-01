@@ -1,0 +1,23 @@
+import 'reflect-metadata';
+
+import { Container } from 'inversify';
+
+import { MediaController } from '@app/components/media/controller';
+import { MediaService } from '@app/components/media/service';
+import { UserController } from '@app/components/user/controller';
+import { UserService } from '@app/components/user/service';
+import { MongoDBClient } from '@app/storage/mongodb/client';
+import { MySQLClient } from '@app/storage/mysql/client';
+import TYPES from './types';
+
+const container = new Container();
+container.bind<MongoDBClient>(TYPES.MongoDBClient).to(MongoDBClient).inSingletonScope();
+container.bind<MySQLClient>(TYPES.MySQLClient).to(MySQLClient).inSingletonScope();
+container.bind<MediaController>(TYPES.MediaController).to(MediaController);
+container.bind<MediaService>(TYPES.MediaService).to(MediaService);
+container.bind<UserController>(TYPES.UserController).to(UserController);
+container.bind<UserService>(TYPES.UserService).to(UserService);
+
+Object.seal(container);
+
+export default container;
