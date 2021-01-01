@@ -1,10 +1,7 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 
-import MongoDBContainer from '@app/storage/mongodb/container';
-import MySQLContainer from '@app/storage/mysql/container';
-import MediaContainer from '@app/components/media/container';
-import UserContainer from '@app/components/user/container';
+import container from '@app/IoC/container';
 import { MongoDBClient } from '@app/storage/mongodb';
 import { MySQLClient } from '@app/storage/mysql';
 import { MediaController } from '@app/components/media/controller';
@@ -23,11 +20,9 @@ const upload = multer({ dest: '.uploads/' });
 
 const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
 
-console.log(TYPES);
-
 export const router = async (): Promise<express.Router> => {
-  const mongodb: MongoDBClient = MongoDBContainer.get<MongoDBClient>(TYPES.MongoDBClient);
-  const mysql: MySQLClient = MySQLContainer.get<MySQLClient>(TYPES.MySQLClient);
+  const mongodb: MongoDBClient = container.get<MongoDBClient>(TYPES.MongoDBClient);
+  const mysql: MySQLClient = container.get<MySQLClient>(TYPES.MySQLClient);
 
   process.on('SIGINT', async () => {
     await mongodb.disconnect();
@@ -43,8 +38,8 @@ export const router = async (): Promise<express.Router> => {
     process.exit(1);
   }
 
-  const mediaController = MediaContainer.get<MediaController>(TYPES.MediaController);
-  const userController = UserContainer.get<UserController>(TYPES.UserController);
+  const mediaController = container.get<MediaController>(TYPES.MediaController);
+  const userController = container.get<UserController>(TYPES.UserController);
   const Router = express.Router();
 
   // for sake of tests
