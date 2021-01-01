@@ -16,7 +16,7 @@
         "-r",
         "ts-node/register",
         "-r",
-        "tsconfig-paths/register"
+        "${workspaceFolder}/tsconfig-paths.js"
       ]
     },
     {
