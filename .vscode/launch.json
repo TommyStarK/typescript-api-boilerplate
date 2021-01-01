@@ -29,7 +29,6 @@
         "--inspect-brk",
         "${workspaceFolder}/node_modules/jest/bin/jest.js",
         "--runInBand",
-        "--forceExit",
         "--coverage",
         "false",
         "--config",

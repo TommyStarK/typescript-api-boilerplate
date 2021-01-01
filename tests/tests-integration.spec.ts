@@ -5,7 +5,11 @@ import express from 'express';
 import request from 'supertest';
 
 import { AppConfig } from '../src/config';
+import { MongoDBClient } from '../src/storage/mongodb';
+import { MySQLClient } from '../src/storage/mysql';
 import { router } from '../src/router';
+import container from '../src/IoC/container';
+import TYPES from '../src/IoC/types';
 
 let token = '';
 let pictureID = '';
@@ -28,6 +32,10 @@ describe('integration tests', () => {
   });
 
   afterAll(async () => {
+    const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
+    const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
+    await mongodb.disconnect();
+    await mysql.disconnect();
     jest.clearAllMocks();
   });
 

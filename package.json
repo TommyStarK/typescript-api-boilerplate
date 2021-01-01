@@ -16,7 +16,7 @@
     "dev": "nodemon",
     "lint": "eslint \"src/**/*.ts\"",
     "start": "node -r ./tsconfig-paths.js ./dist/src/index.js",
-    "test": "jest --verbose --runInBand --forceExit --coverage --config jest.config.js",
+    "test": "jest --verbose --runInBand --coverage --config jest.config.js",
     "test:ci": "scripts/run_tests.sh"
   },
   "dependencies": {
