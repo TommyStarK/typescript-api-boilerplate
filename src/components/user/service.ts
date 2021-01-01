@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
 import { AppConfig } from '@app/config';
-import { UserOperationResponse } from '@app/types';
+import { UserOpResult } from '@app/types';
 import { MongoDBClient } from '@app/storage/mongodb';
 import { MySQLClient } from '@app/storage/mysql';
 import TYPES from '@app/IoC/types';
@@ -42,7 +41,7 @@ export class UserService {
     };
   }
 
-  public async authenticate(payload: { username: string; password: string; }): Promise<UserOperationResponse> {
+  public async authenticate(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, false);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);
@@ -81,7 +80,7 @@ export class UserService {
     return { status: 200, token: newToken };
   }
 
-  public async create(payload: { username: string; email: string; password: string; }): Promise<UserOperationResponse> {
+  public async create(payload: { username?: string; email?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, true);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);
@@ -120,7 +119,7 @@ export class UserService {
     return { status: 201, message: 'Account has been registered' };
   }
 
-  public async delete(payload: { username: string; password: string; }): Promise<UserOperationResponse> {
+  public async delete(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
     const res = this.checkPayloadIsValid(payload, false);
     if (!res.success) {
       return (({ status, message }) => ({ status, message }))(res);

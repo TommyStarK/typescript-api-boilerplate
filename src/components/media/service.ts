@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import fs from 'fs';
 import { inject, injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-import { MediaOperationResponse } from '@app/types';
+import { MediaOpResult } from '@app/types';
 import { MongoDBClient } from '@app/storage/mongodb/client';
 import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
@@ -15,7 +14,7 @@ export class MediaService {
 
   constructor(@inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient) {}
 
-  public async deletePicture(pictureID: string, userID: string): Promise<MediaOperationResponse> {
+  public async deletePicture(pictureID: string, userID: string): Promise<MediaOpResult> {
     if (!utils.checkStringLengthInBytes(pictureID)) {
       return {
         status: 422,
@@ -44,14 +43,13 @@ export class MediaService {
     });
 
     await db.collection('fs.chunks').deleteMany({
-      // eslint-disable-next-line no-underscore-dangle
       files_id: target.value._id,
     });
 
     return { status: 200, message: `Picture with ID (${pictureID}) has been deleted` };
   }
 
-  public async getPictures(userID: string): Promise<MediaOperationResponse> {
+  public async getPictures(userID: string): Promise<MediaOpResult> {
     const db = this.mongoClient.getDatabase();
     const result = await db.collection('users')
       .find({ userID })
@@ -73,7 +71,7 @@ export class MediaService {
     return { status: 200, pictures };
   }
 
-  public async getPicture(pictureID: string, userID: string): Promise<MediaOperationResponse> {
+  public async getPicture(pictureID: string, userID: string): Promise<MediaOpResult> {
     if (!utils.checkStringLengthInBytes(pictureID)) {
       return {
         status: 422,
@@ -117,7 +115,7 @@ export class MediaService {
     };
   }
 
-  public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<MediaOperationResponse> {
+  public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<MediaOpResult> {
     try {
       if (file === undefined) {
         return {

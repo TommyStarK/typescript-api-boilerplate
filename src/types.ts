@@ -1,4 +1,4 @@
-type MediaOperationResponse = {
+type MediaOpResult = {
   status: number;
   message?: string;
   id?: string,
@@ -7,13 +7,13 @@ type MediaOperationResponse = {
   pictures?: {name: string, fileid: string}[];
 };
 
-type UserOperationResponse = {
+type UserOpResult = {
   status: number;
   message?: string;
   token?: string;
 };
 
 export {
-  MediaOperationResponse,
-  UserOperationResponse,
+  MediaOpResult,
+  UserOpResult,
 };
