@@ -1,13 +1,13 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Experimental Typescript boilerplate of a REST API",
   "main": "index.js",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TommyStarK/typescript-api-boilerplate.git"
+    "url": "git+https://github.com/TommyStarK/typescript-api-boilerplate.git"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -36,6 +36,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.9",
     "@types/express": "^4.17.6",
+    "@types/jest": "^26.0.19",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongodb": "^3.6.3",
     "@types/multer": "^1.4.5",
