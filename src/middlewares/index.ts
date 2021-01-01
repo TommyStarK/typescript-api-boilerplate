@@ -1,3 +1,3 @@
-export * from '@app/middlewares/authentication';
-export * from '@app/middlewares/error';
-export * from '@app/middlewares/notfound';
+export * from './authentication';
+export * from './error';
+export * from './notfound';

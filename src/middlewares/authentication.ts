@@ -9,7 +9,9 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
 ): Promise<void> => {
   const token = (request.body && request.body.access_token)
   || (request.query && request.query.access_token)
-  || request.headers['x-access-token'] || request.headers.authorization;
+  || request.headers['x-auth-token']
+  || request.headers['Proxy-Authorization']
+  || request.headers.authorization;
 
   if (token) {
     try {
