@@ -1,28 +1,47 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "resolveJsonModule": true,
-    "module": "commonjs",
     "lib": ["dom","es2020"],
-    "allowJs": true,
-    "checkJs": false,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "strict": false,
+    "module": "commonjs",
     "moduleResolution": "node",
+    "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
       "@app/*": ["./*"]
     },
+    "types": [
+      "reflect-metadata",
+      "node",
+      "express",
+      "mongodb",
+      "mysql2",
+      "inversify",
+      "jest",
+      "body-parser",
+      "cors",
+      "jsonwebtoken",
+      "multer",
+      "uniqid",
+      "winston"
+    ],
     "typeRoots": [
       "./custom_typings",
       "./node_modules/@types"
     ],
+    "strict": false,
+    "checkJs": false,
+    "allowJs": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["./src", "./src/**/*.json", "tsconfig-paths.js"],
+  "include": [
+    "./src",
+    "./src/**/*.json",
+    "tsconfig-paths.js"
+  ],
   "exclude": [
     "**/tests/**",
     "**/coverage/**"
