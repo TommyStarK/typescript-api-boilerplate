@@ -7,7 +7,7 @@ import https from 'https';
 
 import { AppConfig, IAppConfig } from '@app/config';
 import logger from '@app/logger';
-import { router } from '@app/router';
+import { appRouter } from '@app/router';
 
 const HTTP_PORT: number = Number(process.env.HTTP_PORT) || AppConfig.app.http.port;
 const HTTPS_PORT: number = Number(process.env.HTTPS_PORT) || AppConfig.app.https.port;
@@ -36,7 +36,7 @@ async function main() {
   app.use('*', cors({ origin: '*' }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use('/', await router());
+  app.use('/', await appRouter());
 
   attemptToEnableHTTPS(app, AppConfig);
   http.createServer(app).listen(HTTP_PORT, '0.0.0.0', () => {
