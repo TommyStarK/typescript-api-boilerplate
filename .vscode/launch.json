@@ -32,7 +32,7 @@
         "--coverage",
         "false",
         "--config",
-        "jest.config.js"
+        "jest.config.json"
       ]
     }
   ]
