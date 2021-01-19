@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": ["dom","es2020"],
+    "lib": ["es2020"],
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./dist",
@@ -16,13 +16,7 @@
       "mongodb",
       "mysql2",
       "inversify",
-      "jest",
-      "body-parser",
-      "cors",
-      "jsonwebtoken",
-      "multer",
-      "uniqid",
-      "winston"
+      "jest"
     ],
     "typeRoots": [
       "./custom_typings",
@@ -38,12 +32,12 @@
     "emitDecoratorMetadata": true
   },
   "include": [
-    "./src",
-    "./src/**/*.json",
+    "src/**/*",
     "tsconfig-paths.js"
   ],
   "exclude": [
-    "**/tests/**",
-    "**/coverage/**"
+    "tests",
+    "coverage",
+    "node_modules"
   ]
 }

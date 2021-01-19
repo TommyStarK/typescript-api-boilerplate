@@ -1,6 +1,6 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "2.1.1",
+  "version": "2.1.3",
   "description": "Experimental Typescript boilerplate of a REST API",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
@@ -14,9 +14,9 @@
     "build:prod": "cross-env NODE_ENV=production yarn run build",
     "coverage": "codecov",
     "dev": "nodemon",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "start": "node -r ./tsconfig-paths.js ./dist/src/index.js",
-    "test": "jest --verbose --runInBand --coverage --config jest.config.js",
+    "test": "jest --verbose --runInBand --coverage --config jest.config.json",
     "test:ci": "scripts/run_tests.sh"
   },
   "dependencies": {
