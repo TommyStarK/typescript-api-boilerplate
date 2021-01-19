@@ -13,6 +13,7 @@ import TYPES from '../src/IoC/types';
 
 let token = '';
 let pictureID = '';
+/* eslint-disable max-len */
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp2aW5jZW50IiwidXNlcklEIjoiNDA2NDUxMW1qczgybWprNCIsImlhdCI6MTU1MDM1NzE2OSwiZXhwIjoxNTUwNDQzNTY5fQ.CV7oQagJKtsBdO15PPt1sTmIe8cQ6_ewAVqQE0w-jn0';
 
 async function createApp() {
@@ -67,7 +68,7 @@ describe('integration tests', () => {
       .send({ username: 'jest', password: '123123' });
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toEqual(`Body missing 'email' field`);
+    expect(response.body.message).toEqual('Body missing \'email\' field');
   });
 
   test('register successfully a new account', async () => {
@@ -85,7 +86,7 @@ describe('integration tests', () => {
       .send({ username: 'foo', password: '123123', email: 'jest@rocks.com' });
 
     expect(response.status).toBe(409);
-    expect(response.body.message).toEqual("Conflict: Email [jest@rocks.com] already used");
+    expect(response.body.message).toEqual('Conflict: Email [jest@rocks.com] already used');
   });
 
   test('422 failed to retrieve a valid token, password not provided', async () => {
@@ -94,7 +95,7 @@ describe('integration tests', () => {
       .send({ username: 'jest' });
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toEqual(`Body missing 'password' field`);
+    expect(response.body.message).toEqual('Body missing \'password\' field');
   });
 
   test('successfully retrieve a valid token', async () => {
@@ -172,6 +173,7 @@ describe('integration tests', () => {
       .set('Authorization', token);
 
     expect(response.status).toBe(422);
+    /* eslint-disable max-len */
     expect(response.body.message).toEqual('Unprocessable Entity: picture ID must be a single string of either 12 bytes or 24 hex characters');
   });
 
@@ -191,10 +193,10 @@ describe('integration tests', () => {
       .set('Authorization', token)
       .attach('file', './tests/testdata/test2.png');
 
-      expect(response.status).toBe(201);
-      expect(response.body.name).toEqual('test2.png');
-      expect(response.body.id.length).not.toEqual(0);
-      await new Promise((r) => setTimeout(r, 1000));
+    expect(response.status).toBe(201);
+    expect(response.body.name).toEqual('test2.png');
+    expect(response.body.id.length).not.toEqual(0);
+    await new Promise((r) => setTimeout(r, 1000));
   });
 
   test('delete a specific picture', async () => {
@@ -213,7 +215,7 @@ describe('integration tests', () => {
       .send({ password: '123123' });
 
     expect(response.status).toBe(422);
-    expect(response.body.message).toEqual(`Body missing 'username' field`);
+    expect(response.body.message).toEqual('Body missing \'username\' field');
   });
 
   test('unregister account', async () => {
