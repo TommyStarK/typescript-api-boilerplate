@@ -10,19 +10,25 @@ import { UserController } from '@app/components/user/controller';
 import { AppConfig } from '@app/config';
 import TYPES from '@app/IoC/types';
 import logger from '@app/logger';
+
 import {
   authMiddleware,
   errorMiddleware,
   notfoundMiddleware,
 } from '@app/middlewares';
 
+import {
+  authPayloadValidator,
+  registrationPayloadValidator,
+} from '@app/middlewares/validators/user';
+
 const upload = multer({ dest: '.uploads/' });
 
 const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
 
 export const router = async (): Promise<express.Router> => {
-  const mongodb: MongoDBClient = container.get<MongoDBClient>(TYPES.MongoDBClient);
-  const mysql: MySQLClient = container.get<MySQLClient>(TYPES.MySQLClient);
+  const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
+  const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
 
   process.on('SIGINT', async () => {
     await mongodb.disconnect();
@@ -54,9 +60,9 @@ export const router = async (): Promise<express.Router> => {
   }));
 
   // Account management
-  Router.post(`/${AppConfig.app.url}/authorize`, asyncWrapper(userController.authorize.bind(userController)));
-  Router.post(`/${AppConfig.app.url}/register`, asyncWrapper(userController.register.bind(userController)));
-  Router.delete(`/${AppConfig.app.url}/unregister`, asyncWrapper(userController.unregister.bind(userController)));
+  Router.post(`/${AppConfig.app.url}/authorize`, authPayloadValidator(), asyncWrapper(userController.authorize));
+  Router.post(`/${AppConfig.app.url}/register`, registrationPayloadValidator(), asyncWrapper(userController.register));
+  Router.delete(`/${AppConfig.app.url}/unregister`, authPayloadValidator(), asyncWrapper(userController.unregister));
 
   // authentication middleware
   Router.all(`/${AppConfig.app.url}/*`, [authMiddleware(mysql)]);
@@ -66,10 +72,10 @@ export const router = async (): Promise<express.Router> => {
   });
 
   // Media
-  Router.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures.bind(mediaController)));
-  Router.get(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture.bind(mediaController)));
-  Router.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture.bind(mediaController)));
-  Router.delete(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture.bind(mediaController)));
+  Router.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
+  Router.get(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture));
+  Router.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
+  Router.delete(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture));
 
   Router.use(notfoundMiddleware);
   Router.use(errorMiddleware);
