@@ -26,6 +26,7 @@ function in the `utils` module if you need to decrypt stored email.
 - Body parsing
 - Cross-Origin Resource Sharing enabled
 - Consistent coding styles
+- Data input validation middleware(s) thanks to [class-validator](https://github.com/typestack/class-validator)
 - Docker + data persistence
 - Express web framework
 - Inversion of Control container with [Inversify](https://github.com/inversify/InversifyJS)
