@@ -1,3 +1,4 @@
+import autoBind from 'auto-bind';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 
@@ -7,7 +8,9 @@ import TYPES from '@app/IoC/types';
 
 @injectable()
 export class MediaController {
-  constructor(@inject(TYPES.MediaService) private mediaService: MediaService) {}
+  constructor(@inject(TYPES.MediaService) private mediaService: MediaService) {
+    autoBind(this);
+  }
 
   public async deletePicture(request: Request, response: Response): Promise<void> {
     const { id } = request.params;
