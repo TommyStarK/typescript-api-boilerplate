@@ -5,9 +5,6 @@ import { MongoClient, GridFSBucket, Db } from 'mongodb';
 import { AppConfig } from '@app/config';
 import utils from '@app/utils';
 
-type MongoBucket = GridFSBucket;
-type MongoDatabase = Db;
-
 @injectable()
 export class MongoDBClient {
   private readonly validatorsPath: string = 'src/storage/mongodb/validators';
@@ -25,7 +22,7 @@ export class MongoDBClient {
 
   private async checkDatabase(): Promise<void> {
     const files = await utils.readdirAsync(this.validatorsPath);
-    const promises = files.map(async (file): Promise<{name: string, validator: object}> => {
+    const thenables = files.map(async (file): Promise<{name: string, validator: object}> => {
       const lastIndex = file.lastIndexOf('.');
       const collection = file.substr(0, lastIndex);
       const buffer = await utils.readFileAsync(`${this.validatorsPath}/${file}`);
@@ -33,7 +30,7 @@ export class MongoDBClient {
     });
 
     const witness = new Map();
-    const collectionsRequired = await Promise.all(promises);
+    const collectionsRequired = await Promise.all(thenables);
     const existingCollections = await this.database.listCollections().toArray();
     const namesOfExistingCollections = existingCollections.map((collection: { name: string }) => collection.name);
     namesOfExistingCollections.forEach(witness.set.bind(witness));
@@ -74,14 +71,14 @@ export class MongoDBClient {
     }
   }
 
-  public getBucket(): MongoBucket {
+  public getBucket(): GridFSBucket {
     if (this.bucket === undefined) {
       throw new Error('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
     }
     return this.bucket;
   }
 
-  public getDatabase(): MongoDatabase {
+  public getDatabase(): Db {
     if (this.database === undefined) {
       throw new Error('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
     }
