@@ -27,16 +27,16 @@ function in the `utils` module if you need to decrypt stored email.
 - Cross-Origin Resource Sharing enabled
 - Consistent coding styles
 - Data input validation middleware(s) thanks to [class-validator](https://github.com/typestack/class-validator)
-- Docker + data persistence
-- Express web framework
+- Data persistence
+- Docker
 - Inversion of Control container with [Inversify](https://github.com/inversify/InversifyJS)
 - Linting with [Eslint](https://eslint.org/)
 - Logging using [Winston](https://github.com/winstonjs/winston)
 - MongoDB automatic collections creation and validation
 - MySQL tables hydratation
-- Supports HTTP/HTTPS
+- Supports `HTTP/HTTPS`
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
-- Test using [Jest](https://github.com/facebook/jest)
+- Testing with [Jest](https://github.com/facebook/jest)
 
 ## Requirements
 
@@ -60,6 +60,7 @@ Each Contribution is welcomed and encouraged. I do not claim to cover each use c
 Run the following commands to run the unit/integration tests:
 
  ```bash
+❯ yarn install
 ❯ yarn test:ci
  ```
 
