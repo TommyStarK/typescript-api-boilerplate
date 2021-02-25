@@ -123,7 +123,7 @@ export class MediaService {
 
     if (!user) {
       await db.collection('users').insertOne(
-        { userID, pictures: [], videos: [] },
+        { userID, pictures: [] },
       );
     }
 
