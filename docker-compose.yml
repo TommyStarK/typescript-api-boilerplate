@@ -27,7 +27,7 @@ services:
       - boilerplate
     volumes:
       - mongodb_volume:/data/db
-    restart: always
+    restart: unless-stopped
 
   mysql:
     container_name: mysql
@@ -40,7 +40,7 @@ services:
       - boilerplate
     volumes:
       - mysql_volume:/var/lib/mysql
-    restart: always
+    restart: unless-stopped
 
   api:
     build: .
@@ -58,4 +58,4 @@ services:
       - "8443:8443"
     networks:
       - boilerplate
-    restart: always
+    restart: unless-stopped
