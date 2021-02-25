@@ -9,8 +9,8 @@ import multer from 'multer';
 import container from '@app/IoC/container';
 import { MongoDBClient } from '@app/storage/mongodb';
 import { MySQLClient } from '@app/storage/mysql';
-import { MediaController } from '@app/components/media/controller';
-import { UserController } from '@app/components/user/controller';
+import { MediaController } from '@app/services/media/controller';
+import { UserController } from '@app/services/user/controller';
 
 import { AppConfig } from '@app/config';
 import TYPES from '@app/IoC/types';
@@ -24,8 +24,9 @@ import {
 
 import {
   authPayloadValidator,
+  mongoIDValidator,
   registrationPayloadValidator,
-} from '@app/middlewares/validators/user';
+} from '@app/middlewares/validators';
 
 const upload = multer({ dest: '.uploads/' });
 const asyncWrapper = (handler: Handler) => (
@@ -81,9 +82,9 @@ export const router = async (): Promise<express.Router> => {
 
   // Media
   Router.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
-  Router.get(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.getPicture));
+  Router.get(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.getPicture));
   Router.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
-  Router.delete(`/${AppConfig.app.url}/picture/:id`, asyncWrapper(mediaController.deletePicture));
+  Router.delete(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.deletePicture));
 
   Router.use(notfoundMiddleware);
   Router.use(errorMiddleware);
