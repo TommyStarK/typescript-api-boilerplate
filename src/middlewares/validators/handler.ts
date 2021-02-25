@@ -1,4 +1,4 @@
-import { validateOrReject } from 'class-validator';
+import { ValidationError, validateOrReject } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
 
 type ExpressMiddleware = (request: Request, response: Response, next: NextFunction) => Promise<void>;
@@ -14,6 +14,9 @@ class Model<T> {
   }
 }
 
+const validationErrorsPrettier = (errors: ValidationError[]): string => errors
+  .map((e) => `${e.constraints[Object.keys(e.constraints)[0]]}`).join('\n');
+
 const defaultValidationMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     await validateOrReject(req.body, {
@@ -27,8 +30,7 @@ const defaultValidationMiddleware = async (req: Request, res: Response, next: Ne
     });
     next();
   } catch (errors) {
-    console.log(JSON.stringify(errors));
-    res.status(422).json({ errors });
+    res.status(422).json({ status: 422, message: validationErrorsPrettier(errors) });
   }
 };
 
@@ -56,4 +58,5 @@ export {
   ModelCtor,
   ValidationSetupMiddleware,
   validate,
+  validationErrorsPrettier,
 };
