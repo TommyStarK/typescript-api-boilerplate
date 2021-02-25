@@ -7,32 +7,28 @@ import { AppConfig } from '@app/config';
 const algorithm = 'aes-256-ctr';
 const iv = crypto.randomBytes(16);
 const password = crypto.createHash('sha256').update(String(AppConfig.app.secret)).digest('base64').substr(0, 32);
-// eslint-disable-next-line no-useless-escape
-const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const utils = {
-  checkStringLengthInBytes: (target: string) => Buffer.byteLength(target, 'utf8') === 24,
-
-  encodeBase64: async (filePath: any) => {
-    const data = await utils.readFileAsync(filePath);
-    return Buffer.from(data).toString('base64');
-  },
-
-  encrypt: (target: string) => {
-    const cipher = crypto.createCipheriv(algorithm, password, iv);
-    let crypted = cipher.update(target, 'utf8', 'hex');
-    crypted += cipher.final('hex');
-    return crypted;
-  },
-
-  decrypt: (target: string) => {
+  decrypt: (target: string): string => {
     const decipher = crypto.createDecipheriv(algorithm, password, iv);
     let dec = decipher.update(target, 'hex', 'utf8');
     dec += decipher.final('utf8');
     return dec;
   },
 
-  hash: (target: crypto.BinaryLike) => {
+  encodeBase64: async (filePath: string): Promise<string> => {
+    const data = await utils.readFileAsync(filePath);
+    return Buffer.from(data).toString('base64');
+  },
+
+  encrypt: (target: string): string => {
+    const cipher = crypto.createCipheriv(algorithm, password, iv);
+    let crypted = cipher.update(target, 'utf8', 'hex');
+    crypted += cipher.final('hex');
+    return crypted;
+  },
+
+  hash: (target: crypto.BinaryLike): string => {
     const hash = crypto.createHash('sha256');
     hash.update(target);
     return hash.digest('hex');
@@ -77,8 +73,6 @@ const utils = {
       }
     });
   }),
-
-  validateEmail: (email: string) => re.test(email),
 };
 
 export default utils;
