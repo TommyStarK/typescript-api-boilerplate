@@ -165,6 +165,8 @@ describe('integration tests', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.name).toEqual('test.png');
+    expect(response.body.id).toEqual(pictureID);
+    expect(response.body.picture.length).not.toEqual(0);
   });
 
   test('422 get a specific picture with invalid ID', async () => {
@@ -196,6 +198,18 @@ describe('integration tests', () => {
     expect(response.body.name).toEqual('test2.png');
     expect(response.body.id.length).not.toEqual(0);
     await new Promise((r) => setTimeout(r, 1000));
+  });
+
+  test('query all pictures', async () => {
+    const response = await request(app)
+      .get(`/${AppConfig.app.url}/pictures`)
+      .set('Authorization', token);
+
+    expect(response.status).toBe(200);
+    expect(response.body.pictures.length).toEqual(2);
+    expect(response.body.pictures[0].name).toEqual('test.png');
+    expect(response.body.pictures[0].fileid).toEqual(pictureID);
+    expect(response.body.pictures[1].name).toEqual('test2.png');
   });
 
   test('delete a specific picture', async () => {
