@@ -14,13 +14,6 @@ export class MediaService {
   constructor(@inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient) {}
 
   public async deletePicture(pictureID: string, userID: string): Promise<{status: number, message: string}> {
-    if (!utils.checkStringLengthInBytes(pictureID)) {
-      return {
-        status: 422,
-        message: 'Unprocessable Entity: picture ID must be a single string of either 12 bytes or 24 hex characters',
-      };
-    }
-
     const db = this.mongoClient.getDatabase();
     const picObjectId = new ObjectId(pictureID);
     const user = await db.collection('users').findOne({
@@ -48,28 +41,6 @@ export class MediaService {
     return { status: 200, message: `Picture with ID (${pictureID}) has been deleted` };
   }
 
-  public async getPictures(userID: string): Promise<{status: number, pictures: {name: string, fileid: string}[]}> {
-    const db = this.mongoClient.getDatabase();
-    const result = await db.collection('users')
-      .find({ userID })
-      .project({
-        _id: 0,
-        userID: 0,
-        'pictures.hashname': 0,
-        'pictures.encoding': 0,
-        'pictures.mimetype': 0,
-        'pictures.size': 0,
-        videos: 0,
-      }).toArray();
-
-    if (!result.length) {
-      return { status: 200, pictures: [] };
-    }
-
-    const { pictures } = result[0];
-    return { status: 200, pictures };
-  }
-
   public async getPicture(pictureID: string, userID: string): Promise<{
     status: number,
     message?: string,
@@ -77,13 +48,6 @@ export class MediaService {
     name?: string,
     picture?: string,
   }> {
-    if (!utils.checkStringLengthInBytes(pictureID)) {
-      return {
-        status: 422,
-        message: 'Unprocessable Entity: picture ID must be a single string of either 12 bytes or 24 hex characters',
-      };
-    }
-
     const db = this.mongoClient.getDatabase();
     const bucket = this.mongoClient.getBucket();
     const picObjectId = new ObjectId(pictureID);
@@ -118,6 +82,28 @@ export class MediaService {
       name: pictureMetadata.name,
       picture: base64Pic,
     };
+  }
+
+  public async getPictures(userID: string): Promise<{status: number, pictures: {name: string, fileid: string}[]}> {
+    const db = this.mongoClient.getDatabase();
+    const result = await db.collection('users')
+      .find({ userID })
+      .project({
+        _id: 0,
+        userID: 0,
+        'pictures.hashname': 0,
+        'pictures.encoding': 0,
+        'pictures.mimetype': 0,
+        'pictures.size': 0,
+        videos: 0,
+      }).toArray();
+
+    if (!result.length) {
+      return { status: 200, pictures: [] };
+    }
+
+    const { pictures } = result[0];
+    return { status: 200, pictures };
   }
 
   public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<{
