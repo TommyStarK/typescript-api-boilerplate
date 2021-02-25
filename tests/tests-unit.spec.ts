@@ -1,11 +1,6 @@
 import utils from '../src/utils';
 
 describe('unit tests', () => {
-  test('test validateEmail', () => {
-    expect(utils.validateEmail('test@test.com')).toBe(true);
-    expect(utils.validateEmail('test@')).toBe(false);
-  });
-
   test('test encrypt/decrypt', () => {
     expect(utils.decrypt(utils.encrypt('test'))).toEqual('test');
   });

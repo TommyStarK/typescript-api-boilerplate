@@ -68,7 +68,7 @@ describe('integration tests', () => {
       .send({ username: 'jest', password: '123123' });
 
     expect(response.status).toBe(422);
-    // expect(response.body.message).toEqual('Body missing \'email\' field');
+    expect(response.body.message).toEqual('email must be an email');
   });
 
   test('register successfully a new account', async () => {
@@ -95,8 +95,7 @@ describe('integration tests', () => {
       .send({ username: 'jest' });
 
     expect(response.status).toBe(422);
-    console.log('DEEEEEBUG', JSON.stringify(response.body));
-    // expect(response.body.message).toEqual('Body missing \'password\' field');
+    expect(response.body.message).toEqual('password must be a string');
   });
 
   test('successfully retrieve a valid token', async () => {
@@ -169,13 +168,12 @@ describe('integration tests', () => {
   });
 
   test('422 get a specific picture with invalid ID', async () => {
-    const response = await request(app)
+    const res = await request(app)
       .get(`/${AppConfig.app.url}/picture/44621c51`)
       .set('Authorization', token);
 
-    expect(response.status).toBe(422);
-    /* eslint-disable max-len */
-    expect(response.body.message).toEqual('Unprocessable Entity: picture ID must be a single string of either 12 bytes or 24 hex characters');
+    expect(res.status).toBe(422);
+    expect(res.body.message).toEqual('picture ID must be a single string of either 12 bytes or 24 hex characters');
   });
 
   test('upload a picture which already exists', async () => {
@@ -216,7 +214,7 @@ describe('integration tests', () => {
       .send({ password: '123123' });
 
     expect(response.status).toBe(422);
-    // expect(response.body.message).toEqual('Body missing \'username\' field');
+    expect(response.body.message).toEqual('username must be a string');
   });
 
   test('unregister account', async () => {
