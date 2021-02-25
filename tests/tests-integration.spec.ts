@@ -40,6 +40,34 @@ describe('integration tests', () => {
     jest.clearAllMocks();
   });
 
+  test('Backend storage(s) behavior', async () => {
+    try {
+      const dummyMySQL = new MySQLClient();
+      await dummyMySQL.getConnection();
+    } catch (error) {
+      expect(error.message).toEqual('MySQLClient not connected, call \'connect(): Promise<void>\' before');
+    }
+
+    const dummyMongo = new MongoDBClient();
+
+    try {
+      dummyMongo.getBucket();
+    } catch (error) {
+      expect(error.message).toEqual('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
+    }
+
+    try {
+      dummyMongo.getDatabase();
+    } catch (error) {
+      expect(error.message).toEqual('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
+    }
+
+    const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
+    expect(async () => mysql.connect()).not.toThrow();
+    const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
+    expect(async () => mongodb.connect()).not.toThrow();
+  });
+
   test('500 Internal server error', async () => {
     const response = await request(app).get('/500');
     expect(response.status).toBe(500);
@@ -145,6 +173,16 @@ describe('integration tests', () => {
     expect(response.body.pictures.length).toEqual(0);
   });
 
+  test('415 upload Unsupported Media Type', async () => {
+    const response = await request(app)
+      .post(`/${AppConfig.app.url}/picture`)
+      .set('Authorization', token)
+      .attach('file', undefined);
+
+    expect(response.status).toBe(415);
+    expect(response.body.message).toEqual('Unsupported Media Type: expecting form-data with key "file"');
+  });
+
   test('upload a new picture', async () => {
     const response = await request(app)
       .post(`/${AppConfig.app.url}/picture`)
@@ -176,6 +214,15 @@ describe('integration tests', () => {
 
     expect(res.status).toBe(422);
     expect(res.body.message).toEqual('picture ID must be a single string of either 12 bytes or 24 hex characters');
+  });
+
+  test('404 get a specific picture with an ID which does not exist', async () => {
+    const res = await request(app)
+      .get(`/${AppConfig.app.url}/picture/${[...pictureID].reverse().join('')}`)
+      .set('Authorization', token);
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toEqual(`Picture with ID (${[...pictureID].reverse().join('')}) not found`);
   });
 
   test('upload a picture which already exists', async () => {
@@ -222,6 +269,15 @@ describe('integration tests', () => {
     await new Promise((r) => setTimeout(r, 1000));
   });
 
+  test('404 delete a picture which does not exist', async () => {
+    const response = await request(app)
+      .delete(`/${AppConfig.app.url}/picture/${[...pictureID].reverse().join('')}`)
+      .set('Authorization', token);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toEqual(`Picture with ID (${[...pictureID].reverse().join('')}) not found`);
+  });
+
   test('failed to unregister account, username not provided', async () => {
     const response = await request(app)
       .delete(`/${AppConfig.app.url}/unregister`)
@@ -229,6 +285,15 @@ describe('integration tests', () => {
 
     expect(response.status).toBe(422);
     expect(response.body.message).toEqual('username must be a string');
+  });
+
+  test('failed to unregister account, wrong credentials', async () => {
+    const response = await request(app)
+      .delete(`/${AppConfig.app.url}/unregister`)
+      .send({ username: 'jest', password: 'wrongpassword' });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toEqual('Wrong credentials');
   });
 
   test('unregister account', async () => {
@@ -239,5 +304,14 @@ describe('integration tests', () => {
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual('Account has been unregistered');
     await new Promise((r) => setTimeout(r, 1000));
+  });
+
+  test('test /hello with a valid token but from a deleted account', async () => {
+    const response = await request(app)
+      .get(`/${AppConfig.app.url}/hello`)
+      .set('Authorization', token);
+
+    expect(response.status).toBe(403);
+    expect(response.body.message).toEqual('Forbidden');
   });
 });
