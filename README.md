@@ -34,7 +34,7 @@ function in the `utils` module if you need to decrypt stored email.
 - Logging using [Winston](https://github.com/winstonjs/winston)
 - MongoDB automatic collections creation and validation
 - MySQL tables hydratation
-- Support HTTP/HTTPS
+- Supports HTTP/HTTPS
 - Uses [Yarn](https://yarnpkg.com/en/) over npm
 - Test using [Jest](https://github.com/facebook/jest)
 
