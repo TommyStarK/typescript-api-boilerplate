@@ -5,8 +5,6 @@ import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise'
 import { AppConfig } from '@app/config';
 import utils from '@app/utils';
 
-type MySQLConn = mysql.PoolConnection;
-
 @injectable()
 export class MySQLClient {
   private readonly hydratationPath: string = 'src/storage/mysql/tables';
@@ -15,23 +13,23 @@ export class MySQLClient {
   constructor() {}
 
   private async checkConnection(): Promise<void> {
-    const connection: MySQLConn = await this.getConnection();
+    const connection = await this.getConnection();
     await connection.ping();
     connection.release();
   }
 
   private async checkDatabase(): Promise<void> {
-    const connection: MySQLConn = await this.getConnection();
+    const connection = await this.getConnection();
     await connection.query(`create database if not exists ${AppConfig.mysql.database};`);
     await connection.query(`use ${AppConfig.mysql.database};`);
 
     const tables: string[] = await utils.readdirAsync(this.hydratationPath);
-    const promises = tables.map(async (table): Promise<void> => {
+    const thenables = tables.map(async (table): Promise<void> => {
       const tmp: Buffer = await utils.readFileAsync(`${this.hydratationPath}/${table}`);
       connection.query(tmp.toString('utf-8'));
     });
 
-    await Promise.all(promises);
+    await Promise.all(thenables);
     connection.release();
   }
 
@@ -63,13 +61,12 @@ export class MySQLClient {
     }
   }
 
-  public async getConnection(): Promise<MySQLConn> {
+  public async getConnection(): Promise<mysql.PoolConnection> {
     if (this.pool === undefined) {
       throw new Error('MySQLClient not connected, call \'connect(): Promise<void>\' before');
     }
 
-    const conn: MySQLConn = await this.pool.getConnection();
-    return conn;
+    return this.pool.getConnection();
   }
 
   public processRows(rows: RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader): any[] {
@@ -77,9 +74,5 @@ export class MySQLClient {
       .filter((elem) => elem !== undefined)
       // handle BinaryRow
       .map((elem) => (elem['0']));
-  }
-
-  public query() {
-    return this.pool.query;
   }
 }

@@ -3,58 +3,28 @@ import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
 import { AppConfig } from '@app/config';
-import { UserOpResult } from '@app/types';
 import { MongoDBClient } from '@app/storage/mongodb';
 import { MySQLClient } from '@app/storage/mysql';
 import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 
+import {
+  AuthPayload,
+  RegistrationPayload,
+} from '@app/services/user/model';
+
 @injectable()
 export class UserService {
-  private readonly accountDetails: string[] = [
-    'email',
-    'password',
-    'username',
-  ];
-
   constructor(
     @inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient,
     @inject(TYPES.MySQLClient) private mysqlClient: MySQLClient,
   ) {}
 
-  private checkPayloadIsValid(payload: any, emailRequired: boolean): any {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const field of this.accountDetails) {
-      if ((emailRequired || (!emailRequired && field !== 'email')) && !(field in payload)) {
-        return {
-          status: 422,
-          success: false,
-          message: `Body missing '${field}' field`,
-        };
-      }
-    }
-
-    return {
-      status: 422,
-      success: emailRequired ? utils.validateEmail(payload.email) : true,
-      message: 'Invalid email',
-    };
-  }
-
-  public async authenticate(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
-    const res = this.checkPayloadIsValid(payload, false);
-    if (!res.success) {
-      return (({ status, message }) => ({ status, message }))(res);
-    }
-
-    // const query = this.mysqlClient.query();
+  public async authenticate(payload: AuthPayload): Promise<{ status: number, message?: string, token?: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);
-    // const results = await query(
-    //   'select userID, username from users where username = ? and password = ? order by username limit 1',
-    //   [username, passwordHash],
-    // );
+
     const [rows] = await connection.execute(
       'select userID, username from users where username = ? and password = ? order by username limit 1',
       [username, passwordHash],
@@ -80,12 +50,7 @@ export class UserService {
     return { status: 200, token: newToken };
   }
 
-  public async create(payload: { username?: string; email?: string; password?: string; }): Promise<UserOpResult> {
-    const res = this.checkPayloadIsValid(payload, true);
-    if (!res.success) {
-      return (({ status, message }) => ({ status, message }))(res);
-    }
-
+  public async create(payload: RegistrationPayload): Promise<{ status: number, message: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, email, password } = payload;
     const emailEncrypted = utils.encrypt(email);
@@ -119,12 +84,7 @@ export class UserService {
     return { status: 201, message: 'Account has been registered' };
   }
 
-  public async delete(payload: { username?: string; password?: string; }): Promise<UserOpResult> {
-    const res = this.checkPayloadIsValid(payload, false);
-    if (!res.success) {
-      return (({ status, message }) => ({ status, message }))(res);
-    }
-
+  public async delete(payload: AuthPayload): Promise<{ status: number, message: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);

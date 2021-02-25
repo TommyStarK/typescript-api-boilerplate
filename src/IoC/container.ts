@@ -2,10 +2,10 @@ import 'reflect-metadata';
 
 import { Container } from 'inversify';
 
-import { MediaController } from '@app/components/media/controller';
-import { MediaService } from '@app/components/media/service';
-import { UserController } from '@app/components/user/controller';
-import { UserService } from '@app/components/user/service';
+import { MediaController } from '@app/services/media/controller';
+import { MediaService } from '@app/services/media/service';
+import { UserController } from '@app/services/user/controller';
+import { UserService } from '@app/services/user/service';
 import { MongoDBClient } from '@app/storage/mongodb/client';
 import { MySQLClient } from '@app/storage/mysql/client';
 import TYPES from './types';
