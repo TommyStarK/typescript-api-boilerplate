@@ -65,15 +65,12 @@ export class MediaService {
     const filePath = path.join(this.uploadDirectoryPath, pictureMetadata.name);
     await utils.writeFileAsync(filePath, '');
     const pipe = bucket.openDownloadStream(picObjectId).pipe(fs.createWriteStream(filePath));
-    const download = new Promise((resolve, reject) => {
-      pipe.on('finish', async () => {
-        const tmp = await utils.encodeBase64(filePath);
-        resolve(tmp);
-      });
+    const download = new Promise<string>((resolve, reject) => {
+      pipe.on('finish', async () => resolve(await utils.encodeBase64(filePath)));
       pipe.on('error', reject);
     });
 
-    const base64Pic = String(await download);
+    const base64Pic = await download;
     await utils.unlinkAsync(filePath);
 
     return {
@@ -102,8 +99,7 @@ export class MediaService {
       return { status: 200, pictures: [] };
     }
 
-    const { pictures } = result[0];
-    return { status: 200, pictures };
+    return { status: 200, pictures: result[0].pictures };
   }
 
   public async uploadNewPicture(file: Express.Multer.File, userID: string): Promise<{
