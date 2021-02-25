@@ -1,4 +1,9 @@
-import express, { Request, Response } from 'express';
+import express, {
+  Handler,
+  Request,
+  Response,
+  NextFunction,
+} from 'express';
 import multer from 'multer';
 
 import container from '@app/IoC/container';
@@ -23,8 +28,11 @@ import {
 } from '@app/middlewares/validators/user';
 
 const upload = multer({ dest: '.uploads/' });
-
-const asyncWrapper = (fn: any) => (...args: any[]) => fn(...args).catch(args[2]);
+const asyncWrapper = (handler: Handler) => (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => Promise.resolve(handler(req, res, next)).catch(next);
 
 export const router = async (): Promise<express.Router> => {
   const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
