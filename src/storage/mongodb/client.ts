@@ -22,7 +22,7 @@ export class MongoDBClient {
 
   private async checkDatabase(): Promise<void> {
     const files = await utils.readdirAsync(this.validatorsPath);
-    const thenables = files.map(async (file): Promise<{name: string, validator: object}> => {
+    const thenables = files.map(async (file): Promise<{ name: string, validator: object }> => {
       const lastIndex = file.lastIndexOf('.');
       const collection = file.substr(0, lastIndex);
       const buffer = await utils.readFileAsync(`${this.validatorsPath}/${file}`);

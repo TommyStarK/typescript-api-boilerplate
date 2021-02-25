@@ -13,7 +13,7 @@ export class MediaService {
 
   constructor(@inject(TYPES.MongoDBClient) private mongoClient: MongoDBClient) {}
 
-  public async deletePicture(pictureID: string, userID: string): Promise<{status: number, message: string}> {
+  public async deletePicture(pictureID: string, userID: string): Promise<{ status: number, message: string }> {
     const db = this.mongoClient.getDatabase();
     const picObjectId = new ObjectId(pictureID);
     const user = await db.collection('users').findOne({
@@ -81,7 +81,7 @@ export class MediaService {
     };
   }
 
-  public async getPictures(userID: string): Promise<{status: number, pictures: {name: string, fileid: string}[]}> {
+  public async getPictures(userID: string): Promise<{ status: number, pictures: { name: string, fileid: string }[] }> {
     const db = this.mongoClient.getDatabase();
     const result = await db.collection('users')
       .find({ userID })

@@ -11,18 +11,18 @@ export class UserController {
     autoBind(this);
   }
 
-  public async authorize(request: Request<{params: string}, any, AuthPayload>, response: Response): Promise<void> {
+  public async authorize(request: Request<{ params: string }, any, AuthPayload>, response: Response): Promise<void> {
     const auth = await this.userService.authenticate(request.body);
     response.status(auth.status).json(auth);
   }
 
   // eslint-disable-next-line max-len
-  public async register(request: Request<{params: string}, any, RegistrationPayload>, response: Response): Promise<void> {
+  public async register(request: Request<{ params: string }, any, RegistrationPayload>, response: Response): Promise<void> {
     const registration = await this.userService.create(request.body);
     response.status(registration.status).json(registration);
   }
 
-  public async unregister(request: Request<{params: string}, any, AuthPayload>, response: Response): Promise<void> {
+  public async unregister(request: Request<{ params: string }, any, AuthPayload>, response: Response): Promise<void> {
     const unregistration = await this.userService.delete(request.body);
     response.status(unregistration.status).json(unregistration);
   }

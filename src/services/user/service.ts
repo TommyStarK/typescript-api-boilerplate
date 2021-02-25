@@ -20,7 +20,7 @@ export class UserService {
     @inject(TYPES.MySQLClient) private mysqlClient: MySQLClient,
   ) {}
 
-  public async authenticate(payload: AuthPayload): Promise<{status: number, message?: string, token?: string}> {
+  public async authenticate(payload: AuthPayload): Promise<{ status: number, message?: string, token?: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);
@@ -50,7 +50,7 @@ export class UserService {
     return { status: 200, token: newToken };
   }
 
-  public async create(payload: RegistrationPayload): Promise<{status: number, message: string}> {
+  public async create(payload: RegistrationPayload): Promise<{ status: number, message: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, email, password } = payload;
     const emailEncrypted = utils.encrypt(email);
@@ -84,7 +84,7 @@ export class UserService {
     return { status: 201, message: 'Account has been registered' };
   }
 
-  public async delete(payload: AuthPayload): Promise<{status: number, message: string}> {
+  public async delete(payload: AuthPayload): Promise<{ status: number, message: string }> {
     const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);
