@@ -1,6 +1,6 @@
 import { IsEmail, IsString } from 'class-validator';
 
-import { RegistrationPayload } from '@app/components/user/model';
+import { RegistrationPayload } from '@app/services/user/model';
 import { ExpressMiddleware, Model, validate } from '@app/middlewares/validators/handler';
 
 class RegistrationPayloadClass extends Model<RegistrationPayload> {
