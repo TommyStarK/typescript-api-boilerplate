@@ -22,9 +22,6 @@
       "./custom_typings",
       "./node_modules/@types"
     ],
-    "strict": false,
-    "checkJs": false,
-    "allowJs": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,

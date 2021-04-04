@@ -33,7 +33,13 @@ function attemptToEnableHTTPS(expressApp: Express, config: IAppConfig) {
 }
 
 async function main() {
-  app.use('*', cors({ origin: '*' }));
+  app.use('*', cors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use('/', await router());

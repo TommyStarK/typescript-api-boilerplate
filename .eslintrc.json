@@ -45,9 +45,7 @@
       "ignorePackages",
       {
         "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
+        "ts": "never"
       }
     ],
     "@typescript-eslint/no-unused-vars": [

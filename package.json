@@ -14,7 +14,7 @@
     "build:prod": "cross-env NODE_ENV=production yarn run build",
     "coverage": "codecov",
     "dev": "nodemon",
-    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint": "eslint \"{src,tests}/**/*.ts\"",
     "start": "node -r ./tsconfig-paths.js ./dist/src/index.js",
     "test": "jest --verbose --runInBand --coverage --config jest.config.json",
     "test:ci": "scripts/run_tests.sh"
