@@ -6,7 +6,7 @@ docker-compose -f tests/compose-test.yml --project-name boilerplate_${BUILD_NUMB
 docker build . -t typescript_api_boilerplate_test_job_${BUILD_NUMBER};
 
 docker run -ti --rm --network=boilerplate_${BUILD_NUMBER}_default -v `pwd`:/home -e MONGO_URI=mongodb -e MYSQL_URL=mysql \
-typescript_api_boilerplate_test_job_${BUILD_NUMBER} bash -c './scripts/wait_for_it.sh mysql:3306 -- yarn test; exit $?;';
+typescript_api_boilerplate_test_job_${BUILD_NUMBER} bash -c './scripts/wait_for_it.sh --timeout=30 --host=mysql --port=3306 --strict -- yarn test; exit $?;';
 
 rc=$?;
 
