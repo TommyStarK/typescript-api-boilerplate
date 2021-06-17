@@ -16,8 +16,9 @@
     "dev": "nodemon",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
     "start": "node -r ./tsconfig-paths.js ./dist/src/index.js",
-    "test": "jest --verbose --runInBand --coverage --config jest.config.json",
-    "test:ci": "scripts/run_tests.sh"
+    "test:unit": "jest --config jest.config.json --roots tests/unit --runInBand --verbose",
+    "test:integration": "jest --coverage --config jest.config.json --roots tests/integration --runInBand --verbose",
+    "test": "hack/run_tests.sh"
   },
   "dependencies": {
     "auto-bind": "^4.0.0",

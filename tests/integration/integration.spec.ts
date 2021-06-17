@@ -4,12 +4,12 @@ import cors from 'cors';
 import express from 'express';
 import request from 'supertest';
 
-import { AppConfig } from '../src/config';
-import { MongoDBClient } from '../src/storage/mongodb';
-import { MySQLClient } from '../src/storage/mysql';
-import { router } from '../src/router';
-import container from '../src/IoC/container';
-import TYPES from '../src/IoC/types';
+import { AppConfig } from '../../src/config';
+import { MongoDBClient } from '../../src/storage/mongodb';
+import { MySQLClient } from '../../src/storage/mysql';
+import { router } from '../../src/router';
+import container from '../../src/IoC/container';
+import TYPES from '../../src/IoC/types';
 
 let token = '';
 let pictureID = '';

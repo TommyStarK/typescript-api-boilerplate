@@ -2,15 +2,15 @@
 
 [![Build Status](https://travis-ci.org/TommyStarK/typescript-api-boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/typescript-api-boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate/branch/master/graph/badge.svg?token=Qz2QLJRvGX)](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/15256/branches/301878/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=15256&bid=301878)[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-A simple and customizable RESTful API boilerplate written in [Node.js](https://nodejs.org/en/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/) to store large files.
+A simple and modular RESTful API boilerplate written in [Typescript](https://www.typescriptlang.org/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/).
 
-For demo purposes, some features have been integrated to the boilerplate in order to have reusable base "modules" or at least a clean and clear architecture to implement new ones. These "modules" manage the following "services":
+Some features have been integrated to the boilerplate in order to have reusable base "modules", or at least a clean and clear architecture to implement new ones. These "modules" manage the following "services":
 
 - Account management (register/unregister an account)
 - Authentication
-- Per-User media management system (upload|download|list|delete pictures)
+- Per-User media management system (upload/download/list/delete pictures)
 
-The goal is to define a healthy architecture of a REST API connected to one or more backend, in this case a MySQL to store user data and a MongoDB to store pictures of each user. The whole accompanied by a simple authentication system.
+The goal is to define a healthy architecture of a REST API connected to one or more backend(s), in this case a MySQL to store user data and a MongoDB to store pictures of each user. The whole accompanied by a simple authentication system.
 
 **Note**: Only hashes of password are stored in the database. Use the `hash` function in the
 `utils` module if you have to compare hashes.
@@ -23,12 +23,8 @@ function in the `utils` module if you need to decrypt stored email.
 - ECMAScript 2020
 - Auto server restart thanks to [Nodemon](https://github.com/remy/nodemon)
 - Authentication using [JSON Web Tokens](https://jwt.io/)
-- Body parsing
 - Cross-Origin Resource Sharing enabled
-- Consistent coding styles
 - Data input validation middleware(s) thanks to [class-validator](https://github.com/typestack/class-validator)
-- Data persistence
-- Docker
 - Inversion of Control container with [Inversify](https://github.com/inversify/InversifyJS)
 - Linting with [Eslint](https://eslint.org/)
 - Logging using [Winston](https://github.com/winstonjs/winston)
@@ -61,7 +57,7 @@ Run the following commands to run the unit/integration tests:
 
  ```bash
 ❯ yarn install
-❯ yarn test:ci
+❯ yarn test
  ```
 
 ## Usage

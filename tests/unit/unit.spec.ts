@@ -1,4 +1,4 @@
-import utils from '../src/utils';
+import utils from '../../src/utils';
 
 describe('unit tests', () => {
   test('test encrypt/decrypt', () => {
