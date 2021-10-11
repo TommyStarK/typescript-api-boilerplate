@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import { injectable } from 'inversify';
-import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 
 import { AppConfig } from '@app/config';
 import utils from '@app/utils';
@@ -13,13 +12,13 @@ export class MySQLClient {
   constructor() {}
 
   private async checkConnection(): Promise<void> {
-    const connection = await this.getConnection();
+    const connection = await this.pool.getConnection();
     await connection.ping();
     connection.release();
   }
 
   private async checkDatabase(): Promise<void> {
-    const connection = await this.getConnection();
+    const connection = await this.pool.getConnection();
     await connection.query(`create database if not exists ${AppConfig.mysql.database};`);
     await connection.query(`use ${AppConfig.mysql.database};`);
 
@@ -40,18 +39,28 @@ export class MySQLClient {
     }
 
     const {
-      host, user, password,
+      database, host, user, password,
     } = AppConfig.mysql;
 
     this.pool = mysql.createPool({
+      connectionLimit: 1,
+      host,
+      user,
+      password,
+    });
+
+    await this.checkDatabase();
+    await this.pool.end();
+
+    this.pool = mysql.createPool({
       connectionLimit: 10,
+      database,
       host,
       user,
       password,
     });
 
     await this.checkConnection();
-    await this.checkDatabase();
   }
 
   public async disconnect(): Promise<void> {
@@ -61,18 +70,14 @@ export class MySQLClient {
     }
   }
 
-  public async getConnection(): Promise<mysql.PoolConnection> {
+  public async query<T>(sql: string, values: any): Promise<T[]> {
     if (this.pool === undefined) {
-      throw new Error('MySQLClient not connected, call \'connect(): Promise<void>\' before');
+      throw new Error('MySQLClient not connected');
     }
 
-    return this.pool.getConnection();
-  }
-
-  public processRows(rows: RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader): any[] {
-    return [rows].map((row) => (JSON.parse(JSON.stringify(row)).length ? { ...row } : undefined))
-      .filter((elem) => elem !== undefined)
-      // handle BinaryRow
-      .map((elem) => (elem['0']));
+    const connection = await this.pool.getConnection();
+    const [rows] = await connection.query(sql, values);
+    connection.release();
+    return rows as unknown as T[];
   }
 }

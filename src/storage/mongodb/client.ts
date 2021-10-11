@@ -73,14 +73,14 @@ export class MongoDBClient {
 
   public getBucket(): GridFSBucket {
     if (this.bucket === undefined) {
-      throw new Error('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
+      throw new Error('MongoDBCLient not connected');
     }
     return this.bucket;
   }
 
   public getDatabase(): Db {
     if (this.database === undefined) {
-      throw new Error('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
+      throw new Error('MongoDBCLient not connected');
     }
     return this.database;
   }

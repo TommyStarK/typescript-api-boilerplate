@@ -45,8 +45,14 @@ services:
   api:
     build: .
     hostname: api.boilerplate
-    command: ["./scripts/wait_for_it.sh", "mysql:3306", "--", "yarn", "start"]
-    container_name: "api"
+    container_name: api
+    command:
+    - /bin/bash
+    - -c
+    - |
+      ./hack/wait_for_it.sh --timeout=30 --host=mysql --port=3306 --strict -- \
+      ./hack/wait_for_it.sh --timeout=30 --host=mongodb --port=27017 --strict -- \
+      yarn start;
     depends_on:
       - mongodb
       - mysql

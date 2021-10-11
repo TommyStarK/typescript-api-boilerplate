@@ -1,6 +1,6 @@
 # typescript-api-boilerplate
 
-[![Build Status](https://travis-ci.org/TommyStarK/typescript-api-boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/typescript-api-boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate/branch/master/graph/badge.svg?token=Qz2QLJRvGX)](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/15256/branches/301878/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=15256&bid=301878)[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Build Status](https://travis-ci.com/TommyStarK/typescript-api-boilerplate.svg?branch=master)](https://travis-ci.org/TommyStarK/typescript-api-boilerplate) [![codecov](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate/branch/master/graph/badge.svg?token=Qz2QLJRvGX)](https://codecov.io/gh/TommyStarK/typescript-api-boilerplate) [![DeepScan grade](https://deepscan.io/api/teams/10558/projects/15256/branches/301878/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10558&pid=15256&bid=301878)[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 A simple and modular RESTful API boilerplate written in [Typescript](https://www.typescriptlang.org/) using [Express](https://expressjs.com/). The boilerplate is backed with a [MySQL](https://www.mysql.com/) and a [Mongodb](https://www.mongodb.com/).
 
@@ -37,7 +37,7 @@ function in the `utils` module if you need to decrypt stored email.
 ## Requirements
 
 - [Docker](https://www.docker.com)
-- [Node.js 12+](https://nodejs.org/en/)
+- [Node.js 16](https://nodejs.org/en/)
 - [Yarn](https://yarnpkg.com/)
 
 For MacOS, add the following paths to your docker engine:

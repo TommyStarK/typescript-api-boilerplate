@@ -21,23 +21,18 @@ export class UserService {
   ) {}
 
   public async authenticate(payload: AuthPayload): Promise<{ status: number, message?: string, token?: string }> {
-    const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);
 
-    const [rows] = await connection.execute(
+    const [user] = await this.mysqlClient.query<{ userID: string; username: string }>(
       'select userID, username from users where username = ? and password = ? order by username limit 1',
       [username, passwordHash],
     );
 
-    connection.release();
-    const users = this.mysqlClient.processRows(rows);
-
-    if (!users.length) {
+    if (!user) {
       return { status: 401, message: 'Wrong credentials' };
     }
 
-    const user = users[0];
     const tokenPayload = {
       username: user.username,
       userID: user.userID,
@@ -51,22 +46,16 @@ export class UserService {
   }
 
   public async create(payload: RegistrationPayload): Promise<{ status: number, message: string }> {
-    const connection = await this.mysqlClient.getConnection();
     const { username, email, password } = payload;
     const emailEncrypted = utils.encrypt(email);
     const passwordHash = utils.hash(password);
 
-    const [rows] = await connection.execute(
+    const [user] = await this.mysqlClient.query<{ email: string; username: string }>(
       'select email, username from users where username = ? or email = ? order by email limit 1',
       [username, emailEncrypted],
     );
 
-    const users = this.mysqlClient.processRows(rows);
-
-    if (users.length > 0) {
-      const user: any = users[0];
-      connection.release();
-
+    if (user) {
       return {
         status: 409,
         message: `Conflict: ${
@@ -75,39 +64,32 @@ export class UserService {
       };
     }
 
-    await connection.execute(
+    await this.mysqlClient.query(
       'insert into `users`(`email`, `password`, `userID`, `username`) values(?,?,?,?)',
       [emailEncrypted, passwordHash, uniqid(), username],
     );
 
-    connection.release();
     return { status: 201, message: 'Account has been registered' };
   }
 
   public async delete(payload: AuthPayload): Promise<{ status: number, message: string }> {
-    const connection = await this.mysqlClient.getConnection();
     const { username, password } = payload;
     const passwordHash = utils.hash(password);
 
-    const [rows] = await connection.execute(
+    const [u] = await this.mysqlClient.query<{ userID: string }>(
       'select userID from users where username = ? and password = ? order by username limit 1',
       [username, passwordHash],
     );
 
-    const users = this.mysqlClient.processRows(rows);
-
-    if (!users.length) {
-      connection.release();
+    if (!u) {
       return { status: 401, message: 'Wrong credentials' };
     }
 
-    await connection.execute(
+    await this.mysqlClient.query(
       'delete from users where username = ? and password = ? order by username limit 1',
       [username, passwordHash],
     );
 
-    connection.release();
-    const u = users[0];
     const db = this.mongoClient.getDatabase();
     const user = await db.collection('users').findOneAndDelete({
       userID: u.userID,

@@ -40,32 +40,16 @@ describe('integration tests', () => {
     jest.clearAllMocks();
   });
 
-  test('Backend storage(s) behavior', async () => {
-    try {
-      const dummyMySQL = new MySQLClient();
-      await dummyMySQL.getConnection();
-    } catch (error) {
-      expect(error.message).toEqual('MySQLClient not connected, call \'connect(): Promise<void>\' before');
-    }
-
+  test('client(s) storage(s) connection(s)', async () => {
+    const dummyMySQL = new MySQLClient();
+    await expect(dummyMySQL.query('show databases', [])).rejects.toThrow('MySQLClient not connected');
     const dummyMongo = new MongoDBClient();
-
-    try {
-      dummyMongo.getBucket();
-    } catch (error) {
-      expect(error.message).toEqual('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
-    }
-
-    try {
-      dummyMongo.getDatabase();
-    } catch (error) {
-      expect(error.message).toEqual('MongoDBCLient not fully ready, call \'connect():Promise<void>\' before');
-    }
-
+    expect(() => dummyMongo.getBucket()).toThrow('MongoDBCLient not connected');
+    expect(() => dummyMongo.getDatabase()).toThrow('MongoDBCLient not connected');
     const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
-    expect(async () => mysql.connect()).not.toThrow();
+    await expect(mysql.connect()).resolves.not.toThrow();
     const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
-    expect(async () => mongodb.connect()).not.toThrow();
+    await expect(mongodb.connect()).resolves.not.toThrow();
   });
 
   test('500 Internal server error', async () => {
@@ -266,7 +250,6 @@ describe('integration tests', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual(`Picture with ID (${pictureID}) has been deleted`);
-    await new Promise((r) => setTimeout(r, 1000));
   });
 
   test('404 delete a picture which does not exist', async () => {
@@ -303,7 +286,6 @@ describe('integration tests', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual('Account has been unregistered');
-    await new Promise((r) => setTimeout(r, 1000));
   });
 
   test('test /hello with a valid token but from a deleted account', async () => {

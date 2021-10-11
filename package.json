@@ -15,10 +15,17 @@
     "coverage": "codecov",
     "dev": "nodemon",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
-    "start": "node -r ./tsconfig-paths.js ./dist/src/index.js",
-    "test:unit": "jest --config jest.config.json --roots tests/unit --runInBand --verbose",
-    "test:integration": "jest --coverage --config jest.config.json --roots tests/integration --runInBand --verbose",
-    "test": "hack/run_tests.sh"
+    "start": "node -r ./tsconfig-paths.js ./dist/index.js",
+    "test:ci": "hack/run_tests.sh",
+    "test:integration": "jest --coverage --config jest.config.json --no-cache --roots tests/integration --runInBand --verbose",
+    "test:unit": "jest --coverage --config jest.config.json --no-cache --roots tests/unit --runInBand --verbose",
+    "test": "jest --coverage --config jest.config.json --no-cache --roots tests --runInBand --verbose",
+    "validate": "yarn lint && yarn build"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn validate && yarn test:unit"
+    }
   },
   "dependencies": {
     "auto-bind": "^4.0.0",
@@ -57,6 +64,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.2",
     "inversify-inject-decorators": "^3.1.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.4",
