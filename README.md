@@ -57,7 +57,7 @@ Run the following commands to run the unit/integration tests:
 
  ```bash
 ❯ yarn install
-❯ yarn test
+❯ yarn test:ci
  ```
 
 ## Usage
@@ -115,7 +115,7 @@ $ curl -H "Content-Type: application/json" --request DELETE \
 
 ### Config
 
-Check the [config](https://github.com/TommyStarK/REST-API-Node-Boilerplate/blob/master/src/config.ts) file to customize your boilerplate as you wish.
+Check the [config](https://github.com/TommyStarK/typescript-api-boilerplate/blob/master/src/config.ts) file to customize your boilerplate as you wish.
 
   ```typescript
   {

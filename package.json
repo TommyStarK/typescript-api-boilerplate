@@ -1,6 +1,6 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Experimental Typescript boilerplate of a REST API",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
@@ -20,11 +20,12 @@
     "test:integration": "jest --coverage --config jest.config.json --no-cache --roots tests/integration --runInBand --verbose",
     "test:unit": "jest --coverage --config jest.config.json --no-cache --roots tests/unit --runInBand --verbose",
     "test": "jest --coverage --config jest.config.json --no-cache --roots tests --runInBand --verbose",
-    "validate": "yarn lint && yarn build"
+    "validate": "yarn run lint && yarn run build",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn validate && yarn test:unit"
+      "pre-commit": "yarn run validate && yarn run test:unit"
     }
   },
   "dependencies": {

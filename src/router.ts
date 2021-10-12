@@ -57,11 +57,6 @@ export const router = async (): Promise<express.Router> => {
   const userController = container.get<UserController>(TYPES.UserController);
   const Router = express.Router();
 
-  // for sake of tests
-  Router.get('/500', (request: Request, response: Response) => {
-    throw new Error('test internal server error');
-  });
-
   // First path handled
   Router.get(`/${AppConfig.app.url}`, (_: Request, response: Response) => response.status(200).json({
     status: 200,

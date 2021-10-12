@@ -14,10 +14,11 @@ export class MongoDBClient {
 
   constructor() {}
 
-  private async checkConnection(): Promise<void> {
-    if (!this.client.isConnected()) {
-      throw new Error('MongoDBClient not connected');
+  private checkConnection(): boolean {
+    if (this.client === undefined || (this.client !== undefined && !this.client.isConnected())) {
+      throw new Error('MongoDBCLient not connected');
     }
+    return true;
   }
 
   private async checkDatabase(): Promise<void> {
@@ -46,8 +47,9 @@ export class MongoDBClient {
 
   public async connect(): Promise<void> {
     if (this.client !== undefined) {
-      await this.checkConnection();
-      return;
+      if (this.checkConnection()) {
+        return;
+      }
     }
 
     const {
@@ -61,7 +63,7 @@ export class MongoDBClient {
     this.database = this.client.db(database);
     this.bucket = new GridFSBucket(this.database);
 
-    await this.checkConnection();
+    this.checkConnection();
     await this.checkDatabase();
   }
 
@@ -72,16 +74,12 @@ export class MongoDBClient {
   }
 
   public getBucket(): GridFSBucket {
-    if (this.bucket === undefined) {
-      throw new Error('MongoDBCLient not connected');
-    }
+    this.checkConnection();
     return this.bucket;
   }
 
   public getDatabase(): Db {
-    if (this.database === undefined) {
-      throw new Error('MongoDBCLient not connected');
-    }
+    this.checkConnection();
     return this.database;
   }
 }

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import request from 'supertest';
 
 import { AppConfig } from '../../src/config';
@@ -10,18 +10,29 @@ import { MySQLClient } from '../../src/storage/mysql';
 import { router } from '../../src/router';
 import container from '../../src/IoC/container';
 import TYPES from '../../src/IoC/types';
+import { authMiddleware, errorMiddleware } from '../../src/middlewares';
 
 let token = '';
 let pictureID = '';
 /* eslint-disable max-len */
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp2aW5jZW50IiwidXNlcklEIjoiNDA2NDUxMW1qczgybWprNCIsImlhdCI6MTU1MDM1NzE2OSwiZXhwIjoxNTUwNDQzNTY5fQ.CV7oQagJKtsBdO15PPt1sTmIe8cQ6_ewAVqQE0w-jn0';
+/* eslint-disable max-len */
+const forgedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvbyIsInVzZXJJRCI6IjQwNHQyazJva3Vuc290azAiLCJpYXQiOjE2MzQwMjU2NjYsImV4cCI6MTYzNDExMjA2Nn0.ZlAI4PXw9Rz2QXK894d8R4_cnqTXsD8ZReT2haBV5tQ';
 
-async function createApp() {
+async function createApp(): Promise<express.Express> {
   const app = express();
   app.use('*', cors({ origin: '*' }));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use('/', await router());
+  return app;
+}
+
+function internalServerErrorSetup(): express.Express {
+  const app = express();
+  app.all(`/${AppConfig.app.url}/*`, [authMiddleware(new MySQLClient())]);
+  app.get(`/${AppConfig.app.url}/hello`, (_: Request, res: Response) => res.status(200));
+  app.use(errorMiddleware);
   return app;
 }
 
@@ -40,6 +51,14 @@ describe('integration tests', () => {
     jest.clearAllMocks();
   });
 
+  test('500 Internal server error', async () => {
+    const response = await request(internalServerErrorSetup())
+      .get(`/${AppConfig.app.url}/hello`)
+      .set('Authorization', forgedToken);
+
+    expect(response.status).toBe(500);
+  });
+
   test('client(s) storage(s) connection(s)', async () => {
     const dummyMySQL = new MySQLClient();
     await expect(dummyMySQL.query('show databases', [])).rejects.toThrow('MySQLClient not connected');
@@ -50,12 +69,6 @@ describe('integration tests', () => {
     await expect(mysql.connect()).resolves.not.toThrow();
     const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
     await expect(mongodb.connect()).resolves.not.toThrow();
-  });
-
-  test('500 Internal server error', async () => {
-    const response = await request(app).get('/500');
-    expect(response.status).toBe(500);
-    expect(response.body.message).toEqual('Internal server error');
   });
 
   test('ping service', async () => {
