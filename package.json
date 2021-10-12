@@ -15,13 +15,13 @@
     "coverage": "codecov",
     "dev": "nodemon",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
+    "prepare": "husky install",
     "start": "node -r ./tsconfig-paths.js ./dist/index.js",
     "test:ci": "hack/run_tests.sh",
     "test:integration": "jest --coverage --config jest.config.json --no-cache --roots tests/integration --runInBand --verbose",
     "test:unit": "jest --coverage --config jest.config.json --no-cache --roots tests/unit --runInBand --verbose",
     "test": "jest --coverage --config jest.config.json --no-cache --roots tests --runInBand --verbose",
-    "validate": "yarn run lint && yarn run build",
-    "prepare": "husky install"
+    "validate": "yarn run lint && yarn run build"
   },
   "husky": {
     "hooks": {

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import bodyParser from 'body-parser';
+import { json as bodyParserJSON, urlencoded as bodyParserURLEncoded } from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import request from 'supertest';
@@ -22,8 +22,7 @@ const forgedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvby
 async function createApp(): Promise<express.Express> {
   const app = express();
   app.use('*', cors({ origin: '*' }));
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+  app.use(bodyParserURLEncoded({ extended: true }), bodyParserJSON());
   app.use('/', await router());
   return app;
 }

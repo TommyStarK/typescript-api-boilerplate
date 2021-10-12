@@ -1,4 +1,4 @@
-import bodyParser from 'body-parser';
+import { json as bodyParserJSON, urlencoded as bodyParserURLEncoded } from 'body-parser';
 import cors from 'cors';
 import express, { Express } from 'express';
 import fs from 'fs';
@@ -40,8 +40,7 @@ async function main() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   }));
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+  app.use(bodyParserURLEncoded({ extended: true }), bodyParserJSON());
   app.use('/', await router());
 
   attemptToEnableHTTPS(app, AppConfig);

@@ -63,3 +63,5 @@ dist
 # macOS
 .DS_Store
 
+# husky
+.husky
