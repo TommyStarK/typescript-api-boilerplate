@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { ObjectId } from 'mongodb';
 import path from 'path';
 
-import { MongoDBClient } from '@app/storage/mongodb/client';
+import { MongoDBClient } from '@app/storages/mongodb/client';
 import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 

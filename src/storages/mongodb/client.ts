@@ -7,7 +7,7 @@ import utils from '@app/utils';
 
 @injectable()
 export class MongoDBClient {
-  private readonly validatorsPath: string = 'src/storage/mongodb/validators';
+  private readonly validatorsPath: string = 'src/storages/mongodb/validators';
   private bucket: GridFSBucket = undefined;
   private client: MongoClient = undefined;
   private database: Db = undefined;
@@ -15,7 +15,7 @@ export class MongoDBClient {
   constructor() {}
 
   private checkConnection(): boolean {
-    if (this.client === undefined || (this.client !== undefined && !this.client.isConnected())) {
+    if (this.client === undefined) {
       throw new Error('MongoDBCLient not connected');
     }
     return true;

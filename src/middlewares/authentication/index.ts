@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { AppConfig } from '@app/config';
-import { MySQLClient } from '@app/storage/mysql';
+import { MySQLClient } from '@app/storages/mysql';
 
 export const authMiddleware = (mysqlClient: MySQLClient) => async (
   request: Request, response: Response, next: NextFunction,
@@ -20,7 +20,8 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
 
   try {
     const decoded = jwt.verify(token, AppConfig.app.secret);
-    request.decoded = decoded;
+    const { userID, username } = decoded as jwt.JwtPayload;
+    request.user = { userID, username };
   } catch (error) {
     response.status(401).json({ status: 401, message: 'Invalid token' });
     return;
@@ -29,7 +30,7 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
   try {
     const [user] = await mysqlClient.query(
       'select 1 from users where userID = ? and username = ? order by username limit 1',
-      [request.decoded.userID, request.decoded.username],
+      [request.user.userID, request.user.username],
     );
 
     if (!user) {

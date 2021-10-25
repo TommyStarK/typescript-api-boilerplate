@@ -7,8 +7,8 @@ import express, {
 import multer from 'multer';
 
 import container from '@app/IoC/container';
-import { MongoDBClient } from '@app/storage/mongodb';
-import { MySQLClient } from '@app/storage/mysql';
+import { MongoDBClient } from '@app/storages/mongodb';
+import { MySQLClient } from '@app/storages/mysql';
 import { MediaController } from '@app/services/media/controller';
 import { UserController } from '@app/services/user/controller';
 
@@ -19,6 +19,7 @@ import logger from '@app/logger';
 import {
   authMiddleware,
   errorMiddleware,
+  logMiddleware,
   notfoundMiddleware,
 } from '@app/middlewares';
 
@@ -69,10 +70,10 @@ export const router = async (): Promise<express.Router> => {
   Router.delete(`/${AppConfig.app.url}/unregister`, authPayloadValidator(), asyncWrapper(userController.unregister));
 
   // authentication middleware
-  Router.all(`/${AppConfig.app.url}/*`, [authMiddleware(mysql)]);
+  Router.all(`/${AppConfig.app.url}/*`, [authMiddleware(mysql), logMiddleware]);
 
   Router.get(`/${AppConfig.app.url}/hello`, (request: Request, response: Response) => {
-    response.status(200).json({ status: 200, message: `Hello ${request.decoded.username}` });
+    response.status(200).json({ status: 200, message: `Hello ${request.user.username}` });
   });
 
   // Media

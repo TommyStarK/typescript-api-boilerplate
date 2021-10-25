@@ -5,8 +5,8 @@ import express, { Request, Response } from 'express';
 import request from 'supertest';
 
 import { AppConfig } from '../../src/config';
-import { MongoDBClient } from '../../src/storage/mongodb';
-import { MySQLClient } from '../../src/storage/mysql';
+import { MongoDBClient } from '../../src/storages/mongodb';
+import { MySQLClient } from '../../src/storages/mysql';
 import { router } from '../../src/router';
 import container from '../../src/IoC/container';
 import TYPES from '../../src/IoC/types';
@@ -17,7 +17,7 @@ let pictureID = '';
 /* eslint-disable max-len */
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp2aW5jZW50IiwidXNlcklEIjoiNDA2NDUxMW1qczgybWprNCIsImlhdCI6MTU1MDM1NzE2OSwiZXhwIjoxNTUwNDQzNTY5fQ.CV7oQagJKtsBdO15PPt1sTmIe8cQ6_ewAVqQE0w-jn0';
 /* eslint-disable max-len */
-const forgedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvbyIsInVzZXJJRCI6IjQwNHQyazJva3Vuc290azAiLCJpYXQiOjE2MzQwMjU2NjYsImV4cCI6MTYzNDExMjA2Nn0.ZlAI4PXw9Rz2QXK894d8R4_cnqTXsD8ZReT2haBV5tQ';
+const forgedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvbyIsInVzZXJJRCI6ImVld2s0MW1rdjZnMHRuOSIsImlhdCI6MTYzNTE1NzQxNiwiZXhwIjozMTcxNzk1OTk4MTZ9.fLzyfxL-u0mCWGMtUARRfTNGMq0XQ9at70QAUjbjVPI';
 
 async function createApp(): Promise<express.Express> {
   const app = express();

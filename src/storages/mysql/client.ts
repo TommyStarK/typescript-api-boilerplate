@@ -6,7 +6,7 @@ import utils from '@app/utils';
 
 @injectable()
 export class MySQLClient {
-  private readonly hydratationPath: string = 'src/storage/mysql/tables';
+  private readonly hydratationPath: string = 'src/storages/mysql/tables';
   private pool: mysql.Pool = undefined;
 
   constructor() {}

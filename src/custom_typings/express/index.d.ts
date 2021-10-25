@@ -1,6 +1,6 @@
 declare namespace Express {
   interface Request {
-    decoded: any;
     file?: Multer.File;
+    user: { userID: string; username: string };
   }
 }

@@ -14,12 +14,8 @@ const transports: winston.transport[] = process.env.NODE_ENV === 'production' ||
 const logger: winston.Logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
-    winston.format.label({ label: `${process.env.NODE_ENV ? process.env.NODE_ENV : 'local'}` }),
-    winston.format.colorize(),
-    winston.format.timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss',
-    }),
-    winston.format.printf((info) => `[${info.label}][${info.timestamp}] ${info.level}: ${info.message}`),
+    winston.format.timestamp({ format: 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]' }),
+    winston.format.json(),
   ),
   transports,
 });

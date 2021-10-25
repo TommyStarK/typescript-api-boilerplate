@@ -6,8 +6,8 @@ import { MediaController } from '@app/services/media/controller';
 import { MediaService } from '@app/services/media/service';
 import { UserController } from '@app/services/user/controller';
 import { UserService } from '@app/services/user/service';
-import { MongoDBClient } from '@app/storage/mongodb/client';
-import { MySQLClient } from '@app/storage/mysql/client';
+import { MongoDBClient } from '@app/storages/mongodb/client';
+import { MySQLClient } from '@app/storages/mysql/client';
 import TYPES from './types';
 
 const container = new Container();

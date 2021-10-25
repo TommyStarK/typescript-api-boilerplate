@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import uniqid from 'uniqid';
 
 import { AppConfig } from '@app/config';
-import { MongoDBClient } from '@app/storage/mongodb';
-import { MySQLClient } from '@app/storage/mysql';
+import { MongoDBClient } from '@app/storages/mongodb';
+import { MySQLClient } from '@app/storages/mysql';
 import TYPES from '@app/IoC/types';
 import utils from '@app/utils';
 
