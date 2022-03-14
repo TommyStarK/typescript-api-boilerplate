@@ -106,7 +106,7 @@ export class UserService {
     };
 
     if (user.value) {
-      await Promise.all(user.value.pictures.map((elem: unknown) => clean(elem)));
+      await Promise.all(user.value.pictures.map(async (elem: unknown) => clean(elem)));
     }
 
     return { status: 200, message: 'Account has been unregistered' };

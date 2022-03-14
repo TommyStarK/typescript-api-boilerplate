@@ -6,7 +6,7 @@ import { AppConfig } from '@app/config';
 
 const algorithm = 'aes-256-ctr';
 const iv = crypto.randomBytes(16);
-const password = crypto.createHash('sha256').update(String(AppConfig.app.secret)).digest('base64').substr(0, 32);
+const password = crypto.createHash('sha256').update(`${AppConfig.app.secret}`).digest('base64').substring(0, 32);
 
 const utils = {
   decrypt: (target: string): string => {

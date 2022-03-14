@@ -1,5 +1,5 @@
 {
-    "watch": ["src"],
-    "ext": "ts,json",
+    "watch": ["src", "tests"],
+    "ext": "js,ts,json,yml,yaml",
     "exec": "NODE_ENV=local ts-node -r tsconfig-paths/register --project tsconfig.json --files src/index.ts"
 }

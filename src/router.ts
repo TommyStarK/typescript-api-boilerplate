@@ -14,7 +14,7 @@ import { UserController } from '@app/services/user/controller';
 
 import { AppConfig } from '@app/config';
 import TYPES from '@app/IoC/types';
-import logger from '@app/logger';
+// import logger from '@app/logger';
 
 import {
   authMiddleware,
@@ -40,19 +40,21 @@ export const router = async (): Promise<express.Router> => {
   const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
   const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
 
-  process.on('SIGINT', async () => {
-    await mongodb.disconnect();
-    await mysql.disconnect();
-    process.exit(1);
-  });
+  // process.on('SIGINT', async () => {
+  //   await mongodb.disconnect();
+  //   await mysql.disconnect();
+  //   process.exit(1);
+  // });
 
-  try {
-    await mongodb.connect();
-    await mysql.connect();
-  } catch (error) {
-    logger.error(error);
-    process.exit(1);
-  }
+  // try {
+  //   await mongodb.connect();
+  //   await mysql.connect();
+  // } catch (error) {
+  //   logger.error(error);
+  //   process.exit(1);
+  // }
+  await mongodb.connect();
+  await mysql.connect();
 
   const mediaController = container.get<MediaController>(TYPES.MediaController);
   const userController = container.get<UserController>(TYPES.UserController);
