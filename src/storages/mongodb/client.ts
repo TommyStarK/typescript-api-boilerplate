@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import { injectable } from 'inversify';
-import { MongoClient, GridFSBucket, Db } from 'mongodb';
+import {
+  MongoClient,
+  GridFSBucket,
+  Db,
+  Collection,
+} from 'mongodb';
 
 import { AppConfig } from '@app/config';
 import utils from '@app/utils';
@@ -22,25 +27,26 @@ export class MongoDBClient {
   }
 
   private async checkDatabase(): Promise<void> {
+    const collectionsRequired: { name: string, validator: object }[] = [];
     const files = await utils.readdirAsync(this.validatorsPath);
-    const thenables = files.map(async (file): Promise<{ name: string, validator: object }> => {
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const file of files) {
       const lastIndex = file.lastIndexOf('.');
-      const collection = file.substr(0, lastIndex);
+      const collection = file.substring(0, lastIndex);
+      // eslint-disable-next-line no-await-in-loop
       const buffer = await utils.readFileAsync(`${this.validatorsPath}/${file}`);
-      return { name: collection, validator: JSON.parse(buffer.toString('utf-8')) };
-    });
+      collectionsRequired.push({ name: collection, validator: JSON.parse(buffer.toString('utf-8')) });
+    }
 
     const witness = new Map();
-    const collectionsRequired = await Promise.all(thenables);
     const existingCollections = await this.database.listCollections().toArray();
     const namesOfExistingCollections = existingCollections.map((collection: { name: string }) => collection.name);
     namesOfExistingCollections.forEach(witness.set.bind(witness));
 
     const collectionsToCreate = collectionsRequired
       .filter((collection) => !witness.has(collection.name))
-      .map(async (collection): Promise<void> => {
-        await this.database.createCollection(collection.name, collection.validator);
-      });
+      .map(async (c): Promise<Collection<any>> => this.database.createCollection(c.name, c.validator));
 
     await Promise.all(collectionsToCreate);
   }
