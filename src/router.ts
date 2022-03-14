@@ -14,7 +14,7 @@ import { UserController } from '@app/services/user/controller';
 
 import { AppConfig } from '@app/config';
 import TYPES from '@app/IoC/types';
-import logger from '@app/logger';
+// import logger from '@app/logger';
 
 import {
   authMiddleware,
