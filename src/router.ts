@@ -41,20 +41,17 @@ export const router = async (): Promise<express.Router> => {
   const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
 
   // process.on('SIGINT', async () => {
-  //   await mongodb.disconnect();
-  //   await mysql.disconnect();
+  //   await Promise.all([mysql.disconnect(), mongodb.disconnect()]);
   //   process.exit(1);
   // });
 
   // try {
-  //   await mongodb.connect();
-  //   await mysql.connect();
+  //   await Promise.all([mysql.connect(), mongodb.connect()]);
   // } catch (error) {
   //   logger.error(error);
   //   process.exit(1);
   // }
-  await mongodb.connect();
-  await mysql.connect();
+  await Promise.all([mysql.connect(), mongodb.connect()]);
 
   const mediaController = container.get<MediaController>(TYPES.MediaController);
   const userController = container.get<UserController>(TYPES.UserController);

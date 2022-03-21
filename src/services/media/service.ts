@@ -70,8 +70,10 @@ export class MediaService {
       pipe.on('error', reject);
     });
 
-    const base64Pic = await download;
-    await utils.unlinkAsync(filePath);
+    const [base64Pic] = await Promise.all([
+      download,
+      utils.unlinkAsync(filePath),
+    ]);
 
     return {
       status: 200,
