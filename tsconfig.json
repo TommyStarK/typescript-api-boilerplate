@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "lib": ["es2020"],
+    "target": "es2021",
+    "lib": ["es2021"],
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./dist",
@@ -13,9 +13,11 @@
       "reflect-metadata",
       "node",
       "express",
-      "mongodb",
-      "mysql2",
       "inversify",
+      "jsonwebtoken",
+      "mongodb",
+      "multer",
+      "pg",
       "jest"
     ],
     "typeRoots": [

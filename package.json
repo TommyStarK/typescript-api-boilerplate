@@ -1,12 +1,17 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "Experimental Typescript boilerplate of a REST API",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TommyStarK/typescript-api-boilerplate.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run validate && yarn run test:unit"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -23,11 +28,6 @@
     "test": "jest --coverage --config jest.config.json --no-cache --roots tests --runInBand --verbose",
     "validate": "yarn run lint && yarn run build"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run validate && yarn run test:unit"
-    }
-  },
   "dependencies": {
     "auto-bind": "^4.0.0",
     "body-parser": "^1.17.1",
@@ -38,7 +38,7 @@
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
     "multer": "^1.4.2",
-    "mysql2": "^2.2.5",
+    "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "uniqid": "^5.0.3",
     "winston": "^3.2.1"
@@ -50,8 +50,8 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongodb": "^3.6.3",
     "@types/multer": "^1.4.5",
-    "@types/mysql2": "types/mysql2",
     "@types/node": "^14.14.31",
+    "@types/pg": "^8.6.5",
     "@types/request": "^2.48.3",
     "@types/supertest": "^2.0.10",
     "@types/uniqid": "^5.2.0",

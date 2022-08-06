@@ -1,45 +1,48 @@
-version: '3.7'
+version: '3.8'
 
 networks:
   boilerplate:
 
-volumes:
-  mongodb_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/mongodb/data/db
-  mysql_volume:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/lib/mysql
+# volumes:
+#   mongo_volume:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /var/lib/mongo/data/db
+#   postgres_volume:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /var/lib/postgres
 
 services:
-  mongodb:
-    container_name: mongodb
+  mongo:
+    container_name: mongo
     image: mongo:latest
     ports:
       - "27017:27017"
     networks:
       - boilerplate
-    volumes:
-      - mongodb_volume:/data/db
+    # volumes:
+      # - mongo_volume:/data/db
     restart: unless-stopped
 
-  mysql:
-    container_name: mysql
-    image: mysql:latest
+  postgres:
+    container_name: postgres
+    image: postgres:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - POSTGRES_DB=dummy
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
     ports:
-      - "3306:3306"
+      - "5432:5432"
     networks:
       - boilerplate
     volumes:
-      - mysql_volume:/var/lib/mysql
+      # - postgres_volume:/var/lib/postgres
+      - ${PWD}/hack/fixtures/db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
     restart: unless-stopped
 
   api:
@@ -50,15 +53,16 @@ services:
     - /bin/bash
     - -c
     - |
-      ./hack/wait_for_it.sh --timeout=30 --host=mysql --port=3306 --strict -- \
-      ./hack/wait_for_it.sh --timeout=30 --host=mongodb --port=27017 --strict -- \
+      ./hack/wait_for_it.sh --timeout=30 --host=mongo --port=27017 --strict -- \
+      ./hack/wait_for_it.sh --timeout=30 --host=postgres --port=5432 --strict -- \
       yarn start;
     depends_on:
-      - mongodb
-      - mysql
+      - mongo
+      - postgres
     environment:
-      - MONGO_URI=mongodb
-      - MYSQL_URL=mysql
+      - LOG_LEVEL=debug
+      - MONGO_URI=mongo
+      - POSTGRES_URL=postgres
     ports:
       - "3001:3001"
       - "8443:8443"

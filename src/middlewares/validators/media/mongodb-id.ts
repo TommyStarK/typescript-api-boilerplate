@@ -1,7 +1,8 @@
 import { IsString, MinLength } from 'class-validator';
 import { Request } from 'express';
 
-import { MongoID } from '@app/services/media/model';
+import { MongoID } from '@app/api/media/model';
+
 import {
   ExpressMiddleware,
   Model,
@@ -14,7 +15,7 @@ class MongoIDvalidationClass extends Model<MongoID> {
   @MinLength(12, {
     message: 'picture ID must be a single string of either 12 bytes or 24 hex characters',
   })
-  id!: string;
+  id: string;
 }
 
 const customtSetupMiddleware = <T>(request: Request, model: ModelCtor<T>) => {

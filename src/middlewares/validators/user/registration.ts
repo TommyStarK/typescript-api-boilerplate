@@ -1,18 +1,23 @@
 import { IsEmail, IsString } from 'class-validator';
 
-import { RegistrationPayload } from '@app/services/user/model';
-import { ExpressMiddleware, Model, validate } from '@app/middlewares/validators/handler';
+import { RegistrationPayload } from '@app/api/user/model';
+
+import {
+  ExpressMiddleware,
+  Model,
+  validate,
+} from '@app/middlewares/validators/handler';
 
 class RegistrationPayloadClass extends Model<RegistrationPayload> {
   @IsString()
-  username!: string;
+  username: string;
 
   @IsString()
-  password!: string;
+  password: string;
 
   @IsString()
   @IsEmail()
-  email!: string;
+  email: string;
 }
 
 // eslint-disable-next-line max-len
