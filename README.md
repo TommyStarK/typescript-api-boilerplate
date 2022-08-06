@@ -69,47 +69,47 @@ Run the following commands to use your boilerplate:
 
  ```bash
 # Start the stack
-$ docker-compose up --build --detach
+❯ docker-compose up --build --detach
 
 #
 # Assuming your are using the default config
 #
 
 # Ping the service
-$ curl --request GET http://localhost:3001/api.boilerplate/healthz
+❯ curl --request GET http://localhost:3001/api.boilerplate/healthz
 
 # Register a new account
-$ curl -H "Content-Type: application/json" --request POST \
+❯ curl -H "Content-Type: application/json" --request POST \
   -d '{"username":"foo", "email":"foo@email.com", "password":"bar"}' \
   http://localhost:3001/api.boilerplate/register
 
 # Authorize your account and retrieve your authentication token
-$ curl -H "Content-Type: application/json" --request POST \
+❯ export TOKEN=$(curl --silent -H "Content-Type: application/json" --request POST \
   -d '{"username":"foo", "password":"bar"}' \
-  http://localhost:3001/api.boilerplate/authorize
+  http://localhost:3001/api.boilerplate/authorize | jq -r .token)
 
 # Test an auth required request
-$ curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET \
+❯ curl -H "Authorization: $TOKEN" --request GET \
   http://localhost:3001/api.boilerplate/hello
 
 # Upload a picture (okay this is not a picture ... :p)
-curl -H "Authorization: INSERT_YOUR_TOKEN" -F file=@README.md \
+❯ curl -H "Authorization: $TOKEN" -F file=@README.md \
   -X POST http://localhost:3001/api.boilerplate/picture
 
 # Get your pictures
-curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET \
+❯ curl -H "Authorization: $TOKEN" --request GET \
   http://localhost:3001/api.boilerplate/pictures
 
 # Get a specific picture
-curl -H "Authorization: INSERT_YOUR_TOKEN" --request GET \
+❯ curl -H "Authorization: $TOKEN" --request GET \
   http://localhost:3001/api.boilerplate/picture/PICTURE_ID
 
 # Delete a specific picture
-curl -H "Authorization: INSERT_YOUR_TOKEN" --request DELETE \
+❯ curl -H "Authorization: $TOKEN" --request DELETE \
   http://localhost:3001/api.boilerplate/picture/PICTURE_ID
 
 # Unregister your account
-$ curl -H "Content-Type: application/json" --request DELETE \
+❯ curl -H "Content-Type: application/json" --request DELETE \
   -d '{"username":"foo", "password":"bar"}' \
   http://localhost:3001/api.boilerplate/unregister
  ```

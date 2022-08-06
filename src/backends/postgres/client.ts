@@ -21,12 +21,6 @@ export class PostgreSQLClient {
     await this.pool().query('SELECT NOW()');
   }
 
-  private async checkDatabase(): Promise<void> {
-    const client = await this.pool().connect();
-
-    client.release();
-  }
-
   private pool(): Pool {
     if (this._pool === undefined) {
       throw new Error('PostgreSQLClient not connected');
@@ -46,10 +40,7 @@ export class PostgreSQLClient {
 
     this._pool = new Pool(this._config);
 
-    await Promise.all([
-      this.checkConnection(),
-      this.checkDatabase(),
-    ]);
+    await this.checkConnection();
   }
 
   public async disconnect(): Promise<void> {

@@ -62,7 +62,7 @@ export const router = async (): Promise<express.Router> => {
   const r = express.Router();
 
   // healthcheck
-  r.get(`/${AppConfig.app.url}/healthz`, (request: Request, response: Response) => {
+  r.get(`/${AppConfig.app.url}/healthz`, (_: Request, response: Response) => {
     response.status(200).json({ status: 200, message: 'ok' });
   });
 

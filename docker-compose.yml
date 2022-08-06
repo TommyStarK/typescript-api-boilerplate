@@ -3,19 +3,19 @@ version: '3.8'
 networks:
   boilerplate:
 
-# volumes:
-#   mongo_volume:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: /var/lib/mongo/data/db
-#   postgres_volume:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: /var/lib/postgres
+volumes:
+  mongo_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/mongo/data/db
+  postgres_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/postgres
 
 services:
   mongo:
@@ -25,8 +25,8 @@ services:
       - "27017:27017"
     networks:
       - boilerplate
-    # volumes:
-      # - mongo_volume:/data/db
+    volumes:
+      - mongo_volume:/data/db
     restart: unless-stopped
 
   postgres:
@@ -41,7 +41,7 @@ services:
     networks:
       - boilerplate
     volumes:
-      # - postgres_volume:/var/lib/postgres
+      - postgres_volume:/var/lib/postgres
       - ${PWD}/hack/fixtures/db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
     restart: unless-stopped
 
