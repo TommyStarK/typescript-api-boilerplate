@@ -4,24 +4,22 @@ import express, {
   Response,
   NextFunction,
 } from 'express';
+
 import multer from 'multer';
 
-import container from '@app/IoC/container';
-import { MongoDBClient } from '@app/storages/mongodb';
-import { MySQLClient } from '@app/storages/mysql';
-import { MediaController } from '@app/services/media/controller';
-import { UserController } from '@app/services/user/controller';
+import container from '@app/inversion-of-control/container';
+import { MongoDBClient } from '@app/backends/mongo';
+import { PostgreSQLClient } from '@app/backends/postgres';
+import { MediaController } from '@app/api/media';
+import { UserController } from '@app/api/user';
 
 import { AppConfig } from '@app/config';
-import TYPES from '@app/IoC/types';
+import TYPES from '@app/inversion-of-control/types';
 // import logger from '@app/logger';
 
-import {
-  authMiddleware,
-  errorMiddleware,
-  logMiddleware,
-  notfoundMiddleware,
-} from '@app/middlewares';
+import { exceptionsFilter } from '@app/filters';
+import { logInterceptor } from '@app/interceptors';
+import { authMiddleware, notfoundMiddleware } from '@app/middlewares';
 
 import {
   authPayloadValidator,
@@ -30,6 +28,7 @@ import {
 } from '@app/middlewares/validators';
 
 const upload = multer({ dest: '.uploads/' });
+
 const asyncWrapper = (handler: Handler) => (
   req: Request,
   res: Response,
@@ -37,54 +36,55 @@ const asyncWrapper = (handler: Handler) => (
 ) => Promise.resolve(handler(req, res, next)).catch(next);
 
 export const router = async (): Promise<express.Router> => {
-  const mongodb = container.get<MongoDBClient>(TYPES.MongoDBClient);
-  const mysql = container.get<MySQLClient>(TYPES.MySQLClient);
+  const mongo = container.get<MongoDBClient>(TYPES.MongoDBClient);
+  const postgres = container.get<PostgreSQLClient>(TYPES.PostgreSQLClient);
+
+  //
+  // gracefull shutdown
+  //
 
   // process.on('SIGINT', async () => {
-  //   await mongodb.disconnect();
-  //   await mysql.disconnect();
+  //   await Promise.all([mongo.disconnect(), postgres.disconnect()]);
   //   process.exit(1);
   // });
 
   // try {
-  //   await mongodb.connect();
-  //   await mysql.connect();
+  //   await Promise.all([mongo.connect(), postgres.connect()]);
   // } catch (error) {
   //   logger.error(error);
   //   process.exit(1);
   // }
-  await mongodb.connect();
-  await mysql.connect();
+
+  await Promise.all([mongo.connect(), postgres.connect()]);
 
   const mediaController = container.get<MediaController>(TYPES.MediaController);
   const userController = container.get<UserController>(TYPES.UserController);
-  const Router = express.Router();
+  const r = express.Router();
 
-  // First path handled
-  Router.get(`/${AppConfig.app.url}`, (_: Request, response: Response) => response.status(200).json({
-    status: 200,
-    message: `Welcome to the ${AppConfig.app.name}`,
-  }));
+  // healthcheck
+  r.get(`/${AppConfig.app.url}/healthz`, (_: Request, response: Response) => {
+    response.status(200).json({ status: 200, message: 'ok' });
+  });
 
   // Account management
-  Router.post(`/${AppConfig.app.url}/authorize`, authPayloadValidator(), asyncWrapper(userController.authorize));
-  Router.post(`/${AppConfig.app.url}/register`, registrationPayloadValidator(), asyncWrapper(userController.register));
-  Router.delete(`/${AppConfig.app.url}/unregister`, authPayloadValidator(), asyncWrapper(userController.unregister));
+  r.post(`/${AppConfig.app.url}/authorize`, authPayloadValidator(), asyncWrapper(userController.authorize));
+  r.post(`/${AppConfig.app.url}/register`, registrationPayloadValidator(), asyncWrapper(userController.register));
+  r.delete(`/${AppConfig.app.url}/unregister`, authPayloadValidator(), asyncWrapper(userController.unregister));
 
   // authentication middleware
-  Router.all(`/${AppConfig.app.url}/*`, [authMiddleware(mysql), logMiddleware]);
+  r.all(`/${AppConfig.app.url}/*`, [authMiddleware(postgres), logInterceptor]);
 
-  Router.get(`/${AppConfig.app.url}/hello`, (request: Request, response: Response) => {
+  r.get(`/${AppConfig.app.url}/hello`, (request: Request, response: Response) => {
     response.status(200).json({ status: 200, message: `Hello ${request.user.username}` });
   });
 
   // Media
-  Router.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
-  Router.get(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.getPicture));
-  Router.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
-  Router.delete(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.deletePicture));
+  r.get(`/${AppConfig.app.url}/pictures`, asyncWrapper(mediaController.getPictures));
+  r.get(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.getPicture));
+  r.post(`/${AppConfig.app.url}/picture`, upload.single('file'), asyncWrapper(mediaController.uploadNewPicture));
+  r.delete(`/${AppConfig.app.url}/picture/:id`, mongoIDValidator(), asyncWrapper(mediaController.deletePicture));
 
-  Router.use(notfoundMiddleware);
-  Router.use(errorMiddleware);
-  return Router;
+  r.use(notfoundMiddleware);
+  r.use(exceptionsFilter);
+  return r;
 };

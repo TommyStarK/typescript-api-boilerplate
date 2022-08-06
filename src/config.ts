@@ -1,58 +1,52 @@
+import { MongoDBClientConfig } from './backends/mongo';
+import { PostgreSQLClientConfig } from './backends/postgres';
+
 interface IAppConfig {
   app: {
-    name: string;
+    production: boolean;
     url: string;
-    http: {
-      port: number;
-    },
+    port: number;
+    secret: string;
+    expiresIn: string;
     https: {
       port: number;
       tls: {
         certificate: string;
         key: string;
-        path: string;
       },
     },
-    secret: string;
-    expiresIn: string;
-    production: boolean;
   },
-  mongo: {
-    port: string;
-    uri: string;
-    database: string;
-  },
-  mysql: {
-    host: string;
-    user: string;
-    password: string;
-    database: string;
-  },
+  mongo: MongoDBClientConfig,
+  postgres: PostgreSQLClientConfig,
 }
 
 const AppConfig: IAppConfig = {
   app: {
-    name: 'Experimental REST API boilerplate',
     url: 'api.boilerplate',
-    http: { port: 3001 },
-    https: {
-      port: 8443,
-      tls: { certificate: 'server.crt', key: 'key.pem', path: 'tls/' },
-    },
+    port: 3001,
+    production: false,
     secret: '1S3cR€T!',
     expiresIn: '24h',
-    production: false,
+    https: {
+      port: 8443,
+      tls: {
+        certificate: 'tls/server.crt',
+        key: 'tls/key.pem',
+      },
+    },
   },
   mongo: {
-    port: '27017',
-    uri: process.env.MONGO_URI || 'localhost',
-    database: 'experimental_rest_api_boilerplate_mongodb',
+    database: 'dummy',
+    host: process.env.MONGO_URI || 'localhost',
+    port: 27017,
   },
-  mysql: {
-    host: process.env.MYSQL_URL || '127.0.0.1',
+  postgres: {
+    database: 'dummy',
+    host: process.env.POSTGRES_URL || '127.0.0.1',
+    port: 5432,
+    max: 10,
     user: 'root',
     password: 'root',
-    database: 'experimental_rest_api_boilerplate_mysql',
   },
 };
 

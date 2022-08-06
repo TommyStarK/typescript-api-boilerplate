@@ -15,10 +15,10 @@ docker build . -t ${PROJECT_NAME}
 docker-compose -f hack/ci.yml --project-name ${PROJECT_NAME} up --detach
 
 docker run -ti --name ${PROJECT_NAME} --network=${PROJECT_NAME}_default \
-    -e MONGO_URI=mongodb \
-    -e MYSQL_URL=mysql \
+    -e MONGO_URI=mongo \
+    -e POSTGRES_URL=postgres \
     ${PROJECT_NAME} \
-    bash -c './hack/wait_for_it.sh --timeout=30 --host=mysql --port=3306 --strict -- ./hack/wait_for_it.sh --timeout=30 --host=mongodb --port=27017 --strict -- yarn test'
+    bash -c './hack/wait_for_it.sh --timeout=30 --host=mongo --port=27017 --strict -- ./hack/wait_for_it.sh --timeout=30 --host=postgres --port=5432 --strict -- yarn test'
 
 rc=$?
 

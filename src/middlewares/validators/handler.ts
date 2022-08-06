@@ -1,5 +1,10 @@
 import { ValidationError, validateOrReject } from 'class-validator';
-import { Request, Response, NextFunction } from 'express';
+
+import {
+  Request,
+  Response,
+  NextFunction,
+} from 'express';
 
 type ExpressMiddleware = (request: Request, response: Response, next: NextFunction) => Promise<void>;
 type ModelCtor<T extends Model<T>> = new (json?: object) => T;

@@ -1,14 +1,19 @@
 import { IsString } from 'class-validator';
 
-import { AuthPayload } from '@app/services/user/model';
-import { ExpressMiddleware, Model, validate } from '@app/middlewares/validators/handler';
+import { AuthPayload } from '@app/api/user/model';
+
+import {
+  ExpressMiddleware,
+  Model,
+  validate,
+} from '@app/middlewares/validators/handler';
 
 class AuthPayloadClass extends Model<AuthPayload> {
   @IsString()
-  username!: string;
+  username: string;
 
   @IsString()
-  password!: string;
+  password: string;
 }
 
 export const authPayloadValidator = (): ExpressMiddleware => validate<AuthPayloadClass>(AuthPayloadClass);

@@ -1,21 +1,26 @@
-import { NextFunction, Request, Response } from 'express';
+import {
+  NextFunction,
+  Request,
+  Response,
+} from 'express';
+
 import jwt from 'jsonwebtoken';
 
+import { PostgreSQLClient, Query } from '@app/backends/postgres';
 import { AppConfig } from '@app/config';
-import { MySQLClient } from '@app/storages/mysql';
+import { ForbiddenError, UnauthorizedError } from '@app/utils/errors';
 
-export const authMiddleware = (mysqlClient: MySQLClient) => async (
-  request: Request, response: Response, next: NextFunction,
+export const authMiddleware = (postgreClient: PostgreSQLClient) => async (
+  request: Request, _: Response, next: NextFunction,
 ): Promise<void> => {
   const token = (request.body && request.body.access_token)
-  || (request.query && request.query.access_token)
-  || request.headers['x-auth-token']
-  || request.headers['Proxy-Authorization']
-  || request.headers.authorization;
+    || (request.query && request.query.access_token)
+    || request.headers['x-auth-token']
+    || request.headers['Proxy-Authorization']
+    || request.headers.authorization;
 
   if (!token) {
-    response.status(401).json({ status: 401, message: 'No token provided' });
-    return;
+    return next(new UnauthorizedError('no token provided'));
   }
 
   try {
@@ -23,23 +28,24 @@ export const authMiddleware = (mysqlClient: MySQLClient) => async (
     const { userID, username } = decoded as jwt.JwtPayload;
     request.user = { userID, username };
   } catch (error) {
-    response.status(401).json({ status: 401, message: 'Invalid token' });
-    return;
+    return next(new UnauthorizedError('invalid token'));
   }
 
   try {
-    const [user] = await mysqlClient.query(
-      'select 1 from users where userID = ? and username = ? order by username limit 1',
+    const q = new Query(
+      // eslint-disable-next-line @typescript-eslint/quotes
+      `SELECT 1 FROM users u WHERE u."userID" = $1 AND u."username" = $2 ORDER BY "username" LIMIT 1;`,
       [request.user.userID, request.user.username],
     );
 
+    const [user] = await postgreClient.query(q);
+
     if (!user) {
-      response.status(403).json({ status: 403, message: 'Forbidden' });
-      return;
+      throw new ForbiddenError();
     }
 
-    next();
+    return next();
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
