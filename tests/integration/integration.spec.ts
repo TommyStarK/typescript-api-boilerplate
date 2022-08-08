@@ -7,17 +7,14 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import request from 'supertest';
 
-import { AppConfig } from '../../src/config';
-import { authMiddleware } from '../../src/middlewares';
-import { exceptionsFilter } from '../../src/filters';
-
-import container from '../../src/inversion-of-control/container';
-
-import { MongoDBClient } from '../../src/backends/mongo';
-import { PostgreSQLClient, Query } from '../../src/backends/postgres';
-import { router } from '../../src/router';
-
-import TYPES from '../../src/inversion-of-control/types';
+import { MongoDBClient } from '@app/backends/mongo';
+import { PostgreSQLClient, Query } from '@app/backends/postgres';
+import { AppConfig } from '@app/config';
+import { exceptionsFilter } from '@app/filters';
+import container from '@app/inversion-of-control/container';
+import TYPES from '@app/inversion-of-control/types';
+import { authMiddleware } from '@app/middlewares';
+import { router } from '@app/router';
 
 let token = '';
 let pictureID = '';
