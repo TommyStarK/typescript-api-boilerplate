@@ -1,6 +1,6 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Experimental Typescript boilerplate of a REST API",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",
@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "build:dev": "cross-env NODE_ENV=dev yarn run build",
     "build:prod": "cross-env NODE_ENV=production yarn run build",
     "coverage": "codecov",

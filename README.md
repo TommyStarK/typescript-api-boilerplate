@@ -4,7 +4,7 @@
 
 A simple and modular RESTful API boilerplate written in [Typescript](https://www.typescriptlang.org/) using [Express](https://expressjs.com/). The boilerplate is backed with a  [Mongodb](https://www.mongodb.com/) and a [PostgreSQL](https://www.postgresql.org/).
 
-Some features have been integrated to the boilerplate in order to have reusable base "modules", or at least a clean and clear architecture to implement new ones. These "modules" manage the following "services":
+Some features have been integrated into the boilerplate. The idea is to have some basic components and a clear architecture to easily implement new ones:
 
 - Account management (register/unregister an account)
 - Authentication
@@ -13,22 +13,20 @@ Some features have been integrated to the boilerplate in order to have reusable 
 The goal is to define a healthy architecture of a REST API connected to one or more backend(s), in this case a PostgreSQL to store user data and a MongoDB to store pictures of each user. The whole accompanied by a simple authentication system.
 
 **Note**: Only hashes of password are stored in the database. Use the `hash` function in the
-`utils` module if you have to compare hashes.
+`utils/crypto` module if you have to compare hashes.
 
 Same for emails, they are encrypted using `AES256` before being stored. Use the `decrypt`
-function in the `utils` module if you need to decrypt stored email.
+function in the `utils/crypto` module if you need to decrypt stored email.
 
 ## Features
 
-- Auto server restart thanks to [Nodemon](https://github.com/remy/nodemon)
 - Authentication using [JSON Web Tokens](https://jwt.io/)
-- Connections pools for backend storages
+- Configurable connections pools for backend storages
 - Cross-Origin Resource Sharing enabled (including browser preflight request)
 - Custom exception(s) filter
 - Data input validation middlewares thanks to [class-validator](https://github.com/typestack/class-validator)
 - ECMAScript 2021
 - Inversion of Control container with [Inversify](https://github.com/inversify/InversifyJS)
-- Linting with [Eslint](https://eslint.org/)
 - Logging interceptor using [Winston](https://github.com/winstonjs/winston)
 - Native storage drivers
 - MongoDB automatic collections validation
@@ -52,7 +50,7 @@ This can be done through **Docker -> Preferences -> File sharing**
 
 ## Contribution
 
-Each Contribution is welcomed and encouraged. I do not claim to cover each use cases nor completely master the Node.js. If you encounter a non sense or any trouble, you can open an issue and I will be happy to discuss about it :smile:
+Each Contribution is welcomed and encouraged. I don't claim to cover each use cases nor completely master the Node.js. If you encounter a non sense or any trouble, you can open an issue and I will be happy to discuss about it :smile:
 
 ## Tests
 
@@ -75,7 +73,7 @@ Run the following commands to use your boilerplate:
 # Assuming your are using the default config
 #
 
-# Ping the service
+# healthcheck
 ❯ curl --request GET http://localhost:3001/api.boilerplate/healthz
 
 # Register a new account
@@ -88,7 +86,7 @@ Run the following commands to use your boilerplate:
   -d '{"username":"foo", "password":"bar"}' \
   http://localhost:3001/api.boilerplate/authorize | jq -r .token)
 
-# Test an auth required request
+# Test an auth required endpoint
 ❯ curl -H "Authorization: $TOKEN" --request GET \
   http://localhost:3001/api.boilerplate/hello
 

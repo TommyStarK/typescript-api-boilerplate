@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    ".husky",
+    ".vscode",
+    "coverage",
+    "dist",
+    "node_modules",
+    "tests"
+  ]
+}
