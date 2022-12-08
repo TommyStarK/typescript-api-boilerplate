@@ -11,7 +11,7 @@ cache:
     yarn: true
 
 before_script:
-    - yarn lint
+    - yarn validate
 
 script:
     - yarn test:ci
