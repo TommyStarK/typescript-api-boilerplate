@@ -33,7 +33,7 @@
     "body-parser": "^1.17.1",
     "class-validator": "^0.13.1",
     "cors": "^2.8.3",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "inversify": "^5.0.5",
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.8",
