@@ -1,7 +1,7 @@
 /* eslint-disable import/newline-after-import */
 /* eslint-disable import/first */
 import * as os from 'os';
-process.env.UV_THREADPOOL_SIZE = `${os.cpus().length - 1}`; // keeps one for event loop
+process.env.UV_THREADPOOL_SIZE = `${os.cpus().length - 1 > 1 ? os.cpus().length - 1 : 1}`; // keeps one for event loop
 
 import { json as bodyParserJSON, urlencoded as bodyParserURLEncoded } from 'body-parser';
 import cors from 'cors';

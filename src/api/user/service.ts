@@ -1,10 +1,17 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
-import uniqid from 'uniqid';
 
 import { MongoDBClient } from '@app/backends/mongo';
-import { PostgreSQLClient, Query } from '@app/backends/postgres';
+import { PostgreSQLClient } from '@app/backends/postgres';
+
+import {
+  deleteUser,
+  findUser,
+  findUserByEmail,
+  insertUser,
+} from '@app/backends/postgres/queries';
+
 import { AppConfig } from '@app/config';
 import TYPES from '@app/inversion-of-control/types';
 import logger from '@app/logger';
@@ -24,12 +31,7 @@ export class UserService {
     const { username, password } = payload;
     const passwordHash = hash(password);
 
-    const findUserQuery = new Query(
-      // eslint-disable-next-line max-len
-      `SELECT "userID", "username" FROM users u WHERE u."username" = $1 AND u."password" = $2 ORDER BY "username" LIMIT 1;`,
-      [username, passwordHash],
-    );
-
+    const findUserQuery = findUser(username, passwordHash);
     logger.debug({ findUserQuery });
 
     const [user] = await this.postgreClient.query<{ userID: string; username: string }>(findUserQuery);
@@ -58,11 +60,7 @@ export class UserService {
     const emailEncrypted = encrypt(email);
     const passwordHash = hash(password);
 
-    const findUserByEmailQuery = new Query(
-      `SELECT "email", "username" FROM users u WHERE u."username" = $1 OR u."email" = $2 ORDER BY "email" LIMIT 1;`,
-      [username, emailEncrypted],
-    );
-
+    const findUserByEmailQuery = findUserByEmail(username, emailEncrypted);
     logger.debug({ findUserByEmailQuery });
 
     const [user] = await this.postgreClient.query<{ email: string; username: string }>(findUserByEmailQuery);
@@ -73,10 +71,8 @@ export class UserService {
       } [${user.username === username ? user.username : email}] already used`);
     }
 
-    const insertUserQuery = new Query(
-      `INSERT INTO users ("email", "password", "userID", "username") VALUES ($1, $2, $3, $4);`,
-      [emailEncrypted, passwordHash, uniqid(), username],
-    );
+    const insertUserQuery = insertUser(username, emailEncrypted, passwordHash);
+    logger.debug({ insertUserQuery });
 
     await this.postgreClient.runAtomicQueries([insertUserQuery]);
 
@@ -87,11 +83,7 @@ export class UserService {
     const { username, password } = payload;
     const passwordHash = hash(password);
 
-    const findUserQuery = new Query(
-      `SELECT "userID" from users u WHERE u."username" = $1 AND u."password" = $2 ORDER BY "username" LIMIT 1;`,
-      [username, passwordHash],
-    );
-
+    const findUserQuery = findUser(username, passwordHash);
     logger.debug({ findUserQuery });
 
     const [u] = await this.postgreClient.query<{ userID: string }>(findUserQuery);
@@ -100,10 +92,8 @@ export class UserService {
       throw new UnauthorizedError('wrong credentials');
     }
 
-    const deleteUserQuery = new Query(
-      `DELETE FROM users u WHERE u."username" = $1 AND u."password" = $2;`,
-      [username, passwordHash],
-    );
+    const deleteUserQuery = deleteUser(username, passwordHash);
+    logger.debug({ deleteUserQuery });
 
     await this.postgreClient.runAtomicQueries([deleteUserQuery]);
 
