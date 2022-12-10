@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable max-len */
 import { inject, injectable } from 'inversify';
 import jwt from 'jsonwebtoken';
 
 import { MongoDBClient } from '@app/backends/mongo';
-import { PostgreSQLClient } from '@app/backends/postgres';
 
 import {
+  PostgreSQLClient,
   deleteUser,
-  findUser,
-  findUserByEmail,
+  findUserByUsernameAndPassword,
+  findUserByUsernameOrEmail,
   insertUser,
-} from '@app/backends/postgres/queries';
+} from '@app/backends/postgres';
 
 import { AppConfig } from '@app/config';
 import TYPES from '@app/inversion-of-control/types';
@@ -31,10 +32,10 @@ export class UserService {
     const { username, password } = payload;
     const passwordHash = hash(password);
 
-    const findUserQuery = findUser(username, passwordHash);
-    logger.debug({ findUserQuery });
+    const findUserByUsernameAndPasswordQuery = findUserByUsernameAndPassword(username, passwordHash);
+    logger.debug({ findUserByUsernameAndPasswordQuery });
 
-    const [user] = await this.postgreClient.query<{ userID: string; username: string }>(findUserQuery);
+    const [user] = await this.postgreClient.query<{ userID: string; username: string }>(findUserByUsernameAndPasswordQuery);
 
     if (!user) {
       throw new UnauthorizedError('wrong credentials');
@@ -60,10 +61,10 @@ export class UserService {
     const emailEncrypted = encrypt(email);
     const passwordHash = hash(password);
 
-    const findUserByEmailQuery = findUserByEmail(username, emailEncrypted);
-    logger.debug({ findUserByEmailQuery });
+    const findUserByUsernameOrEmailQuery = findUserByUsernameOrEmail(username, emailEncrypted);
+    logger.debug({ findUserByUsernameOrEmailQuery });
 
-    const [user] = await this.postgreClient.query<{ email: string; username: string }>(findUserByEmailQuery);
+    const [user] = await this.postgreClient.query<{ email: string; username: string }>(findUserByUsernameOrEmailQuery);
 
     if (user) {
       throw new ConflictError(`Conflict: ${
@@ -83,10 +84,10 @@ export class UserService {
     const { username, password } = payload;
     const passwordHash = hash(password);
 
-    const findUserQuery = findUser(username, passwordHash);
-    logger.debug({ findUserQuery });
+    const findUserByUsernameAndPasswordQuery = findUserByUsernameAndPassword(username, passwordHash);
+    logger.debug({ findUserByUsernameAndPasswordQuery });
 
-    const [u] = await this.postgreClient.query<{ userID: string }>(findUserQuery);
+    const [u] = await this.postgreClient.query<{ userID: string }>(findUserByUsernameAndPasswordQuery);
 
     if (!u) {
       throw new UnauthorizedError('wrong credentials');
