@@ -1,6 +1,6 @@
 {
   "name": "typescript-api-boilerplate",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Experimental Typescript boilerplate of a REST API",
   "author": "Thomas Milox (TommyStarK)",
   "license": "MIT",

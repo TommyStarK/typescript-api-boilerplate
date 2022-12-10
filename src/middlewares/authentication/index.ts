@@ -6,8 +6,9 @@ import {
 
 import jwt from 'jsonwebtoken';
 
-import { PostgreSQLClient, Query } from '@app/backends/postgres';
+import { PostgreSQLClient, findUserByUsernameAndUserID } from '@app/backends/postgres';
 import { AppConfig } from '@app/config';
+import logger from '@app/logger';
 import { ForbiddenError, UnauthorizedError } from '@app/utils/errors';
 
 export const authMiddleware = (postgreClient: PostgreSQLClient) => async (
@@ -32,13 +33,10 @@ export const authMiddleware = (postgreClient: PostgreSQLClient) => async (
   }
 
   try {
-    const q = new Query(
-      // eslint-disable-next-line @typescript-eslint/quotes
-      `SELECT 1 FROM users u WHERE u."userID" = $1 AND u."username" = $2 ORDER BY "username" LIMIT 1;`,
-      [request.user.userID, request.user.username],
-    );
+    const findUserByUsernameAndUserIDQuery = findUserByUsernameAndUserID(request.user.userID, request.user.username);
+    logger.debug({ findUserByUsernameAndUserIDQuery });
 
-    const [user] = await postgreClient.query(q);
+    const [user] = await postgreClient.query(findUserByUsernameAndUserIDQuery);
 
     if (!user) {
       throw new ForbiddenError();
