@@ -31,7 +31,7 @@
   "dependencies": {
     "auto-bind": "^4.0.0",
     "body-parser": "^1.17.1",
-    "class-validator": "^0.13.1",
+    "class-validator": "^0.14.0",
     "cors": "^2.8.3",
     "express": "^4.17.3",
     "inversify": "^5.0.5",
